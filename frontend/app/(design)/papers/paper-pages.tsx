@@ -215,7 +215,7 @@ export function AddPaperLivePage() {
     try {
       const created = await uploadPaper(examId, studentId.trim(), file);
       setPaper(created);
-      setPollMessage("Page processing is not enabled yet; you can enter answers manually.");
+      setPollMessage("Pages scanned and read. Review the transcription before you grade.");
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Could not upload paper");
     } finally {
@@ -241,7 +241,7 @@ export function AddPaperLivePage() {
   return (
     <ShellFrame context={context} active="add-paper">
       <PageHeader crumbs={[{ label: context.course.code, href: `/courses/${courseId}` }, { label: context.exam.name, href: `/courses/${courseId}/exams/${examId}/papers` }, { label: "Add paper" }]} />
-      <PageTitle title="Add a paper" description="Upload one student's paper PDF. You can enter answers manually while transcription is unavailable." />
+      <PageTitle title="Add a paper" description="Upload one student's paper PDF. The pages are scanned and the handwriting read, then you review and grade." />
       {error && <Alert>{error}</Alert>}
       {!paper ? (
         <Card padding="24px">
@@ -267,8 +267,8 @@ export function AddPaperLivePage() {
               </div>
             ))}
           </div>
-          <p style={{ color: "var(--muted)", fontSize: "13px" }}>Transcription is not enabled. Continue by typing each answer and entering its score.</p>
-          <Button onClick={() => router.push(`/papers/${paper.id}/grade`)} icon={<ArrowRight size={16} />}>Enter answers</Button>
+          <p style={{ color: "var(--muted)", fontSize: "13px" }}>The handwriting has been read. Review the transcription, check any highlighted words, and score each answer.</p>
+          <Button onClick={() => router.push(`/papers/${paper.id}/grade`)} icon={<ArrowRight size={16} />}>Review and grade</Button>
         </Card>
       )}
     </ShellFrame>
@@ -375,7 +375,7 @@ export function GradePaperLivePage() {
   return (
     <ShellFrame context={context} active="my-papers">
       <PageHeader crumbs={[{ label: context.course.code, href: `/courses/${context.course.id}` }, { label: context.exam.name, href: `/courses/${context.course.id}/exams/${context.exam.id}/papers` }, { label: "Grade paper" }]} />
-      <PageTitle title={`Grade ${paper.studentId}`} description="Edit each transcription and score the answer from zero to the question maximum." />
+      <PageTitle title={`Grade ${paper.studentId}`} description="Review the scanned transcription, fix any highlighted words, and score each answer from zero to the question maximum." />
       {error && <Alert>{error}</Alert>}{message && <Pill tone="green">{message}</Pill>}
       {!editable && <Alert>This paper is locked because it has been submitted.</Alert>}
       {paper.answers.length === 0 && <Card padding="22px"><p>No questions are set up for this exam yet.</p></Card>}
@@ -387,6 +387,11 @@ export function GradePaperLivePage() {
             {answer.rubricPoints.map((point) => <div key={point.text} style={{ display: "flex", justifyContent: "space-between", gap: "12px", fontSize: "13px", color: "var(--muted)" }}><span>{point.text}</span><span>{point.points} pts</span></div>)}
           </div>
           <label style={{ display: "block", marginTop: "18px" }}><span style={labelStyle}>Transcribed answer</span><textarea disabled={!editable} value={answer.transcription} onChange={(event) => editAnswer(index, { transcription: event.target.value })} rows={5} style={{ ...fieldStyle, resize: "vertical" }} /></label>
+          {answer.uncertainWords.length > 0 && (
+            <p style={{ margin: "8px 0 0", fontSize: "13px", color: "var(--amber-x, var(--muted))" }}>
+              Words to check: {answer.uncertainWords.join(", ")}
+            </p>
+          )}
           <label style={{ display: "block", width: "180px", marginTop: "14px" }}><span style={labelStyle}>TA score</span><input disabled={!editable} type="number" min="0" max={answer.maxPoints} step="0.5" value={answer.taPoints ?? ""} onChange={(event) => editAnswer(index, { taPoints: event.target.value === "" ? null : Number(event.target.value) })} style={fieldStyle} /></label>
         </Card>
       ))}

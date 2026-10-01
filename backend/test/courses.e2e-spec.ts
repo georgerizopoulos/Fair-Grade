@@ -68,6 +68,8 @@ describe('Courses and membership (e2e)', () => {
               heldAt: new Date('2026-09-16'),
               status: 'PUBLISHED',
             },
+            // The instructor is still preparing this one; a TA shouldn't see it.
+            { name: 'Final', heldAt: new Date('2027-01-20'), status: 'DRAFT' },
           ],
         },
       },
@@ -155,6 +157,37 @@ describe('Courses and membership (e2e)', () => {
     );
     expect(me.isYou).toBe(true);
     expect(other.isYou).toBe(false);
+  });
+
+  it('GET /courses/:id: a TA does not see draft exams or the leaderboard setting', async () => {
+    const ta = await http
+      .get(`/courses/${ids.hy335}`)
+      .set(auth('maria'))
+      .expect(200);
+    // DRAFT "Final" is hidden; only OPEN/PUBLISHED exams show.
+    expect(ta.body.exams.map((e: { name: string }) => e.name)).toEqual([
+      'Quiz 1',
+      'Midterm',
+    ]);
+    expect(ta.body).not.toHaveProperty('leaderboardVisibility');
+    // A TA can only add papers to the OPEN exam.
+    const byName = (n: string) =>
+      ta.body.exams.find((e: { name: string }) => e.name === n);
+    expect(byName('Midterm').canAddPapers).toBe(true);
+    expect(byName('Quiz 1').canAddPapers).toBe(false);
+
+    const instructor = await http
+      .get(`/courses/${ids.hy335}`)
+      .set(auth('instructor'))
+      .expect(200);
+    // The instructor sees every exam, including the draft, and the setting.
+    expect(instructor.body.exams.map((e: { name: string }) => e.name)).toEqual([
+      'Quiz 1',
+      'Midterm',
+      'Final',
+    ]);
+    expect(instructor.body).toHaveProperty('leaderboardVisibility');
+    expect(instructor.body.exams[0]).not.toHaveProperty('canAddPapers');
   });
 
   it('unknown course → 404', async () => {

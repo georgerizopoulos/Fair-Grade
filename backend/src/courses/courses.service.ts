@@ -23,10 +23,12 @@ export class CoursesService {
 
   // GET /courses: a TA only gets the courses they're a member of.
   async list(user: AuthUser) {
+    const isTa = user.role === 'ta';
     const courses = await this.prisma.course.findMany({
       where: this.access.visibleCourseFilter(user),
       include: {
-        exams: true,
+        // A TA doesn't see exams the instructor hasn't opened for grading yet.
+        exams: isTa ? { where: { status: { in: ['OPEN', 'PUBLISHED'] } } } : true,
         _count: { select: { members: { where: { role: 'ta' } } } },
       },
       orderBy: { code: 'asc' },
@@ -78,8 +80,13 @@ export class CoursesService {
   }
 
   // GET /courses/:id: header, exams in date order with progress, members.
+  // A TA sees a narrower view than the instructor: only exams that are open for
+  // grading or already published (not the drafts the instructor is still
+  // preparing), progress for their own papers only, and no leaderboard setting
+  // or cohort-wide numbers.
   async get(user: AuthUser, courseId: string) {
     await this.access.course(user, courseId);
+    const isTa = user.role === 'ta';
 
     const course = await this.prisma.course.findUniqueOrThrow({
       where: { id: courseId },
@@ -88,7 +95,11 @@ export class CoursesService {
         exams: {
           include: {
             _count: { select: { questions: true } },
-            papers: { select: { status: true } },
+            papers: {
+              // A TA only ever counts their own papers.
+              where: isTa ? { taId: user.id } : undefined,
+              select: { status: true },
+            },
           },
         },
         members: {
@@ -98,19 +109,23 @@ export class CoursesService {
       },
     });
 
-    return {
-      viewerRole: user.role,
-      id: course.id,
-      code: course.code,
-      name: course.name,
-      semester: course.semester,
-      leaderboardVisibility: course.leaderboardVisibility,
-      owner: course.owner
-        ? { ...course.owner, isYou: course.owner.id === user.id }
-        : null,
-      exams: [...course.exams].sort(byHeldAt).map((e) => {
+    // TAs don't see exams the instructor hasn't opened for grading yet.
+    const TA_VISIBLE: Set<string> = new Set(['OPEN', 'PUBLISHED']);
+    const exams = [...course.exams]
+      .filter((e) => !isTa || TA_VISIBLE.has(e.status))
+      .sort(byHeldAt)
+      .map((e) => {
         const count = (status: string) =>
           e.papers.filter((p) => p.status === status).length;
+        const progress = {
+          papers: e.papers.length,
+          drafts: count('DRAFT') + count('TRANSCRIBING'),
+          submitted:
+            count('AI_GRADING') + count('AI_GRADED') + count('AI_FAILED'),
+          aiGrading: count('AI_GRADING'),
+          aiGraded: count('AI_GRADED'),
+          aiFailed: count('AI_FAILED'),
+        };
         return {
           id: e.id,
           name: e.name,
@@ -118,17 +133,25 @@ export class CoursesService {
           status: e.status,
           passMark: e.passMark,
           questionCount: e._count.questions,
-          progress: {
-            papers: e.papers.length,
-            drafts: count('DRAFT') + count('TRANSCRIBING'),
-            submitted:
-              count('AI_GRADING') + count('AI_GRADED') + count('AI_FAILED'),
-            aiGrading: count('AI_GRADING'),
-            aiGraded: count('AI_GRADED'),
-            aiFailed: count('AI_FAILED'),
-          },
+          // A TA can only add papers to an exam that is open for grading.
+          ...(isTa ? { canAddPapers: e.status === 'OPEN' } : {}),
+          // For a TA, progress counts only their own papers (see the query above).
+          progress,
         };
-      }),
+      });
+
+    return {
+      viewerRole: user.role,
+      id: course.id,
+      code: course.code,
+      name: course.name,
+      semester: course.semester,
+      // Leaderboard visibility is an instructor setting; TAs don't see it.
+      ...(isTa ? {} : { leaderboardVisibility: course.leaderboardVisibility }),
+      owner: course.owner
+        ? { ...course.owner, isYou: course.owner.id === user.id }
+        : null,
+      exams,
       members: course.members.map((m) => ({
         userId: m.user.id,
         name: m.user.name,

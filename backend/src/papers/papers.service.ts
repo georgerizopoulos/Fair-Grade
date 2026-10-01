@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   ForbiddenException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -15,6 +16,10 @@ import type { AuthUser } from '../common/auth.decorators.js';
 import type { PaperStatus, Prisma } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { isHalfStep, paperTotals } from './paper-totals.js';
+import {
+  PAPER_TRANSCRIBER,
+  type PaperTranscriber,
+} from './paper-transcriber.js';
 import {
   CreatePaperDto,
   MyPapersQuery,
@@ -44,6 +49,8 @@ export class PapersService {
     private readonly prisma: PrismaService,
     private readonly access: AccessService,
     private readonly activity: ActivityService,
+    @Inject(PAPER_TRANSCRIBER)
+    private readonly transcriber: PaperTranscriber,
   ) {}
 
   async upload(
@@ -55,7 +62,13 @@ export class PapersService {
     if (user.role === 'instructor') {
       await this.access.ownedExam(user, examId);
     } else {
-      await this.access.exam(user, examId);
+      const exam = await this.access.exam(user, examId);
+      // A TA can only add papers to an exam that is open for grading.
+      if (exam.status !== 'OPEN') {
+        throw new ConflictException(
+          'Papers can only be added while the exam is open for grading',
+        );
+      }
     }
 
     const taId = user.role === 'ta' ? user.id : dto.taId;
@@ -112,22 +125,27 @@ export class PapersService {
 
         for (let index = 0; index < pageCount; index++) {
           await tx.paperPage.create({
-            data: { paperId: created.id, index, status: 'WAITING' },
+            data: { paperId: created.id, index, status: 'READ' },
           });
         }
 
         const questions = await tx.question.findMany({
           where: { examId },
           orderBy: { order: 'asc' },
-          select: { id: true },
+          select: { id: true, code: true },
         });
+        // Fake the handwriting read: one of the 5 template papers at random.
+        const transcripts = this.transcriber.transcribe(
+          questions.map((q) => q.code),
+        );
         for (const question of questions) {
+          const t = transcripts[question.code];
           await tx.paperAnswer.create({
             data: {
               paperId: created.id,
               questionId: question.id,
-              transcription: '',
-              uncertainWords: [],
+              transcription: t?.transcription ?? '',
+              uncertainWords: t?.uncertainWords ?? [],
               pages: [],
             },
           });
@@ -136,7 +154,6 @@ export class PapersService {
         return created;
       });
 
-      // Future transcription hook: enqueue this stored PDF with the exam questions.
       return this.get(user, paper.id);
     } catch (error) {
       await unlink(diskPath).catch(() => undefined);
