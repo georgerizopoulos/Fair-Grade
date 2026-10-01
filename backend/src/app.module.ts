@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { AccessModule } from './access/access.module.js';
+import { ActivityModule } from './activity/activity.module.js';
 import { AnswersModule } from './answers/answers.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { AllExceptionsFilter } from './common/all-exceptions.filter.js';
@@ -23,6 +24,7 @@ import { UsersModule } from './users/users.module.js';
   imports: [
     PrismaModule,
     AccessModule,
+    ActivityModule,
     HealthModule,
     AuthModule,
     UsersModule,

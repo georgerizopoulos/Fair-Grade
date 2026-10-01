@@ -1,5 +1,5 @@
 /* Fair Grade design tokens and motion, from design-reference/html.
-   Light/dark: the sidebar switch is a checkbox; .fg-root:has(:checked) swaps the tokens. */
+   Dark mode: <html data-theme="dark">, toggled by components/shell/theme-switch.tsx. */
 @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&family=Caveat:wght@400..600&display=swap');
 
 
@@ -70,14 +70,18 @@ main{padding:20px 16px 64px !important}
 }
 body{background:#EEF0F3}
 .fg-root{--bg:#EEF0F3;--surface:#FFFFFF;--surface-2:#FAFAFB;--raised:#FFFFFF;--ink:#0E1116;--text:#14171C;--text-2:#40444D;--muted:#5B606B;--faint:#8A8F99;--dot:#9AA0AA;--avatar-bg:#E6E8EC;--avatar-fg:#30343C;--ink-rgb:14, 17, 22;--surface-rgb:255, 255, 255;--shadow-rgb:14, 17, 22;--blue:#3358D4;--blue-x:#2A47AE;--blue-t:#EDF1FD;--blue-t3:#CCD6F7;--blue-x3:#203A90;--red:#D64545;--red-x:#A82E2E;--red-t:#FCEEEE;--red-t2:#FFF8F8;--red-t3:#F6CACA;--red-x3:#8A2323;--green:#2E8B57;--green-x:#21704A;--green-t:#E7F4EC;--amber:#B7791F;--amber-x:#8A5A12;--amber-t:#FBF3E0;--chart-grey:#B9BEC7;--teal:#1F7A66;--gold-icon:#F3D58A;--disabled-bg:#E3E5EA;--disabled-fg:#7A808B;min-height:100vh;background:var(--bg);color:var(--text);transition:background-color 500ms cubic-bezier(0.32,0.72,0,1)}
-.fg-root:has(.fg-theme-input:checked){--bg:#0B0D11;--surface:#14171D;--surface-2:#191C23;--raised:#262A33;--ink:#F2F4F7;--text:#E3E6EB;--text-2:#C4C9D2;--muted:#959CA8;--faint:#656C79;--dot:#7D8491;--avatar-bg:#272B33;--avatar-fg:#DDE1E7;--ink-rgb:226, 231, 240;--surface-rgb:20, 23, 29;--shadow-rgb:0, 0, 0;--blue:#7091FF;--blue-x:#A9BBFF;--blue-t:rgba(112, 145, 255, 0.15);--blue-t3:rgba(112, 145, 255, 0.30);--blue-x3:#C9D4FF;--red:#F06A6A;--red-x:#FF9E9E;--red-t:rgba(240, 106, 106, 0.15);--red-t2:rgba(240, 106, 106, 0.07);--red-t3:rgba(240, 106, 106, 0.30);--red-x3:#FFC2C2;--green:#4CBB80;--green-x:#86D9AC;--green-t:rgba(76, 187, 128, 0.15);--amber:#E3A848;--amber-x:#F2CB7E;--amber-t:rgba(227, 168, 72, 0.15);--chart-grey:#4A515E;--teal:#7FD3BE;--gold-icon:#9A7A24;--disabled-bg:#22262E;--disabled-fg:#6A717D;color-scheme:dark}
+[data-theme="dark"] .fg-root{--bg:#0B0D11;--surface:#14171D;--surface-2:#191C23;--raised:#262A33;--ink:#F2F4F7;--text:#E3E6EB;--text-2:#C4C9D2;--muted:#959CA8;--faint:#656C79;--dot:#7D8491;--avatar-bg:#272B33;--avatar-fg:#DDE1E7;--ink-rgb:226, 231, 240;--surface-rgb:20, 23, 29;--shadow-rgb:0, 0, 0;--blue:#7091FF;--blue-x:#A9BBFF;--blue-t:rgba(112, 145, 255, 0.15);--blue-t3:rgba(112, 145, 255, 0.30);--blue-x3:#C9D4FF;--red:#F06A6A;--red-x:#FF9E9E;--red-t:rgba(240, 106, 106, 0.15);--red-t2:rgba(240, 106, 106, 0.07);--red-t3:rgba(240, 106, 106, 0.30);--red-x3:#FFC2C2;--green:#4CBB80;--green-x:#86D9AC;--green-t:rgba(76, 187, 128, 0.15);--amber:#E3A848;--amber-x:#F2CB7E;--amber-t:rgba(227, 168, 72, 0.15);--chart-grey:#4A515E;--teal:#7FD3BE;--gold-icon:#9A7A24;--disabled-bg:#22262E;--disabled-fg:#6A717D;color-scheme:dark}
 .fg-dark{--bg:#EEF0F3;--surface:#FFFFFF;--surface-2:#FAFAFB;--raised:#FFFFFF;--ink:#0E1116;--text:#14171C;--text-2:#40444D;--muted:#5B606B;--faint:#8A8F99;--dot:#9AA0AA;--avatar-bg:#E6E8EC;--avatar-fg:#30343C;--ink-rgb:14, 17, 22;--surface-rgb:255, 255, 255;--shadow-rgb:14, 17, 22;--blue:#3358D4;--blue-x:#2A47AE;--blue-t:#EDF1FD;--blue-t3:#CCD6F7;--blue-x3:#203A90;--red:#D64545;--red-x:#A82E2E;--red-t:#FCEEEE;--red-t2:#FFF8F8;--red-t3:#F6CACA;--red-x3:#8A2323;--green:#2E8B57;--green-x:#21704A;--green-t:#E7F4EC;--amber:#B7791F;--amber-x:#8A5A12;--amber-t:#FBF3E0;--chart-grey:#B9BEC7;--teal:#1F7A66;--gold-icon:#F3D58A;--disabled-bg:#E3E5EA;--disabled-fg:#7A808B;color-scheme:light}
-.fg-root:has(.fg-theme-input:checked) .fg-dark{--ink:#181C25}
+[data-theme="dark"] .fg-root .fg-dark{--ink:#181C25}
 .fg-theme-input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
 .fg-theme-thumb{transition:transform 500ms cubic-bezier(0.32,0.72,0,1)}
-.fg-root:has(.fg-theme-input:checked) .fg-theme-thumb{transform:translateX(28px)}
+[data-theme="dark"] .fg-root .fg-theme-thumb{transform:translateX(28px)}
 .fg-theme-sun{color:var(--ink)}
 .fg-theme-moon{color:var(--faint)}
-.fg-root:has(.fg-theme-input:checked) .fg-theme-sun{color:var(--faint)}
-.fg-root:has(.fg-theme-input:checked) .fg-theme-moon{color:var(--ink)}
+[data-theme="dark"] .fg-root .fg-theme-sun{color:var(--faint)}
+[data-theme="dark"] .fg-root .fg-theme-moon{color:var(--ink)}
 .fg-theme-switch:has(.fg-theme-input:focus-visible){outline:2px solid var(--blue);outline-offset:2px}
+
+/* Tailwind's preflight sets line-height 1.5 on <html>; the design was drawn with the
+   browser default. */
+.fg-root{line-height:normal}

@@ -24,6 +24,7 @@ enum Role {
 enum UserStatus {
   ACTIVE
   INVITED // created by an instructor, hasn't signed in yet
+  DEACTIVATED // can't sign in; their submitted papers still count
 }
 
 enum LeaderboardVisibility {

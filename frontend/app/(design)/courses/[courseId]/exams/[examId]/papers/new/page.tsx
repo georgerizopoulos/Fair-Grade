@@ -1,12 +1,744 @@
-// Static design, generated from design-reference/html/TAScan.html.
-// Demo content only: nothing here talks to the API yet.
-import Link from "next/link";
+// Static design, generated from design-reference/html/TAScan.html
+// by frontend/scripts/html2jsx.py. Demo content only: nothing here talks
+// to the API yet. When wiring it up, replace the constants with real data.
 import type { Metadata } from "next";
+import {
+  AppShell,
+  Button,
+  Card,
+  PageHeader,
+  PageTitle,
+  Pill,
+  SecondaryButton,
+  SectionHeader,
+} from "@/components/shell";
 
 export const metadata: Metadata = { title: "Add a paper \u00b7 Fair Grade" };
 
+const course = { id: "hy335", code: "HY335", name: "Computer Networks" };
+const exam = { id: "midterm", name: "Midterm" };
+
 export default function AddPaperPage() {
   return (
-    <><div className="fg-shell" style={{"display": "flex", "minHeight": "100vh", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "color": "var(--text)", "background": "radial-gradient(1200px 520px at 30% -8%, var(--surface) 0%, rgba(var(--surface-rgb), 0) 70%), var(--bg)"}}><aside className="fg-side" style={{"width": "252px", "flexShrink": "0", "padding": "14px 0 14px 14px"}}><div style={{"position": "sticky", "top": "14px", "minHeight": "calc(100vh - 28px)", "background": "rgba(var(--surface-rgb), 0.62)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "borderRadius": "24px", "padding": "18px 12px", "display": "flex", "flexDirection": "column"}}><div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "2px 2px 16px 8px"}}><svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><rect width="32" height="32" rx="10" fill="var(--ink)" /><rect x="8" y="11" width="16" height="2.6" rx="1.3" fill="var(--surface)" /><rect x="8" y="18.4" width="11" height="2.6" rx="1.3" fill="var(--surface)" /><circle cx="23" cy="19.7" r="2.2" fill="var(--red)" /></svg><span style={{"fontSize": "16px", "fontWeight": "600", "letterSpacing": "-0.02em", "color": "var(--ink)", "flexGrow": "1"}}>Fair Grade</span><label className="fg-theme-switch fg-press" title="Light or dark" style={{"position": "relative", "display": "inline-flex", "alignItems": "center", "width": "62px", "height": "32px", "padding": "3px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "boxShadow": "inset 0 0 0 1px rgba(var(--ink-rgb), 0.06)", "cursor": "pointer", "flexShrink": "0"}}><input type="checkbox" className="fg-theme-input" aria-label="Dark mode" /><span className="fg-theme-thumb" style={{"position": "absolute", "left": "3px", "top": "3px", "width": "26px", "height": "26px", "borderRadius": "999px", "background": "var(--raised)", "boxShadow": "0 1px 2px rgba(var(--shadow-rgb), 0.14), 0 0 0 1px rgba(var(--ink-rgb), 0.06)"}}></span><span className="fg-theme-sun" style={{"position": "relative", "width": "26px", "height": "26px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="12" cy="12" r="3.6" /><path d="M12 3.5v1.6M12 18.9v1.6M3.5 12h1.6M18.9 12h1.6M6 6l1.1 1.1M16.9 16.9L18 18M18 6l-1.1 1.1M7.1 16.9L6 18" /></svg></span><span className="fg-theme-moon" style={{"position": "relative", "width": "26px", "height": "26px", "marginLeft": "2px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M19 14.2A7.5 7.5 0 0 1 9.8 5a7.5 7.5 0 1 0 9.2 9.2z" /></svg></span></label></div><div className="fg-dark" style={{"display": "flex", "alignItems": "center", "gap": "11px", "padding": "11px 12px", "margin": "0 0 14px", "borderRadius": "16px", "background": "radial-gradient(180px 90px at 100% 0%, #2A3142 0%, rgba(42, 49, 66, 0) 70%), var(--ink)", "boxShadow": "inset 0 1px 0 rgba(var(--surface-rgb), 0.08), 0 12px 26px -16px rgba(var(--shadow-rgb), 0.75)"}}><span style={{"width": "32px", "height": "32px", "borderRadius": "10px", "background": "rgba(var(--surface-rgb), 0.09)", "boxShadow": "inset 0 0 0 1px rgba(var(--surface-rgb), 0.10)", "color": "#9EE0D0", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "flexShrink": "0"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 19l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L9 18z" /><path d="M14.5 6.5l3 3" /></svg></span><span style={{"display": "flex", "flexDirection": "column", "minWidth": "0", "flexGrow": "1"}}><span style={{"fontSize": "11.5px", "color": "#8E95A3"}}>You are signed in as</span><span style={{"fontSize": "14.5px", "fontWeight": "600", "letterSpacing": "-0.01em", "color": "var(--surface)", "whiteSpace": "nowrap"}}>Teaching assistant</span></span><span style={{"width": "8px", "height": "8px", "borderRadius": "999px", "background": "#9EE0D0", "boxShadow": "0 0 0 3px rgba(var(--surface-rgb), 0.06)", "flexShrink": "0"}} title="Grader"></span></div><button type="button" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "10px", "width": "100%", "padding": "10px 12px", "marginBottom": "20px", "border": "0", "borderRadius": "14px", "background": "var(--surface)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "cursor": "pointer", "textAlign": "left", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif"}}><span style={{"width": "30px", "height": "30px", "borderRadius": "9px", "background": "var(--blue-t)", "color": "var(--blue-x)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "11px", "fontWeight": "600"}}>335</span><span style={{"display": "flex", "flexDirection": "column", "minWidth": "0", "flexGrow": "1"}}><span style={{"fontSize": "13.5px", "fontWeight": "600", "color": "var(--ink)"}}>HY335</span><span style={{"fontSize": "12px", "color": "var(--muted)"}}>Computer Networks</span></span><span style={{"color": "var(--faint)"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M8 9.5l4-4 4 4" /><path d="M8 14.5l4 4 4-4" /></svg></span></button><button type="button" className="fg-press" aria-label="Search, shortcut Command K" style={{"display": "flex", "alignItems": "center", "gap": "10px", "width": "100%", "height": "38px", "padding": "0 8px 0 12px", "marginBottom": "18px", "border": "0", "borderRadius": "12px", "background": "rgba(var(--ink-rgb), 0.04)", "color": "var(--muted)", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "13.5px", "cursor": "pointer"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4 4" /></svg><span style={{"flexGrow": "1", "textAlign": "left"}}>Search</span><kbd style={{"display": "inline-flex", "alignItems": "center", "height": "22px", "padding": "0 7px", "borderRadius": "7px", "background": "var(--surface)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 0 rgba(var(--ink-rgb), 0.11)", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "11.5px", "fontWeight": "500", "color": "var(--muted)"}}>⌘K</kbd></button><nav aria-label="Main" style={{"display": "flex", "flexDirection": "column", "gap": "2px"}}><div style={{"fontSize": "12px", "color": "var(--faint)", "padding": "0 12px 6px"}}>HY335</div><Link href="/courses/hy335" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "11px", "height": "38px", "padding": "0 12px", "borderRadius": "12px", "textDecoration": "none", "fontSize": "14px", "fontWeight": "500", "color": "var(--muted)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M13.5 3.5H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z" /><path d="M13.5 3.5V9H19" /></svg><span>Exams</span></Link><div style={{"fontSize": "12px", "color": "var(--faint)", "padding": "20px 12px 6px"}}>Midterm</div><Link href="/courses/hy335/exams/midterm/stats" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "11px", "height": "38px", "padding": "0 12px", "borderRadius": "12px", "textDecoration": "none", "fontSize": "14px", "fontWeight": "500", "color": "var(--muted)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M4 12h3l2.5-6 5 12 2.5-6h3" /></svg><span>My stats</span></Link><Link href="/courses/hy335/exams/midterm/papers" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "11px", "height": "38px", "padding": "0 12px", "borderRadius": "12px", "textDecoration": "none", "fontSize": "14px", "fontWeight": "500", "color": "var(--muted)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 19l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L9 18z" /><path d="M14.5 6.5l3 3" /></svg><span>My papers</span></Link><Link href="/courses/hy335/exams/midterm/papers/new" aria-current="page" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "11px", "height": "38px", "padding": "0 12px", "borderRadius": "12px", "textDecoration": "none", "fontSize": "14px", "fontWeight": "500", "background": "var(--raised)", "color": "var(--ink)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07), 0 1px 2px rgba(var(--shadow-rgb), 0.06)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M12 15.5V4.5" /><path d="M7.5 9l4.5-4.5L16.5 9" /><path d="M4.5 15v3a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3" /></svg><span>Add paper</span></Link><div style={{"fontSize": "12px", "color": "var(--faint)", "padding": "20px 12px 6px"}}>Workspace</div><Link href="/courses" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "11px", "height": "38px", "padding": "0 12px", "borderRadius": "12px", "textDecoration": "none", "fontSize": "14px", "fontWeight": "500", "color": "var(--muted)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M4 5.5h6.5a2 2 0 0 1 2 2V19a1.6 1.6 0 0 0-1.6-1.6H4z" /><path d="M20 5.5h-6.5a2 2 0 0 0-2 2V19a1.6 1.6 0 0 1 1.6-1.6H20z" /></svg><span>All courses</span></Link></nav><div style={{"flexGrow": "1"}}></div><div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "12px 6px 2px 8px", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><span style={{"width": "32px", "height": "32px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "13px", "fontWeight": "600", "flexShrink": "0"}}>N</span><div style={{"display": "flex", "flexDirection": "column", "minWidth": "0", "flexGrow": "1"}}><span style={{"fontSize": "13.5px", "fontWeight": "600", "color": "var(--ink)"}}>Nikos Georgiou</span><span style={{"marginTop": "3px"}}><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "22px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "color": "var(--ink)", "fontSize": "11.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 19l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L9 18z" /><path d="M14.5 6.5l3 3" /></svg>TA</span></span></div><Link href="/login" aria-label="Log out" className="fg-press" style={{"width": "40px", "height": "40px", "borderRadius": "999px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "background": "transparent", "color": "var(--muted)", "border": "0", "cursor": "pointer", "textDecoration": "none"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4" /><path d="M10 16l-4-4 4-4" /><path d="M6 12h9" /></svg></Link></div></div></aside><main style={{"flexGrow": "1", "minWidth": "0", "padding": "26px 44px 96px"}}><div style={{"maxWidth": "1120px", "margin": "0 auto", "display": "flex", "flexDirection": "column", "gap": "28px"}}><div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "gap": "16px", "minHeight": "40px", "flexWrap": "wrap"}}><div style={{"display": "flex", "alignItems": "center", "gap": "8px", "fontSize": "13.5px", "fontWeight": "500"}}><span style={{"color": "var(--muted)"}}><Link href="/courses/hy335" style={{"color": "var(--muted)", "textDecoration": "none"}}>HY335 Computer Networks</Link></span><span style={{"color": "var(--faint)", "padding": "0 2px"}}>/</span><span style={{"color": "var(--muted)"}}>Midterm</span><span style={{"color": "var(--faint)", "padding": "0 2px"}}>/</span><span style={{"color": "var(--muted)"}}><Link href="/courses/hy335/exams/midterm/papers" style={{"color": "var(--muted)", "textDecoration": "none"}}>My papers</Link></span><span style={{"color": "var(--faint)", "padding": "0 2px"}}>/</span><span style={{"color": "var(--ink)"}}>Add paper</span></div><div style={{"display": "flex", "alignItems": "center", "gap": "10px", "flexWrap": "wrap"}}><Link href="/courses/hy335/exams/midterm/papers" className="fg-press" style={{"display": "inline-flex", "alignItems": "center", "gap": "8px", "height": "40px", "padding": "0 16px", "borderRadius": "999px", "background": "var(--surface)", "color": "var(--ink)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "border": "0", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "14px", "fontWeight": "500", "textDecoration": "none", "cursor": "pointer", "whiteSpace": "nowrap"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" /></svg><span>Cancel</span></Link></div></div><div className="fg-in"><div><h1 style={{"margin": "0", "fontSize": "34px", "fontWeight": "600", "letterSpacing": "-0.035em", "lineHeight": "1.1", "color": "var(--ink)"}}>Add a paper</h1><p style={{"margin": "10px 0 0", "fontSize": "15px", "lineHeight": "1.55", "color": "var(--muted)", "maxWidth": "620px"}}>Scan the whole paper into one PDF. Phone scanner apps work fine.</p></div></div><div className="fg-grid" style={{"display": "grid", "gridTemplateColumns": "repeat(12, minmax(0, 1fr))", "gap": "20px", "alignItems": "start"}}><div className="fg-span" style={{"gridColumn": "span 8", "minWidth": "0"}}><div className="fg-in fg-d1" style={{"background": "rgba(var(--ink-rgb), 0.028)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.05)", "borderRadius": "26px", "padding": "6px"}}><div style={{"background": "var(--surface)", "borderRadius": "20px", "padding": "28px", "boxShadow": "inset 0 1px 0 rgba(var(--surface-rgb), 0.9), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)"}}><div className="fg-grid" style={{"display": "grid", "gridTemplateColumns": "220px minmax(0, 1fr)", "gap": "20px", "alignItems": "end", "marginBottom": "22px"}}><div style={{"width": "100%"}}><label htmlFor="sid" style={{"display": "block", "fontSize": "13px", "fontWeight": "500", "color": "var(--text)", "marginBottom": "8px"}}>Student ID</label><div style={{"position": "relative"}}><input id="sid" type="text" defaultValue="csd5146" aria-label="Student ID" style={{"width": "100%", "height": "44px", "padding": "0 14px 0 14px", "border": "0", "borderRadius": "12px", "background": "var(--surface)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "14px", "color": "var(--text)", "outline": "none"}} /></div></div><p style={{"margin": "0 0 12px", "fontSize": "13px", "color": "var(--muted)", "lineHeight": "1.5"}}>Kept with the grade only. The AI never sees it.</p></div><div style={{"display": "flex", "alignItems": "center", "gap": "14px", "padding": "14px 16px", "borderRadius": "18px", "background": "rgba(var(--ink-rgb), 0.03)", "marginBottom": "22px"}}><span style={{"width": "40px", "height": "40px", "borderRadius": "12px", "background": "var(--red-t)", "color": "var(--red)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M13.5 3.5H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z" /><path d="M13.5 3.5V9H19" /></svg></span><span style={{"display": "flex", "flexDirection": "column", "flexGrow": "1"}}><span style={{"fontSize": "14px", "fontWeight": "500", "color": "var(--ink)"}}>midterm-csd5146.pdf</span><span style={{"fontSize": "12.5px", "color": "var(--muted)"}}>4 pages, 2.1 MB</span></span><button type="button" className="fg-press" style={{"display": "inline-flex", "alignItems": "center", "gap": "8px", "height": "40px", "padding": "0 16px", "borderRadius": "999px", "background": "var(--surface)", "color": "var(--ink)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "border": "0", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "14px", "fontWeight": "500", "textDecoration": "none", "cursor": "pointer", "whiteSpace": "nowrap"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M19.5 11A7.5 7.5 0 1 0 17.3 16.3" /><path d="M19.5 5v6h-6" /></svg><span>Replace</span></button></div><div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "baseline", "marginBottom": "14px"}}><h3 style={{"margin": "0", "fontSize": "15px", "fontWeight": "600", "color": "var(--ink)"}}>Reading the handwriting</h3><span style={{"fontSize": "13px", "color": "var(--muted)", "fontVariantNumeric": "tabular-nums"}}>Page 3 of 4</span></div><div style={{"height": "4px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "marginBottom": "20px", "overflow": "hidden"}}><div style={{"width": "62%", "height": "4px", "borderRadius": "999px", "background": "var(--amber)"}}></div></div><div style={{"display": "grid", "gridTemplateColumns": "repeat(4, minmax(0, 1fr))", "gap": "16px"}}><div style={{"display": "flex", "flexDirection": "column", "gap": "10px"}}><div style={{"position": "relative", "aspectRatio": "0.72", "borderRadius": "10px", "background": "#FBFBF8", "boxShadow": "0 0 0 1.5px var(--green), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "padding": "18px 14px", "overflow": "hidden"}}><span style={{"display": "block", "height": "3px", "width": "82%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "70%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "88%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "64%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "76%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "58%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "80%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"position": "absolute", "left": "10px", "bottom": "10px"}}><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--green-t)", "color": "var(--green-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--green)"}}></span>Read</span></span></div><span style={{"fontSize": "12.5px", "color": "var(--muted)", "whiteSpace": "nowrap"}}>Page 1 · Q1</span></div><div style={{"display": "flex", "flexDirection": "column", "gap": "10px"}}><div style={{"position": "relative", "aspectRatio": "0.72", "borderRadius": "10px", "background": "#FBFBF8", "boxShadow": "0 0 0 1.5px var(--green), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "padding": "18px 14px", "overflow": "hidden"}}><span style={{"display": "block", "height": "3px", "width": "82%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "70%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "88%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "64%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "76%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "58%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "80%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"position": "absolute", "left": "10px", "bottom": "10px"}}><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--green-t)", "color": "var(--green-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--green)"}}></span>Read</span></span></div><span style={{"fontSize": "12.5px", "color": "var(--muted)", "whiteSpace": "nowrap"}}>Page 2 · Q1, Q2</span></div><div style={{"display": "flex", "flexDirection": "column", "gap": "10px"}}><div style={{"position": "relative", "aspectRatio": "0.72", "borderRadius": "10px", "background": "#FBFBF8", "boxShadow": "0 0 0 1.5px var(--amber), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "padding": "18px 14px", "overflow": "hidden"}}><span style={{"display": "block", "height": "3px", "width": "82%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "70%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "88%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "64%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "76%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "58%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "80%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span className="fg-bar" style={{"position": "absolute", "left": "0", "right": "0", "top": "0", "height": "40%", "background": "linear-gradient(180deg, rgba(243, 201, 119, 0) 0%, rgba(243, 201, 119, 0.35) 100%)"}}></span><span style={{"position": "absolute", "left": "10px", "bottom": "10px"}}><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--amber-t)", "color": "var(--amber-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--amber)"}}></span>Reading</span></span></div><span style={{"fontSize": "12.5px", "color": "var(--muted)", "whiteSpace": "nowrap"}}>Page 3 · Q2, Q3</span></div><div style={{"display": "flex", "flexDirection": "column", "gap": "10px"}}><div style={{"position": "relative", "aspectRatio": "0.72", "borderRadius": "10px", "background": "#FBFBF8", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "padding": "18px 14px", "overflow": "hidden"}}><span style={{"display": "block", "height": "3px", "width": "70%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "84%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "60%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "78%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"display": "block", "height": "3px", "width": "66%", "borderRadius": "9px", "background": "rgba(31, 42, 68, 0.35)", "marginBottom": "7px"}}></span><span style={{"position": "absolute", "left": "10px", "bottom": "10px"}}><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.05)", "color": "var(--text-2)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}>Waiting</span></span></div><span style={{"fontSize": "12.5px", "color": "var(--muted)", "whiteSpace": "nowrap"}}>Page 4</span></div></div></div></div></div><div className="fg-span" style={{"gridColumn": "span 4", "minWidth": "0"}}><div className="fg-in fg-d2" style={{"background": "rgba(var(--ink-rgb), 0.028)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.05)", "borderRadius": "26px", "padding": "6px"}}><div style={{"background": "var(--surface)", "borderRadius": "20px", "padding": "26px", "boxShadow": "inset 0 1px 0 rgba(var(--surface-rgb), 0.9), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)"}}><div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "flex-start", "gap": "16px", "marginBottom": "20px"}}><div><h2 style={{"margin": "0", "fontSize": "17px", "fontWeight": "600", "letterSpacing": "-0.02em", "color": "var(--ink)"}}>Answers found so far</h2><p style={{"margin": "5px 0 0", "fontSize": "13.5px", "lineHeight": "1.5", "color": "var(--muted)", "maxWidth": "560px"}}>Each answer goes under its question. You check them on the next step.</p></div></div><div style={{"display": "flex", "alignItems": "center", "gap": "12px", "padding": "12px 0", "borderTop": "0"}}><span style={{"height": "26px", "padding": "0 9px", "borderRadius": "8px", "background": "var(--ink)", "color": "var(--surface)", "fontSize": "12.5px", "fontWeight": "600", "display": "inline-flex", "alignItems": "center"}}>Q1</span><span style={{"flexGrow": "1", "fontSize": "13.5px", "color": "var(--ink)"}}>TCP three-way handshake</span><span style={{"fontSize": "12.5px", "color": "var(--muted)"}}>Pages 1–2</span></div><div style={{"display": "flex", "alignItems": "center", "gap": "12px", "padding": "12px 0", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><span style={{"height": "26px", "padding": "0 9px", "borderRadius": "8px", "background": "var(--ink)", "color": "var(--surface)", "fontSize": "12.5px", "fontWeight": "600", "display": "inline-flex", "alignItems": "center"}}>Q2</span><span style={{"flexGrow": "1", "fontSize": "13.5px", "color": "var(--ink)"}}>TCP and UDP</span><span style={{"fontSize": "12.5px", "color": "var(--muted)"}}>Pages 2–3</span></div><div style={{"display": "flex", "alignItems": "center", "gap": "12px", "padding": "12px 0", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><span style={{"height": "26px", "padding": "0 9px", "borderRadius": "8px", "background": "rgba(var(--ink-rgb), 0.06)", "color": "var(--muted)", "fontSize": "12.5px", "fontWeight": "600", "display": "inline-flex", "alignItems": "center"}}>Q3</span><span style={{"flexGrow": "1", "fontSize": "13.5px", "color": "var(--ink)"}}>DNS resolution</span><span style={{"fontSize": "12.5px", "color": "var(--muted)"}}>Looking…</span></div><div style={{"marginTop": "20px"}}><Link href="/papers/csd5146/grade" className="fg-press" style={{"display": "inline-flex", "alignItems": "center", "gap": "12px", "height": "48px", "padding": "6px 7px 6px 20px", "borderRadius": "999px", "background": "var(--ink)", "color": "var(--surface)", "boxShadow": "none", "border": "0", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "15px", "fontWeight": "500", "letterSpacing": "-0.01em", "textDecoration": "none", "cursor": "pointer", "whiteSpace": "nowrap", "width": "100%", "justifyContent": "space-between"}}><span>Continue to grading</span><span className="fg-knob" style={{"width": "34px", "height": "34px", "borderRadius": "999px", "background": "rgba(var(--surface-rgb), 0.12)", "color": "var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg></span></Link></div><p style={{"margin": "12px 0 0", "fontSize": "12.5px", "color": "var(--muted)", "lineHeight": "1.5"}}>Hard to read? You can correct any answer by hand on the next step.</p></div></div></div></div></div></main></div></>
+    <>
+      <AppShell course={course} exam={exam} active="add-paper" access="ta">
+        <PageHeader
+          crumbs={[
+            { label: "HY335 Computer Networks", href: "/courses/hy335" },
+            { label: "Midterm" },
+            { label: "My papers", href: "/courses/hy335/exams/midterm/papers" },
+            { label: "Add paper" },
+          ]}
+        >
+          <SecondaryButton
+            icon={
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                style={{ flexShrink: "0", display: "block" }}
+              >
+                <path d="M6.5 6.5l11 11M17.5 6.5l-11 11" />
+              </svg>
+            }
+            href="/courses/hy335/exams/midterm/papers"
+          >
+            <span>Cancel</span>
+          </SecondaryButton>
+        </PageHeader>
+        <PageTitle
+          title={<>Add a paper</>}
+          description={<>Scan the whole paper into one PDF. Phone scanner apps work fine.</>}
+        />
+        <div
+          className="fg-grid"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
+            gap: "20px",
+            alignItems: "start",
+          }}
+        >
+          <div className="fg-span" style={{ gridColumn: "span 8", minWidth: "0" }}>
+            <Card className="fg-in fg-d1" padding="28px">
+              <div
+                className="fg-grid"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "220px minmax(0, 1fr)",
+                  gap: "20px",
+                  alignItems: "end",
+                  marginBottom: "22px",
+                }}
+              >
+                <div style={{ width: "100%" }}>
+                  <label
+                    htmlFor="sid"
+                    style={{
+                      display: "block",
+                      fontSize: "13px",
+                      fontWeight: "500",
+                      color: "var(--text)",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    Student ID
+                  </label>
+                  <div style={{ position: "relative" }}>
+                    <input
+                      id="sid"
+                      type="text"
+                      defaultValue="csd5146"
+                      aria-label="Student ID"
+                      style={{
+                        width: "100%",
+                        height: "44px",
+                        padding: "0 14px 0 14px",
+                        border: "0",
+                        borderRadius: "12px",
+                        background: "var(--surface)",
+                        boxShadow:
+                          "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)",
+                        fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                        fontSize: "14px",
+                        color: "var(--text)",
+                        outline: "none",
+                      }}
+                    />
+                  </div>
+                </div>
+                <p
+                  style={{
+                    margin: "0 0 12px",
+                    fontSize: "13px",
+                    color: "var(--muted)",
+                    lineHeight: "1.5",
+                  }}
+                >
+                  Kept with the grade only. The AI never sees it.
+                </p>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "14px",
+                  padding: "14px 16px",
+                  borderRadius: "18px",
+                  background: "rgba(var(--ink-rgb), 0.03)",
+                  marginBottom: "22px",
+                }}
+              >
+                <span
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "12px",
+                    background: "var(--red-t)",
+                    color: "var(--red)",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                    style={{ flexShrink: "0", display: "block" }}
+                  >
+                    <path d="M13.5 3.5H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z" />
+                    <path d="M13.5 3.5V9H19" />
+                  </svg>
+                </span>
+                <span style={{ display: "flex", flexDirection: "column", flexGrow: "1" }}>
+                  <span style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>
+                    midterm-csd5146.pdf
+                  </span>
+                  <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>4 pages, 2.1 MB</span>
+                </span>
+                <SecondaryButton
+                  icon={
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                      style={{ flexShrink: "0", display: "block" }}
+                    >
+                      <path d="M19.5 11A7.5 7.5 0 1 0 17.3 16.3" />
+                      <path d="M19.5 5v6h-6" />
+                    </svg>
+                  }
+                >
+                  <span>Replace</span>
+                </SecondaryButton>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "baseline",
+                  marginBottom: "14px",
+                }}
+              >
+                <h3
+                  style={{ margin: "0", fontSize: "15px", fontWeight: "600", color: "var(--ink)" }}
+                >
+                  Reading the handwriting
+                </h3>
+                <span
+                  style={{
+                    fontSize: "13px",
+                    color: "var(--muted)",
+                    fontVariantNumeric: "tabular-nums",
+                  }}
+                >
+                  Page 3 of 4
+                </span>
+              </div>
+              <div
+                style={{
+                  height: "4px",
+                  borderRadius: "999px",
+                  background: "rgba(var(--ink-rgb), 0.06)",
+                  marginBottom: "20px",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    width: "62%",
+                    height: "4px",
+                    borderRadius: "999px",
+                    background: "var(--amber)",
+                  }}
+                ></div>
+              </div>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+                  gap: "16px",
+                }}
+              >
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  <div
+                    style={{
+                      position: "relative",
+                      aspectRatio: "0.72",
+                      borderRadius: "10px",
+                      background: "#FBFBF8",
+                      boxShadow:
+                        "0 0 0 1.5px var(--green), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)",
+                      padding: "18px 14px",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "82%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "70%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "88%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "64%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "76%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "58%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "80%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span style={{ position: "absolute", left: "10px", bottom: "10px" }}>
+                      <Pill tone="green" dot>
+                        Read
+                      </Pill>
+                    </span>
+                  </div>
+                  <span style={{ fontSize: "12.5px", color: "var(--muted)", whiteSpace: "nowrap" }}>
+                    Page 1 · Q1
+                  </span>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  <div
+                    style={{
+                      position: "relative",
+                      aspectRatio: "0.72",
+                      borderRadius: "10px",
+                      background: "#FBFBF8",
+                      boxShadow:
+                        "0 0 0 1.5px var(--green), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)",
+                      padding: "18px 14px",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "82%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "70%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "88%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "64%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "76%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "58%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "80%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span style={{ position: "absolute", left: "10px", bottom: "10px" }}>
+                      <Pill tone="green" dot>
+                        Read
+                      </Pill>
+                    </span>
+                  </div>
+                  <span style={{ fontSize: "12.5px", color: "var(--muted)", whiteSpace: "nowrap" }}>
+                    Page 2 · Q1, Q2
+                  </span>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  <div
+                    style={{
+                      position: "relative",
+                      aspectRatio: "0.72",
+                      borderRadius: "10px",
+                      background: "#FBFBF8",
+                      boxShadow:
+                        "0 0 0 1.5px var(--amber), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)",
+                      padding: "18px 14px",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "82%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "70%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "88%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "64%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "76%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "58%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "80%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      className="fg-bar"
+                      style={{
+                        position: "absolute",
+                        left: "0",
+                        right: "0",
+                        top: "0",
+                        height: "40%",
+                        background:
+                          "linear-gradient(180deg, rgba(243, 201, 119, 0) 0%, rgba(243, 201, 119, 0.35) 100%)",
+                      }}
+                    ></span>
+                    <span style={{ position: "absolute", left: "10px", bottom: "10px" }}>
+                      <Pill tone="amber" dot>
+                        Reading
+                      </Pill>
+                    </span>
+                  </div>
+                  <span style={{ fontSize: "12.5px", color: "var(--muted)", whiteSpace: "nowrap" }}>
+                    Page 3 · Q2, Q3
+                  </span>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  <div
+                    style={{
+                      position: "relative",
+                      aspectRatio: "0.72",
+                      borderRadius: "10px",
+                      background: "#FBFBF8",
+                      boxShadow:
+                        "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)",
+                      padding: "18px 14px",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "70%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "84%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "60%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "78%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "3px",
+                        width: "66%",
+                        borderRadius: "9px",
+                        background: "rgba(31, 42, 68, 0.35)",
+                        marginBottom: "7px",
+                      }}
+                    ></span>
+                    <span style={{ position: "absolute", left: "10px", bottom: "10px" }}>
+                      <Pill>Waiting</Pill>
+                    </span>
+                  </div>
+                  <span style={{ fontSize: "12.5px", color: "var(--muted)", whiteSpace: "nowrap" }}>
+                    Page 4
+                  </span>
+                </div>
+              </div>
+            </Card>
+          </div>
+          <div className="fg-span" style={{ gridColumn: "span 4", minWidth: "0" }}>
+            <Card className="fg-in fg-d2" padding="26px">
+              <SectionHeader
+                title={<>Answers found so far</>}
+                description={
+                  <>Each answer goes under its question. You check them on the next step.</>
+                }
+              />
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  padding: "12px 0",
+                  borderTop: "0",
+                }}
+              >
+                <span
+                  style={{
+                    height: "26px",
+                    padding: "0 9px",
+                    borderRadius: "8px",
+                    background: "var(--ink)",
+                    color: "var(--surface)",
+                    fontSize: "12.5px",
+                    fontWeight: "600",
+                    display: "inline-flex",
+                    alignItems: "center",
+                  }}
+                >
+                  Q1
+                </span>
+                <span style={{ flexGrow: "1", fontSize: "13.5px", color: "var(--ink)" }}>
+                  TCP three-way handshake
+                </span>
+                <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>Pages 1–2</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  padding: "12px 0",
+                  borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                }}
+              >
+                <span
+                  style={{
+                    height: "26px",
+                    padding: "0 9px",
+                    borderRadius: "8px",
+                    background: "var(--ink)",
+                    color: "var(--surface)",
+                    fontSize: "12.5px",
+                    fontWeight: "600",
+                    display: "inline-flex",
+                    alignItems: "center",
+                  }}
+                >
+                  Q2
+                </span>
+                <span style={{ flexGrow: "1", fontSize: "13.5px", color: "var(--ink)" }}>
+                  TCP and UDP
+                </span>
+                <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>Pages 2–3</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  padding: "12px 0",
+                  borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                }}
+              >
+                <span
+                  style={{
+                    height: "26px",
+                    padding: "0 9px",
+                    borderRadius: "8px",
+                    background: "rgba(var(--ink-rgb), 0.06)",
+                    color: "var(--muted)",
+                    fontSize: "12.5px",
+                    fontWeight: "600",
+                    display: "inline-flex",
+                    alignItems: "center",
+                  }}
+                >
+                  Q3
+                </span>
+                <span style={{ flexGrow: "1", fontSize: "13.5px", color: "var(--ink)" }}>
+                  DNS resolution
+                </span>
+                <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>Looking…</span>
+              </div>
+              <div style={{ marginTop: "20px" }}>
+                <Button
+                  size="lg"
+                  fullWidth
+                  href="/papers/csd5146/grade"
+                  icon={
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                      style={{ flexShrink: "0", display: "block" }}
+                    >
+                      <path d="M5 12h14" />
+                      <path d="M13 6l6 6-6 6" />
+                    </svg>
+                  }
+                >
+                  Continue to grading
+                </Button>
+              </div>
+              <p
+                style={{
+                  margin: "12px 0 0",
+                  fontSize: "12.5px",
+                  color: "var(--muted)",
+                  lineHeight: "1.5",
+                }}
+              >
+                Hard to read? You can correct any answer by hand on the next step.
+              </p>
+            </Card>
+          </div>
+        </div>
+      </AppShell>
+    </>
   );
 }

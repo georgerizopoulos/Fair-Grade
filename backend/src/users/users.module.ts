@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { UsersController } from './users.controller.js';
+import { UsersService } from './users.service.js';
 
-// Owned by Γιώργος. Add your controllers and providers here; this module is
-// already wired into app.module.ts.
 @Module({
   controllers: [UsersController],
-  providers: [],
+  providers: [UsersService],
+  exports: [UsersService],
 })
 export class UsersModule {}

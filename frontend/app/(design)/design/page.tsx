@@ -1,11 +1,924 @@
-// Static design, generated from design-reference/html/Main.html.
-// Demo content only: nothing here talks to the API yet.
+// Static design, generated from design-reference/html/Main.html
+// by frontend/scripts/html2jsx.py. Demo content only: nothing here talks
+// to the API yet. When wiring it up, replace the constants with real data.
 import type { Metadata } from "next";
+import {
+  Button,
+  Card,
+  Pill,
+  SecondaryButton,
+  SectionHeader,
+  ThemeSwitch,
+} from "@/components/shell";
 
 export const metadata: Metadata = { title: "Fair Grade design system \u00b7 Fair Grade" };
 
 export default function DesignSystemPage() {
   return (
-    <><div style={{"minHeight": "100vh", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "color": "var(--text)", "background": "radial-gradient(1200px 520px at 20% -10%, var(--surface) 0%, rgba(var(--surface-rgb), 0) 70%), var(--bg)", "padding": "72px 64px 96px"}}><div style={{"maxWidth": "1240px", "margin": "0 auto", "display": "flex", "flexDirection": "column", "gap": "28px"}}><div className="fg-in" style={{"display": "flex", "justifyContent": "space-between", "alignItems": "flex-end", "gap": "24px", "flexWrap": "wrap"}}><div style={{"display": "flex", "alignItems": "center", "gap": "18px"}}><svg width="56" height="56" viewBox="0 0 32 32" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><rect width="32" height="32" rx="10" fill="var(--ink)" /><rect x="8" y="11" width="16" height="2.6" rx="1.3" fill="var(--surface)" /><rect x="8" y="18.4" width="11" height="2.6" rx="1.3" fill="var(--surface)" /><circle cx="23" cy="19.7" r="2.2" fill="var(--red)" /></svg><div><span style={{"display": "inline-flex", "alignItems": "center", "height": "24px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--surface)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11)", "color": "var(--muted)", "fontSize": "10.5px", "fontWeight": "500", "letterSpacing": "0.16em", "textTransform": "uppercase"}}>Design system</span><h1 style={{"margin": "12px 0 0", "fontSize": "52px", "fontWeight": "600", "letterSpacing": "-0.045em", "lineHeight": "1", "color": "var(--ink)"}}>Fair Grade</h1></div></div><div style={{"display": "flex", "alignItems": "flex-start", "gap": "24px"}}><p style={{"margin": "0", "maxWidth": "480px", "fontSize": "15px", "lineHeight": "1.6", "color": "var(--muted)"}}>A quiet instrument for people who grade. TAs scan and grade papers, the AI grades the same answers, and the report shows where they disagree.</p><label className="fg-theme-switch fg-press" title="Light or dark" style={{"position": "relative", "display": "inline-flex", "alignItems": "center", "width": "62px", "height": "32px", "padding": "3px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "boxShadow": "inset 0 0 0 1px rgba(var(--ink-rgb), 0.06)", "cursor": "pointer", "flexShrink": "0"}}><input type="checkbox" className="fg-theme-input" aria-label="Dark mode" /><span className="fg-theme-thumb" style={{"position": "absolute", "left": "3px", "top": "3px", "width": "26px", "height": "26px", "borderRadius": "999px", "background": "var(--raised)", "boxShadow": "0 1px 2px rgba(var(--shadow-rgb), 0.14), 0 0 0 1px rgba(var(--ink-rgb), 0.06)"}}></span><span className="fg-theme-sun" style={{"position": "relative", "width": "26px", "height": "26px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="12" cy="12" r="3.6" /><path d="M12 3.5v1.6M12 18.9v1.6M3.5 12h1.6M18.9 12h1.6M6 6l1.1 1.1M16.9 16.9L18 18M18 6l-1.1 1.1M7.1 16.9L6 18" /></svg></span><span className="fg-theme-moon" style={{"position": "relative", "width": "26px", "height": "26px", "marginLeft": "2px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M19 14.2A7.5 7.5 0 0 1 9.8 5a7.5 7.5 0 1 0 9.2 9.2z" /></svg></span></label></div></div><div className="fg-grid" style={{"display": "grid", "gridTemplateColumns": "repeat(12, minmax(0, 1fr))", "gap": "20px", "alignItems": "start"}}><div className="fg-span" style={{"gridColumn": "span 7", "minWidth": "0"}}><div className="fg-in fg-d1" style={{"background": "rgba(var(--ink-rgb), 0.028)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.05)", "borderRadius": "26px", "padding": "6px"}}><div style={{"background": "var(--surface)", "borderRadius": "20px", "padding": "28px", "boxShadow": "inset 0 1px 0 rgba(var(--surface-rgb), 0.9), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)"}}><div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "flex-start", "gap": "16px", "marginBottom": "20px"}}><div><h2 style={{"margin": "0", "fontSize": "17px", "fontWeight": "600", "letterSpacing": "-0.02em", "color": "var(--ink)"}}>Colour</h2><p style={{"margin": "5px 0 0", "fontSize": "13.5px", "lineHeight": "1.5", "color": "var(--muted)", "maxWidth": "560px"}}>Red and blue are never decoration. They mean stricter or more lenient than the AI.</p></div></div><div style={{"display": "grid", "gridTemplateColumns": "repeat(3, minmax(0, 1fr))", "gap": "18px"}}><div style={{"display": "flex", "flexDirection": "column", "gap": "10px"}}><span style={{"display": "block", "height": "76px", "borderRadius": "16px", "background": "var(--ink)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"fontSize": "13.5px", "fontWeight": "600", "color": "var(--ink)"}}>Ink</span><span style={{"fontSize": "12.5px", "color": "var(--muted)"}}><span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "12px", "color": "var(--muted)", "letterSpacing": "-0.01em"}}>var(--ink)</span><br />Text, primary actions, the AI line</span></div><div style={{"display": "flex", "flexDirection": "column", "gap": "10px"}}><span style={{"display": "block", "height": "76px", "borderRadius": "16px", "background": "var(--bg)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"fontSize": "13.5px", "fontWeight": "600", "color": "var(--ink)"}}>Canvas</span><span style={{"fontSize": "12.5px", "color": "var(--muted)"}}><span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "12px", "color": "var(--muted)", "letterSpacing": "-0.01em"}}>var(--bg)</span><br />App background</span></div><div style={{"display": "flex", "flexDirection": "column", "gap": "10px"}}><span style={{"display": "block", "height": "76px", "borderRadius": "16px", "background": "var(--surface)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"fontSize": "13.5px", "fontWeight": "600", "color": "var(--ink)"}}>Surface</span><span style={{"fontSize": "12.5px", "color": "var(--muted)"}}><span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "12px", "color": "var(--muted)", "letterSpacing": "-0.01em"}}>var(--surface)</span><br />Panels and fields</span></div><div style={{"display": "flex", "flexDirection": "column", "gap": "10px"}}><span style={{"display": "block", "height": "76px", "borderRadius": "16px", "background": "var(--red)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"fontSize": "13.5px", "fontWeight": "600", "color": "var(--ink)"}}>Red pen</span><span style={{"fontSize": "12.5px", "color": "var(--muted)"}}><span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "12px", "color": "var(--muted)", "letterSpacing": "-0.01em"}}>var(--red)</span><br />Stricter than the AI, flags</span></div><div style={{"display": "flex", "flexDirection": "column", "gap": "10px"}}><span style={{"display": "block", "height": "76px", "borderRadius": "16px", "background": "var(--blue)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"fontSize": "13.5px", "fontWeight": "600", "color": "var(--ink)"}}>Ink blue</span><span style={{"fontSize": "12.5px", "color": "var(--muted)"}}><span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "12px", "color": "var(--muted)", "letterSpacing": "-0.01em"}}>var(--blue)</span><br />The AI, lenient side, focus</span></div><div style={{"display": "flex", "flexDirection": "column", "gap": "10px"}}><span style={{"display": "block", "height": "76px", "borderRadius": "16px", "background": "var(--green)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"fontSize": "13.5px", "fontWeight": "600", "color": "var(--ink)"}}>Pass green</span><span style={{"fontSize": "12.5px", "color": "var(--muted)"}}><span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "12px", "color": "var(--muted)", "letterSpacing": "-0.01em"}}>var(--green)</span><br />Submitted, graded</span></div></div></div></div></div><div className="fg-span" style={{"gridColumn": "span 5", "minWidth": "0"}}><div className="fg-in fg-d2" style={{"background": "rgba(var(--ink-rgb), 0.028)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.05)", "borderRadius": "26px", "padding": "6px"}}><div style={{"background": "var(--surface)", "borderRadius": "20px", "padding": "28px", "boxShadow": "inset 0 1px 0 rgba(var(--surface-rgb), 0.9), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)"}}><div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "flex-start", "gap": "16px", "marginBottom": "20px"}}><div><h2 style={{"margin": "0", "fontSize": "17px", "fontWeight": "600", "letterSpacing": "-0.02em", "color": "var(--ink)"}}>Type</h2><p style={{"margin": "5px 0 0", "fontSize": "13.5px", "lineHeight": "1.5", "color": "var(--muted)", "maxWidth": "560px"}}>Geist for the app, Geist Mono for IDs, Caveat only to render a scanned page.</p></div></div><div style={{"display": "grid", "gridTemplateColumns": "140px minmax(0, 1fr)", "gap": "20px", "alignItems": "center", "padding": "12px 0", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><div style={{"fontSize": "12.5px", "color": "var(--muted)"}}><div style={{"fontWeight": "600", "color": "var(--ink)"}}>Page title</div>34 / 600 / −3.5%</div><div><span style={{"fontSize": "34px", "fontWeight": "600", "letterSpacing": "-0.035em", "color": "var(--ink)"}}>Midterm report</span></div></div><div style={{"display": "grid", "gridTemplateColumns": "140px minmax(0, 1fr)", "gap": "20px", "alignItems": "center", "padding": "12px 0", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><div style={{"fontSize": "12.5px", "color": "var(--muted)"}}><div style={{"fontWeight": "600", "color": "var(--ink)"}}>Section</div>17 / 600</div><div><span style={{"fontSize": "17px", "fontWeight": "600", "letterSpacing": "-0.02em", "color": "var(--ink)"}}>Gap per question</span></div></div><div style={{"display": "grid", "gridTemplateColumns": "140px minmax(0, 1fr)", "gap": "20px", "alignItems": "center", "padding": "12px 0", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><div style={{"fontSize": "12.5px", "color": "var(--muted)"}}><div style={{"fontWeight": "600", "color": "var(--ink)"}}>Body</div>14–15 / 400</div><div><span style={{"fontSize": "15px", "color": "var(--text)"}}>The AI grades the same answers right after the TA submits.</span></div></div><div style={{"display": "grid", "gridTemplateColumns": "140px minmax(0, 1fr)", "gap": "20px", "alignItems": "center", "padding": "12px 0", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><div style={{"fontSize": "12.5px", "color": "var(--muted)"}}><div style={{"fontWeight": "600", "color": "var(--ink)"}}>Numbers</div>tabular</div><div><span style={{"fontSize": "30px", "fontWeight": "500", "letterSpacing": "-0.04em", "color": "var(--ink)", "fontVariantNumeric": "tabular-nums", "lineHeight": "1"}}>7 / 10</span></div></div><div style={{"display": "grid", "gridTemplateColumns": "140px minmax(0, 1fr)", "gap": "20px", "alignItems": "center", "padding": "12px 0", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><div style={{"fontSize": "12.5px", "color": "var(--muted)"}}><div style={{"fontWeight": "600", "color": "var(--ink)"}}>Student IDs</div>Geist Mono</div><div><span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "14px", "color": "var(--text)", "letterSpacing": "-0.01em"}}>csd5146</span></div></div><div style={{"display": "grid", "gridTemplateColumns": "140px minmax(0, 1fr)", "gap": "20px", "alignItems": "center", "padding": "12px 0", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><div style={{"fontSize": "12.5px", "color": "var(--muted)"}}><div style={{"fontWeight": "600", "color": "var(--ink)"}}>Scans</div>Caveat, only inside a scanned page</div><div><span style={{"fontFamily": "'Caveat', 'Bradley Hand', cursive", "fontSize": "26px", "color": "#1F2A44"}}>SYN, then SYN-ACK, then ACK</span></div></div></div></div></div><div className="fg-span" style={{"gridColumn": "span 5", "minWidth": "0"}}><div className="fg-in fg-d3" style={{"background": "rgba(var(--ink-rgb), 0.028)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.05)", "borderRadius": "26px", "padding": "6px"}}><div style={{"background": "var(--surface)", "borderRadius": "20px", "padding": "28px", "boxShadow": "inset 0 1px 0 rgba(var(--surface-rgb), 0.9), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)"}}><div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "flex-start", "gap": "16px", "marginBottom": "20px"}}><div><h2 style={{"margin": "0", "fontSize": "17px", "fontWeight": "600", "letterSpacing": "-0.02em", "color": "var(--ink)"}}>Actions and status</h2></div></div><div style={{"display": "flex", "flexWrap": "wrap", "gap": "12px", "alignItems": "center"}}><button type="button" className="fg-press" style={{"display": "inline-flex", "alignItems": "center", "gap": "12px", "height": "48px", "padding": "6px 7px 6px 20px", "borderRadius": "999px", "background": "var(--ink)", "color": "var(--surface)", "boxShadow": "none", "border": "0", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "15px", "fontWeight": "500", "letterSpacing": "-0.01em", "textDecoration": "none", "cursor": "pointer", "whiteSpace": "nowrap"}}><span>Submit grades</span><span className="fg-knob" style={{"width": "34px", "height": "34px", "borderRadius": "999px", "background": "rgba(var(--surface-rgb), 0.12)", "color": "var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span></button><button type="button" className="fg-press" style={{"display": "inline-flex", "alignItems": "center", "gap": "12px", "height": "48px", "padding": "6px 7px 6px 20px", "borderRadius": "999px", "background": "var(--surface)", "color": "var(--ink)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11)", "border": "0", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "15px", "fontWeight": "500", "letterSpacing": "-0.01em", "textDecoration": "none", "cursor": "pointer", "whiteSpace": "nowrap"}}><span>Add paper</span><span className="fg-knob" style={{"width": "34px", "height": "34px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.035)", "color": "var(--ink)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M12 5v14M5 12h14" /></svg></span></button><button type="button" className="fg-press" style={{"display": "inline-flex", "alignItems": "center", "gap": "8px", "height": "40px", "padding": "0 16px", "borderRadius": "999px", "background": "var(--surface)", "color": "var(--ink)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "border": "0", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "14px", "fontWeight": "500", "textDecoration": "none", "cursor": "pointer", "whiteSpace": "nowrap"}}><span>Save draft</span></button><button type="button" className="fg-press" style={{"display": "inline-flex", "alignItems": "center", "gap": "12px", "height": "40px", "padding": "6px 7px 6px 16px", "borderRadius": "999px", "background": "var(--red)", "color": "var(--surface)", "boxShadow": "none", "border": "0", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "14px", "fontWeight": "500", "letterSpacing": "-0.01em", "textDecoration": "none", "cursor": "pointer", "whiteSpace": "nowrap"}}><span>Remove access</span><span className="fg-knob" style={{"width": "28px", "height": "28px", "borderRadius": "999px", "background": "rgba(var(--surface-rgb), 0.16)", "color": "var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" /></svg></span></button></div><div style={{"display": "flex", "flexWrap": "wrap", "gap": "8px", "marginTop": "22px"}}><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--red-t)", "color": "var(--red-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--red)"}}></span>Flagged</span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--green-t)", "color": "var(--green-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--green)"}}></span>Submitted</span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--blue-t)", "color": "var(--blue-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--blue)"}}></span>AI graded</span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--amber-t)", "color": "var(--amber-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--amber)"}}></span>AI grading</span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.05)", "color": "var(--text-2)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--dot)"}}></span>Draft</span></div></div></div></div><div className="fg-span" style={{"gridColumn": "span 7", "minWidth": "0"}}><div className="fg-in fg-d4" style={{"background": "rgba(var(--ink-rgb), 0.028)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.05)", "borderRadius": "26px", "padding": "6px"}}><div style={{"background": "var(--surface)", "borderRadius": "20px", "padding": "28px", "boxShadow": "inset 0 1px 0 rgba(var(--surface-rgb), 0.9), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)"}}><div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "flex-start", "gap": "16px", "marginBottom": "20px"}}><div><h2 style={{"margin": "0", "fontSize": "17px", "fontWeight": "600", "letterSpacing": "-0.02em", "color": "var(--ink)"}}>The deviation ruler</h2><p style={{"margin": "5px 0 0", "fontSize": "13.5px", "lineHeight": "1.5", "color": "var(--muted)", "maxWidth": "560px"}}>Centre line is the AI. The soft band is the flag threshold, 15% of the question&apos;s points. The bar is a TA&apos;s average gap.</p></div></div><div style={{"display": "grid", "gridTemplateColumns": "170px minmax(0, 1fr) 120px", "gap": "18px", "alignItems": "center", "padding": "8px 0"}}><span style={{"fontSize": "14px", "fontWeight": "500"}}>Q2 TCP and UDP</span><div style={{"position": "relative", "height": "36px", "minWidth": "200px", "flexGrow": "1"}} aria-hidden="true"><span style={{"position": "absolute", "left": "38.75%", "width": "22.50%", "top": "4px", "bottom": "4px", "borderRadius": "8px", "background": "rgba(var(--ink-rgb), 0.05)"}}></span><span style={{"position": "absolute", "left": "0%", "top": "6px", "bottom": "6px", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "25%", "top": "6px", "bottom": "6px", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "75%", "top": "6px", "bottom": "6px", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "100%", "top": "6px", "bottom": "6px", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "50%", "top": "2px", "bottom": "2px", "width": "1.5px", "marginLeft": "-0.75px", "background": "var(--ink)"}}></span><span style={{"position": "absolute", "left": "23.75%", "top": "13.0px", "width": "26.25%", "height": "10px", "borderRadius": "999px", "background": "var(--red)", "opacity": "1"}}></span><span style={{"position": "absolute", "left": "23.75%", "top": "18.0px", "width": "12px", "height": "12px", "borderRadius": "999px", "background": "var(--surface)", "boxShadow": "0 0 0 2px var(--red)", "transform": "translate(-50%, -50%)"}}></span></div><span style={{"fontSize": "13.5px", "textAlign": "right", "color": "var(--red-x)", "fontVariantNumeric": "tabular-nums"}}>1.05 stricter</span></div><div style={{"display": "grid", "gridTemplateColumns": "170px minmax(0, 1fr) 120px", "gap": "18px", "alignItems": "center", "padding": "8px 0"}}><span style={{"fontSize": "14px", "fontWeight": "500"}}>Q1 Handshake</span><div style={{"position": "relative", "height": "36px", "minWidth": "200px", "flexGrow": "1"}} aria-hidden="true"><span style={{"position": "absolute", "left": "35.00%", "width": "30.00%", "top": "4px", "bottom": "4px", "borderRadius": "8px", "background": "rgba(var(--ink-rgb), 0.05)"}}></span><span style={{"position": "absolute", "left": "0%", "top": "6px", "bottom": "6px", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "25%", "top": "6px", "bottom": "6px", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "75%", "top": "6px", "bottom": "6px", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "100%", "top": "6px", "bottom": "6px", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "50%", "top": "2px", "bottom": "2px", "width": "1.5px", "marginLeft": "-0.75px", "background": "var(--ink)"}}></span><span style={{"position": "absolute", "left": "50.00%", "top": "13.0px", "width": "10.00%", "height": "10px", "borderRadius": "999px", "background": "var(--blue)", "opacity": "0.45"}}></span><span style={{"position": "absolute", "left": "60.00%", "top": "18.0px", "width": "12px", "height": "12px", "borderRadius": "999px", "background": "var(--surface)", "boxShadow": "0 0 0 2px var(--blue)", "transform": "translate(-50%, -50%)"}}></span></div><span style={{"fontSize": "13.5px", "textAlign": "right", "color": "var(--muted)", "fontVariantNumeric": "tabular-nums"}}>0.40 lenient</span></div><div style={{"display": "grid", "gridTemplateColumns": "170px minmax(0, 1fr) 120px", "gap": "18px", "alignItems": "center", "padding": "8px 0"}}><span style={{"fontSize": "14px", "fontWeight": "500"}}>Q3 DNS</span><div style={{"position": "relative", "height": "36px", "minWidth": "200px", "flexGrow": "1"}} aria-hidden="true"><span style={{"position": "absolute", "left": "38.75%", "width": "22.50%", "top": "4px", "bottom": "4px", "borderRadius": "8px", "background": "rgba(var(--ink-rgb), 0.05)"}}></span><span style={{"position": "absolute", "left": "0%", "top": "6px", "bottom": "6px", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "25%", "top": "6px", "bottom": "6px", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "75%", "top": "6px", "bottom": "6px", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "100%", "top": "6px", "bottom": "6px", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "50%", "top": "2px", "bottom": "2px", "width": "1.5px", "marginLeft": "-0.75px", "background": "var(--ink)"}}></span><span style={{"position": "absolute", "left": "50.00%", "top": "18.0px", "width": "12px", "height": "12px", "borderRadius": "999px", "background": "var(--surface)", "boxShadow": "0 0 0 2px var(--ink)", "transform": "translate(-50%, -50%)"}}></span></div><span style={{"fontSize": "13.5px", "textAlign": "right", "color": "var(--muted)", "fontVariantNumeric": "tabular-nums"}}>Aligned</span></div></div></div></div></div></div></div></>
+    <>
+      <div
+        style={{
+          minHeight: "100vh",
+          fontFamily: "'Geist', 'Segoe UI', system-ui, sans-serif",
+          color: "var(--text)",
+          background:
+            "radial-gradient(1200px 520px at 20% -10%, var(--surface) 0%, rgba(var(--surface-rgb), 0) 70%), var(--bg)",
+          padding: "72px 64px 96px",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "1240px",
+            margin: "0 auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: "28px",
+          }}
+        >
+          <div
+            className="fg-in"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+              gap: "24px",
+              flexWrap: "wrap",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
+              <svg
+                width="56"
+                height="56"
+                viewBox="0 0 32 32"
+                aria-hidden="true"
+                style={{ flexShrink: "0", display: "block" }}
+              >
+                <rect width="32" height="32" rx="10" fill="var(--ink)" />
+                <rect x="8" y="11" width="16" height="2.6" rx="1.3" fill="var(--surface)" />
+                <rect x="8" y="18.4" width="11" height="2.6" rx="1.3" fill="var(--surface)" />
+                <circle cx="23" cy="19.7" r="2.2" fill="var(--red)" />
+              </svg>
+              <div>
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    height: "24px",
+                    padding: "0 10px",
+                    borderRadius: "999px",
+                    background: "var(--surface)",
+                    boxShadow: "0 0 0 1px rgba(var(--ink-rgb), 0.11)",
+                    color: "var(--muted)",
+                    fontSize: "10.5px",
+                    fontWeight: "500",
+                    letterSpacing: "0.16em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Design system
+                </span>
+                <h1
+                  style={{
+                    margin: "12px 0 0",
+                    fontSize: "52px",
+                    fontWeight: "600",
+                    letterSpacing: "-0.045em",
+                    lineHeight: "1",
+                    color: "var(--ink)",
+                  }}
+                >
+                  Fair Grade
+                </h1>
+              </div>
+            </div>
+            <div style={{ display: "flex", alignItems: "flex-start", gap: "24px" }}>
+              <p
+                style={{
+                  margin: "0",
+                  maxWidth: "480px",
+                  fontSize: "15px",
+                  lineHeight: "1.6",
+                  color: "var(--muted)",
+                }}
+              >
+                A quiet instrument for people who grade. TAs scan and grade papers, the AI grades
+                the same answers, and the report shows where they disagree.
+              </p>
+              <ThemeSwitch />
+            </div>
+          </div>
+          <div
+            className="fg-grid"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
+              gap: "20px",
+              alignItems: "start",
+            }}
+          >
+            <div className="fg-span" style={{ gridColumn: "span 7", minWidth: "0" }}>
+              <Card className="fg-in fg-d1" padding="28px">
+                <SectionHeader
+                  title={<>Colour</>}
+                  description={
+                    <>
+                      Red and blue are never decoration. They mean stricter or more lenient than the
+                      AI.
+                    </>
+                  }
+                />
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                    gap: "18px",
+                  }}
+                >
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "76px",
+                        borderRadius: "16px",
+                        background: "var(--ink)",
+                        boxShadow: "0 0 0 1px rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span style={{ fontSize: "13.5px", fontWeight: "600", color: "var(--ink)" }}>
+                      Ink
+                    </span>
+                    <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>
+                      <span
+                        style={{
+                          fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                          fontSize: "12px",
+                          color: "var(--muted)",
+                          letterSpacing: "-0.01em",
+                        }}
+                      >
+                        var(--ink)
+                      </span>
+                      <br />
+                      Text, primary actions, the AI line
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "76px",
+                        borderRadius: "16px",
+                        background: "var(--bg)",
+                        boxShadow: "0 0 0 1px rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span style={{ fontSize: "13.5px", fontWeight: "600", color: "var(--ink)" }}>
+                      Canvas
+                    </span>
+                    <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>
+                      <span
+                        style={{
+                          fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                          fontSize: "12px",
+                          color: "var(--muted)",
+                          letterSpacing: "-0.01em",
+                        }}
+                      >
+                        var(--bg)
+                      </span>
+                      <br />
+                      App background
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "76px",
+                        borderRadius: "16px",
+                        background: "var(--surface)",
+                        boxShadow: "0 0 0 1px rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span style={{ fontSize: "13.5px", fontWeight: "600", color: "var(--ink)" }}>
+                      Surface
+                    </span>
+                    <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>
+                      <span
+                        style={{
+                          fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                          fontSize: "12px",
+                          color: "var(--muted)",
+                          letterSpacing: "-0.01em",
+                        }}
+                      >
+                        var(--surface)
+                      </span>
+                      <br />
+                      Panels and fields
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "76px",
+                        borderRadius: "16px",
+                        background: "var(--red)",
+                        boxShadow: "0 0 0 1px rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span style={{ fontSize: "13.5px", fontWeight: "600", color: "var(--ink)" }}>
+                      Red pen
+                    </span>
+                    <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>
+                      <span
+                        style={{
+                          fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                          fontSize: "12px",
+                          color: "var(--muted)",
+                          letterSpacing: "-0.01em",
+                        }}
+                      >
+                        var(--red)
+                      </span>
+                      <br />
+                      Stricter than the AI, flags
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "76px",
+                        borderRadius: "16px",
+                        background: "var(--blue)",
+                        boxShadow: "0 0 0 1px rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span style={{ fontSize: "13.5px", fontWeight: "600", color: "var(--ink)" }}>
+                      Ink blue
+                    </span>
+                    <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>
+                      <span
+                        style={{
+                          fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                          fontSize: "12px",
+                          color: "var(--muted)",
+                          letterSpacing: "-0.01em",
+                        }}
+                      >
+                        var(--blue)
+                      </span>
+                      <br />
+                      The AI, lenient side, focus
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    <span
+                      style={{
+                        display: "block",
+                        height: "76px",
+                        borderRadius: "16px",
+                        background: "var(--green)",
+                        boxShadow: "0 0 0 1px rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span style={{ fontSize: "13.5px", fontWeight: "600", color: "var(--ink)" }}>
+                      Pass green
+                    </span>
+                    <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>
+                      <span
+                        style={{
+                          fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                          fontSize: "12px",
+                          color: "var(--muted)",
+                          letterSpacing: "-0.01em",
+                        }}
+                      >
+                        var(--green)
+                      </span>
+                      <br />
+                      Submitted, graded
+                    </span>
+                  </div>
+                </div>
+              </Card>
+            </div>
+            <div className="fg-span" style={{ gridColumn: "span 5", minWidth: "0" }}>
+              <Card className="fg-in fg-d2" padding="28px">
+                <SectionHeader
+                  title={<>Type</>}
+                  description={
+                    <>
+                      Geist for the app, Geist Mono for IDs, Caveat only to render a scanned page.
+                    </>
+                  }
+                />
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "140px minmax(0, 1fr)",
+                    gap: "20px",
+                    alignItems: "center",
+                    padding: "12px 0",
+                    borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                  }}
+                >
+                  <div style={{ fontSize: "12.5px", color: "var(--muted)" }}>
+                    <div style={{ fontWeight: "600", color: "var(--ink)" }}>Page title</div>34 / 600
+                    / −3.5%
+                  </div>
+                  <div>
+                    <span
+                      style={{
+                        fontSize: "34px",
+                        fontWeight: "600",
+                        letterSpacing: "-0.035em",
+                        color: "var(--ink)",
+                      }}
+                    >
+                      Midterm report
+                    </span>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "140px minmax(0, 1fr)",
+                    gap: "20px",
+                    alignItems: "center",
+                    padding: "12px 0",
+                    borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                  }}
+                >
+                  <div style={{ fontSize: "12.5px", color: "var(--muted)" }}>
+                    <div style={{ fontWeight: "600", color: "var(--ink)" }}>Section</div>17 / 600
+                  </div>
+                  <div>
+                    <span
+                      style={{
+                        fontSize: "17px",
+                        fontWeight: "600",
+                        letterSpacing: "-0.02em",
+                        color: "var(--ink)",
+                      }}
+                    >
+                      Gap per question
+                    </span>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "140px minmax(0, 1fr)",
+                    gap: "20px",
+                    alignItems: "center",
+                    padding: "12px 0",
+                    borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                  }}
+                >
+                  <div style={{ fontSize: "12.5px", color: "var(--muted)" }}>
+                    <div style={{ fontWeight: "600", color: "var(--ink)" }}>Body</div>14–15 / 400
+                  </div>
+                  <div>
+                    <span style={{ fontSize: "15px", color: "var(--text)" }}>
+                      The AI grades the same answers right after the TA submits.
+                    </span>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "140px minmax(0, 1fr)",
+                    gap: "20px",
+                    alignItems: "center",
+                    padding: "12px 0",
+                    borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                  }}
+                >
+                  <div style={{ fontSize: "12.5px", color: "var(--muted)" }}>
+                    <div style={{ fontWeight: "600", color: "var(--ink)" }}>Numbers</div>tabular
+                  </div>
+                  <div>
+                    <span
+                      style={{
+                        fontSize: "30px",
+                        fontWeight: "500",
+                        letterSpacing: "-0.04em",
+                        color: "var(--ink)",
+                        fontVariantNumeric: "tabular-nums",
+                        lineHeight: "1",
+                      }}
+                    >
+                      7 / 10
+                    </span>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "140px minmax(0, 1fr)",
+                    gap: "20px",
+                    alignItems: "center",
+                    padding: "12px 0",
+                    borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                  }}
+                >
+                  <div style={{ fontSize: "12.5px", color: "var(--muted)" }}>
+                    <div style={{ fontWeight: "600", color: "var(--ink)" }}>Student IDs</div>Geist
+                    Mono
+                  </div>
+                  <div>
+                    <span
+                      style={{
+                        fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                        fontSize: "14px",
+                        color: "var(--text)",
+                        letterSpacing: "-0.01em",
+                      }}
+                    >
+                      csd5146
+                    </span>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "140px minmax(0, 1fr)",
+                    gap: "20px",
+                    alignItems: "center",
+                    padding: "12px 0",
+                    borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                  }}
+                >
+                  <div style={{ fontSize: "12.5px", color: "var(--muted)" }}>
+                    <div style={{ fontWeight: "600", color: "var(--ink)" }}>Scans</div>Caveat, only
+                    inside a scanned page
+                  </div>
+                  <div>
+                    <span
+                      style={{
+                        fontFamily: "'Caveat', 'Bradley Hand', cursive",
+                        fontSize: "26px",
+                        color: "#1F2A44",
+                      }}
+                    >
+                      SYN, then SYN-ACK, then ACK
+                    </span>
+                  </div>
+                </div>
+              </Card>
+            </div>
+            <div className="fg-span" style={{ gridColumn: "span 5", minWidth: "0" }}>
+              <Card className="fg-in fg-d3" padding="28px">
+                <SectionHeader title={<>Actions and status</>} />
+                <div
+                  style={{ display: "flex", flexWrap: "wrap", gap: "12px", alignItems: "center" }}
+                >
+                  <Button
+                    size="lg"
+                    icon={
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        style={{ flexShrink: "0", display: "block" }}
+                      >
+                        <path d="M5 12.5l4.5 4.5L19 7.5" />
+                      </svg>
+                    }
+                  >
+                    Submit grades
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    icon={
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        style={{ flexShrink: "0", display: "block" }}
+                      >
+                        <path d="M12 5v14M5 12h14" />
+                      </svg>
+                    }
+                  >
+                    Add paper
+                  </Button>
+                  <SecondaryButton>
+                    <span>Save draft</span>
+                  </SecondaryButton>
+                  <Button
+                    variant="danger"
+                    icon={
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        style={{ flexShrink: "0", display: "block" }}
+                      >
+                        <path d="M6.5 6.5l11 11M17.5 6.5l-11 11" />
+                      </svg>
+                    }
+                  >
+                    Remove access
+                  </Button>
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "22px" }}>
+                  <Pill tone="red" dot>
+                    Flagged
+                  </Pill>
+                  <Pill tone="green" dot>
+                    Submitted
+                  </Pill>
+                  <Pill tone="blue" dot>
+                    AI graded
+                  </Pill>
+                  <Pill tone="amber" dot>
+                    AI grading
+                  </Pill>
+                  <Pill dot>Draft</Pill>
+                </div>
+              </Card>
+            </div>
+            <div className="fg-span" style={{ gridColumn: "span 7", minWidth: "0" }}>
+              <Card className="fg-in fg-d4" padding="28px">
+                <SectionHeader
+                  title={<>The deviation ruler</>}
+                  description={
+                    <>
+                      Centre line is the AI. The soft band is the flag threshold, 15% of the
+                      question&apos;s points. The bar is a TA&apos;s average gap.
+                    </>
+                  }
+                />
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "170px minmax(0, 1fr) 120px",
+                    gap: "18px",
+                    alignItems: "center",
+                    padding: "8px 0",
+                  }}
+                >
+                  <span style={{ fontSize: "14px", fontWeight: "500" }}>Q2 TCP and UDP</span>
+                  <div
+                    style={{
+                      position: "relative",
+                      height: "36px",
+                      minWidth: "200px",
+                      flexGrow: "1",
+                    }}
+                    aria-hidden="true"
+                  >
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "38.75%",
+                        width: "22.50%",
+                        top: "4px",
+                        bottom: "4px",
+                        borderRadius: "8px",
+                        background: "rgba(var(--ink-rgb), 0.05)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "0%",
+                        top: "6px",
+                        bottom: "6px",
+                        width: "1px",
+                        background: "rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "25%",
+                        top: "6px",
+                        bottom: "6px",
+                        width: "1px",
+                        background: "rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "75%",
+                        top: "6px",
+                        bottom: "6px",
+                        width: "1px",
+                        background: "rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "100%",
+                        top: "6px",
+                        bottom: "6px",
+                        width: "1px",
+                        background: "rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "50%",
+                        top: "2px",
+                        bottom: "2px",
+                        width: "1.5px",
+                        marginLeft: "-0.75px",
+                        background: "var(--ink)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "23.75%",
+                        top: "13.0px",
+                        width: "26.25%",
+                        height: "10px",
+                        borderRadius: "999px",
+                        background: "var(--red)",
+                        opacity: "1",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "23.75%",
+                        top: "18.0px",
+                        width: "12px",
+                        height: "12px",
+                        borderRadius: "999px",
+                        background: "var(--surface)",
+                        boxShadow: "0 0 0 2px var(--red)",
+                        transform: "translate(-50%, -50%)",
+                      }}
+                    ></span>
+                  </div>
+                  <span
+                    style={{
+                      fontSize: "13.5px",
+                      textAlign: "right",
+                      color: "var(--red-x)",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    1.05 stricter
+                  </span>
+                </div>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "170px minmax(0, 1fr) 120px",
+                    gap: "18px",
+                    alignItems: "center",
+                    padding: "8px 0",
+                  }}
+                >
+                  <span style={{ fontSize: "14px", fontWeight: "500" }}>Q1 Handshake</span>
+                  <div
+                    style={{
+                      position: "relative",
+                      height: "36px",
+                      minWidth: "200px",
+                      flexGrow: "1",
+                    }}
+                    aria-hidden="true"
+                  >
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "35.00%",
+                        width: "30.00%",
+                        top: "4px",
+                        bottom: "4px",
+                        borderRadius: "8px",
+                        background: "rgba(var(--ink-rgb), 0.05)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "0%",
+                        top: "6px",
+                        bottom: "6px",
+                        width: "1px",
+                        background: "rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "25%",
+                        top: "6px",
+                        bottom: "6px",
+                        width: "1px",
+                        background: "rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "75%",
+                        top: "6px",
+                        bottom: "6px",
+                        width: "1px",
+                        background: "rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "100%",
+                        top: "6px",
+                        bottom: "6px",
+                        width: "1px",
+                        background: "rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "50%",
+                        top: "2px",
+                        bottom: "2px",
+                        width: "1.5px",
+                        marginLeft: "-0.75px",
+                        background: "var(--ink)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "50.00%",
+                        top: "13.0px",
+                        width: "10.00%",
+                        height: "10px",
+                        borderRadius: "999px",
+                        background: "var(--blue)",
+                        opacity: "0.45",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "60.00%",
+                        top: "18.0px",
+                        width: "12px",
+                        height: "12px",
+                        borderRadius: "999px",
+                        background: "var(--surface)",
+                        boxShadow: "0 0 0 2px var(--blue)",
+                        transform: "translate(-50%, -50%)",
+                      }}
+                    ></span>
+                  </div>
+                  <span
+                    style={{
+                      fontSize: "13.5px",
+                      textAlign: "right",
+                      color: "var(--muted)",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    0.40 lenient
+                  </span>
+                </div>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "170px minmax(0, 1fr) 120px",
+                    gap: "18px",
+                    alignItems: "center",
+                    padding: "8px 0",
+                  }}
+                >
+                  <span style={{ fontSize: "14px", fontWeight: "500" }}>Q3 DNS</span>
+                  <div
+                    style={{
+                      position: "relative",
+                      height: "36px",
+                      minWidth: "200px",
+                      flexGrow: "1",
+                    }}
+                    aria-hidden="true"
+                  >
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "38.75%",
+                        width: "22.50%",
+                        top: "4px",
+                        bottom: "4px",
+                        borderRadius: "8px",
+                        background: "rgba(var(--ink-rgb), 0.05)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "0%",
+                        top: "6px",
+                        bottom: "6px",
+                        width: "1px",
+                        background: "rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "25%",
+                        top: "6px",
+                        bottom: "6px",
+                        width: "1px",
+                        background: "rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "75%",
+                        top: "6px",
+                        bottom: "6px",
+                        width: "1px",
+                        background: "rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "100%",
+                        top: "6px",
+                        bottom: "6px",
+                        width: "1px",
+                        background: "rgba(var(--ink-rgb), 0.07)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "50%",
+                        top: "2px",
+                        bottom: "2px",
+                        width: "1.5px",
+                        marginLeft: "-0.75px",
+                        background: "var(--ink)",
+                      }}
+                    ></span>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "50.00%",
+                        top: "18.0px",
+                        width: "12px",
+                        height: "12px",
+                        borderRadius: "999px",
+                        background: "var(--surface)",
+                        boxShadow: "0 0 0 2px var(--ink)",
+                        transform: "translate(-50%, -50%)",
+                      }}
+                    ></span>
+                  </div>
+                  <span
+                    style={{
+                      fontSize: "13.5px",
+                      textAlign: "right",
+                      color: "var(--muted)",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    Aligned
+                  </span>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

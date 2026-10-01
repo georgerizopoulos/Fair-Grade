@@ -2,17 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { getCurrentUser, HOME_BY_ROLE } from "@/lib/auth";
+import { getCurrentUser, homeFor } from "@/lib/auth";
 
-// instructor ? /upload | ta ? /ta | logged out ? /login
+// Signed in → the role's home (instructor: courses, TA: their open exam). Otherwise → /login.
 export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
     getCurrentUser()
-      .then((u) => {
-        router.replace(u ? HOME_BY_ROLE[u.role] : "/login");
-      })
+      .then(async (u) => router.replace(u ? await homeFor(u) : "/login"))
       .catch(() => router.replace("/login"));
   }, [router]);
 

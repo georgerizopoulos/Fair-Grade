@@ -1,35 +1,46 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { IsIn, IsOptional } from 'class-validator';
-import { Roles } from '../common/auth.decorators.js';
-import type { Role } from '../generated/prisma/client.js';
-import { PrismaService } from '../prisma/prisma.service.js';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import {
+  type AuthUser,
+  CurrentUser,
+  Roles,
+} from '../common/auth.decorators.js';
+import { CreateUserDto, ListUsersQuery, UpdateUserDto } from './users.dto.js';
+import { UsersService } from './users.service.js';
 
-// Reference endpoint — copy this pattern for your own:
-//   - @Roles(...) on the handler → 401 without a token, 403 for the wrong role
+// Reference controller — copy this pattern for your own:
+//   - @Roles(...) → 401 without a token, 403 for the wrong role
 //   - a DTO class for @Query()/@Body() → 400 VALIDATION_ERROR naming the field
-//   - throw NotFoundException / ConflictException / ... → the error filter
-//     turns it into the API_SPEC error shape
-//   - return a plain object → JSON response
-
-class ListUsersQuery {
-  @IsOptional()
-  @IsIn(['instructor', 'ta'])
-  role?: Role;
-}
-
+//   - throw NotFoundException / ConflictException / ... in the service → the
+//     error filter turns it into the API_SPEC error shape
+@Roles('instructor')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly users: UsersService) {}
 
-  // API_SPEC #5
-  @Roles('instructor')
   @Get()
-  async list(@Query() query: ListUsersQuery) {
-    const users = await this.prisma.user.findMany({
-      where: query.role ? { role: query.role } : {},
-      select: { id: true, name: true, email: true, role: true },
-      orderBy: { name: 'asc' },
-    });
-    return { users };
+  list(@CurrentUser() user: AuthUser, @Query() query: ListUsersQuery) {
+    return this.users.list(user, query.role);
+  }
+
+  @Post()
+  create(@Body() dto: CreateUserDto) {
+    return this.users.create(dto);
+  }
+
+  @Patch(':id')
+  update(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+    @Body() dto: UpdateUserDto,
+  ) {
+    return this.users.update(user, id, dto);
   }
 }
