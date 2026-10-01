@@ -15,4 +15,20 @@ export class ReportsController {
   myStats(@CurrentUser() user: AuthUser, @Param('id') examId: string) {
     return this.reports.myStats(user, examId);
   }
+
+  @Roles('instructor')
+  @Get(':id/report')
+  examReport(@CurrentUser() user: AuthUser, @Param('id') examId: string) {
+    return this.reports.examReport(user, examId);
+  }
+
+  @Roles('instructor')
+  @Get(':id/report/tas/:taId')
+  taDetailReport(
+    @CurrentUser() user: AuthUser,
+    @Param('id') examId: string,
+    @Param('taId') taId: string,
+  ) {
+    return this.reports.taDetailReport(user, examId, taId);
+  }
 }
