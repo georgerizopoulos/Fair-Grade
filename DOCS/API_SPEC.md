@@ -156,8 +156,8 @@ The same rule is used everywhere:
 | `GET /exams/:id/my-stats` | TA member | ✅ | reports |
 | `GET /exams/:id/report` | owner | ✅ | reports |
 | `GET /exams/:id/report/tas/:taId` | owner | ✅ | reports |
-| `GET /courses/:id/stats` | owner | ⏳ | reports |
-| `GET /courses/:id/activity` | owner | ⏳ | activity |
+| `GET /courses/:id/stats` | owner | ✅ tested | courses + reports |
+| `GET /courses/:id/activity` | owner | ✅ tested | courses |
 | `GET /search?q=` | signed in | ⏳ | search |
 
 ---
@@ -362,7 +362,11 @@ Response: `{ id, name, heldAt, status, passMark, courseId, course: { id, code, n
 
 ### `PATCH /exams/:id` ✅
 
-Request: any of `{ name, heldAt (null clears it), passMark }`. Response: same shape as `GET /exams/:id`.
+Request: any of `{ name, heldAt (null clears it), passMark, status }`. Response: same shape as `GET /exams/:id`.
+
+Status flow: `DRAFT` → `QUESTIONS_READY` (set automatically by the first `PUT /exams/:id/questions`) → `OPEN` (TAs see it and add papers) → `PUBLISHED` (no new papers), and back to `OPEN` to reopen.
+- 400 when opening or publishing an exam without questions;
+- 409 when moving an exam that already has papers back to `DRAFT` or `QUESTIONS_READY`.
 
 ### `GET /exams/:id/questions` ✅
 
@@ -556,8 +560,11 @@ The TA's own numbers for one exam (type `MyStatsResponse`):
 - `worthASecondLook`: the TA's largest single-question gaps, with the AI's reasoning;
 - `leaderboard` and `badges`, which follow the course's `leaderboardVisibility`:
   - `OFF`: left out;
-  - `ANONYMOUS`: other TAs appear as "A TA";
-  - `NAMED`: other TAs appear with their names.
+  - `ANONYMOUS`: other TAs appear as "TA 2", "TA 3" (their rank);
+  - `NAMED`: other TAs appear with their names;
+  - the score is the TA's average |paper gap| in this exam, smallest first.
+
+The math (gaps, flags, totals) is in `backend/src/reports/report-math.ts`, shared by all three report endpoints.
 
 ### `GET /exams/:id/report` ✅ (owner)
 
@@ -567,15 +574,36 @@ Type `ExamReportResponse`:
 {
   "exam": { "id": "…", "name": "Midterm", "maxTotal": 10 },
   "course": { "id": "…", "code": "HY335", "name": "Computer Networks" },
-  "totalPapers": 58, "aiGradedPapers": 57,
+  "totalPapers": 59, "submittedPapers": 58, "aiGradedPapers": 57,
+  "aiGradingPapers": 1, "aiFailedPapers": 0,
+  "taAverage": 7.06, "aiAverage": 7.18, "flaggedTaCount": 1,
+  "headline": {
+    "taId": "…", "taName": "Maria Papadaki", "paperGap": -1.4, "papersGraded": 12,
+    "questionCode": "Q2", "questionTitle": "TCP and UDP", "maxPoints": 3,
+    "questionGap": -1.05, "threshold": 0.45
+  },
+  "questions": [
+    { "questionId": "…", "code": "Q2", "title": "TCP and UDP", "maxPoints": 3, "threshold": 0.45,
+      "tas": [{ "taId": "…", "taName": "Maria Papadaki", "averageGap": -1.05, "sampleSize": 12, "flagged": true }] }
+  ],
   "tas": [
     {
-      "taId": "…", "taName": "Maria Papadaki", "papersGraded": 12, "averageGap": -1.4,
-      "flagged": true, "flaggedQuestionCodes": ["Q2"]
+      "taId": "…", "taName": "Maria Papadaki", "email": "maria@demo.com", "papersGraded": 12,
+      "taAverage": 5.9, "aiAverage": 7.3, "paperGap": -1.4, "averageGap": 0.47,
+      "flagged": true, "flaggedQuestionCodes": ["Q2"],
+      "questions": [{ "code": "Q2", "averageGap": -1.05, "sampleSize": 12, "flagged": true }]
     }
+  ],
+  "papers": [
+    { "paperId": "…", "studentId": "csd5108", "taId": "…", "taName": "Maria Papadaki",
+      "taTotal": 4.5, "aiTotal": 7, "gap": -2.5, "mostlyCode": "Q2" }
   ]
 }
 ```
+
+- `headline`: the flagged TA with the largest paper gap, on their worst flagged question; `null` when nobody is flagged.
+- `tas`: flagged first, then by |paper gap|. `averageGap` is the mean |question gap| (kept for older clients).
+- `papers`: every AI-graded paper, largest |gap| first. The report's "Export grades" builds its CSV from it.
 
 ### `GET /exams/:id/report/tas/:taId` ✅ (owner)
 
@@ -583,23 +611,27 @@ Type `TaDetailReportResponse`:
 - the TA's summary: `papersGraded`, `taAverage`, `aiAverage`, `paperGap`, `flaggedQuestionCodes`;
 - `questions`: per question `sampleSize`, `taAverage`, `aiAverage`, `averageGap`, `threshold`, `flagged`;
 - `flaggedPapers`: keyed by question code, the papers behind each flag, largest gap first, with both points and the AI's reasoning;
+- `largestGaps`: the 3 largest single-answer gaps, on the worst flagged question (or anywhere when nothing is flagged), with the transcription, both points and the AI's reasoning;
 - `papers`: every paper the TA graded, with TA/AI points per question.
 
-Returns 404 for an unknown TA.
+Returns 404 for an unknown TA. A TA with no AI-graded papers yet gets empty lists.
 
-### `GET /courses/:id/stats?examId=` ⏳ (owner)
+### `GET /courses/:id/stats?examId=` ✅ (owner)
 
-Planned:
-- the trend of the exam average gap per exam, and the change since the first exam;
-- KPIs: papers, AI graded, average gap, flags, median time per paper;
-- a leaderboard: paper-weighted mean of |TA paper gap| across exams, with per-exam history and badges ("Closest to the AI", "Most improved", "Fast and accurate");
-- pass/fail at stake, with the papers;
-- the grade distribution (10 bins, TA vs AI, pass rates, averages);
-- the top 3 rubrics to tighten (spread of the TA average gap per question).
+Built by `buildCourseStats` in `backend/src/reports/course-stats.ts`, from AI-graded papers. With `examId` (404 if it isn't in the course) the KPIs, leaderboard averages, pass/fail, distribution and rubrics cover that exam only; the trend always covers every exam.
 
-### `GET /courses/:id/activity?limit=` ⏳ (owner)
+- `course` (with `leaderboardVisibility`), `exams`, `focusExamId`;
+- `trend`: per exam with graded papers, `averageGap` = mean over TAs of |TA paper gap|, `papers`, `flaggedTas`;
+- `headline`: `first` and `last` exam, relative `change`, `improvingEveryExam`, `tasCloser` / `tasCompared`, `tasFurther` (names);
+- `kpis`: `papersSubmitted`, `aiGraded`, `averageGap` (latest or focused exam), `flagsRaised` and `flagsByExam`, `medianMinutes` (scan to submit);
+- `atStake`: papers where TA and AI disagree on pass/fail, largest gap first (`failsWithTa`);
+- `leaderboard`: per TA `averageGap` (paper-weighted mean |paper gap|), `direction` (`stricter` / `lenient` / `even`), `sinceFirst`, `flags`, `medianMinutes`, `history` per exam, `badge` (`closest`, `improved`, `fast`);
+- `distribution`: 10 bins out of 10 (TA and AI), `passMark`, `passedTa`, `passedAi`, averages;
+- `questionsToTighten`: top 3 questions by spread (most lenient − strictest TA average gap, TAs with ≥ 3 papers), with the `outlier` when one TA is far from the rest.
 
-Planned: `{ activity: [{ id, type, actor: { id, name }, paperId, payload, createdAt }] }`, newest first. The entries are already written by the endpoints above.
+### `GET /courses/:id/activity?limit=` ✅ (owner)
+
+`{ activity: [{ id, type, createdAt, actor, ta, member, paper: { id, studentId, status }, exam, questionCode, averageGap, aiResult: { gap, mostlyCode, largestGap }, error }] }`, newest first, `limit` 1–100 (default 20). Names and exams referenced in the payload are resolved; `aiResult` is filled for `AI_GRADED` entries.
 
 ### `GET /search?q=` ⏳
 

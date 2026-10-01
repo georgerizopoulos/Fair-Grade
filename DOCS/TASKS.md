@@ -40,21 +40,21 @@ Step 4 needs **the seeded papers** (not done yet).
 | Reports: `my-stats`, exam report, per-TA report | Δημήτρης |
 | Pages wired to the API: courses list, course page, exam setup, add paper, grade, paper result | team |
 | `llm.client.ts`, prompt, response validation, `runGrading()` (old flow, to be reused) | Κώστας |
+| Seeded HY335 papers for the demo story, `scripts/check-demo-numbers.ts` | Γιώργος |
+| Real numbers in `my-stats`, exam report and TA report (`reports/report-math.ts`, unit-tested) | Γιώργος |
+| Course stats and activity feed endpoints (`reports/course-stats.ts`), exam status flow (draft → ready → open → published), e2e tests | Γιώργος |
+| Pages wired: TA My stats, Report, TA page, Course stats (with live activity and leaderboard visibility), Members, Users, New exam, open/publish an exam | Γιώργος |
 
 ## Left, in priority order
 
 | # | What | Who | Notes |
 |---|---|---|---|
-| 2 | **Seeded papers** that produce the demo numbers: Maria −1.05 on Midterm Q2, Nikos's anchor papers csd5121…csd5150, csd5146's transcription and reasoning | Σταύρος | Add to `backend/scripts/seed.ts`. The Midterm first, then Exam 1 and Exam 2. |
-| 3 | **Tests for papers and reports**: `backend/test/papers.e2e-spec.ts` (every lifecycle rule and permission), reports | Γιώργος, Δημήτρης | Pattern: `test/members.e2e-spec.ts`. |
-| 4 | **Wire the remaining pages**: TA **My stats**, **My papers**, instructor **Report** and **TA page** | Δημήτρης (report, TA page), Σταύρος (My stats, My papers) | Endpoints exist. |
-| 5 | **Members** and **Users** pages wired | Γιώργος | Endpoints exist. |
-| 6 | **Course stats** (`GET /courses/:id/stats`) and its page | Δημήτρης | Leaderboard, badges, distribution, pass/fail at stake. |
-| 7 | **Activity feed** (`GET /courses/:id/activity`) and **⌘K search** | Δημήτρης | Lowest priority. |
+| 3 | **Tests for papers and reports**: `backend/test/papers.e2e-spec.ts` (every lifecycle rule and permission), reports e2e | Γιώργος, Δημήτρης | Pattern: `test/members.e2e-spec.ts`. |
+| 7 | **⌘K search** (`GET /search`) | Δημήτρης | Lowest priority. |
 | 8 | **Real handwriting transcription** with a vision model | Κώστας | Only if a vision model is available on Bedrock. The demo fake works without it. |
 | 9 | **Deck** | Γιώργος | Problem → solution → live demo → how it works → why it matters → team. |
 
-**If time runs short, cut from the bottom:** 8 → 7 → 6 → 5. **Never cut 2**, because without it the demo has no flag.
+**If time runs short, cut from the bottom:** 8 → 7. Before the demo run `npm run seed` so test papers don't change the numbers.
 
 ---
 

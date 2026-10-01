@@ -8,12 +8,14 @@ import {
   AppShell,
   Button,
   Card,
+  Notice,
   PageHeader,
   PageTitle,
   Pill,
   RoleChip,
   SecondaryButton,
   SectionHeader,
+  TextField,
   YouTag,
   type PillTone,
 } from "@/components/shell";
@@ -82,6 +84,30 @@ export function CourseLivePage() {
   const [course, setCourse] = useState<CourseDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [newExam, setNewExam] = useState<{ open: boolean; name: string; heldAt: string; busy: boolean; error: string }>({
+    open: false,
+    name: "",
+    heldAt: "",
+    busy: false,
+    error: "",
+  });
+
+  async function createExam() {
+    setNewExam((n) => ({ ...n, busy: true, error: "" }));
+    try {
+      const created = await apiFetch<{ id: string }>(`/courses/${courseId}/exams`, {
+        method: "POST",
+        body: { name: newExam.name.trim(), ...(newExam.heldAt ? { heldAt: newExam.heldAt } : {}) },
+      });
+      router.push(`/courses/${courseId}/exams/${created.id}/setup`);
+    } catch (cause) {
+      setNewExam((n) => ({
+        ...n,
+        busy: false,
+        error: cause instanceof Error ? cause.message : "Could not create the exam",
+      }));
+    }
+  }
 
   useEffect(() => {
     if (!user) return;
@@ -147,8 +173,12 @@ export function CourseLivePage() {
       >
         {/* Only the instructor creates exams. */}
         {!isTa && (
-          <Button size="lg" icon={<Plus size={16} />}>
-            New exam
+          <Button
+            size="lg"
+            icon={<Plus size={16} />}
+            onClick={() => setNewExam((n) => ({ ...n, open: !n.open, error: "" }))}
+          >
+            {newExam.open ? "Close" : "New exam"}
           </Button>
         )}
       </PageHeader>
@@ -161,6 +191,50 @@ export function CourseLivePage() {
             : course.semester ?? undefined
         }
       />
+
+      {!isTa && newExam.open && (
+        <Card className="fg-in" padding="24px">
+          <SectionHeader
+            title="New exam"
+            description="Name it and pick the date. Next you add the questions and model answers."
+          />
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (newExam.name.trim()) void createExam();
+            }}
+            style={{ marginTop: "16px", display: "flex", gap: "14px", alignItems: "flex-end", flexWrap: "wrap" }}
+          >
+            <div style={{ flex: "1 1 260px" }}>
+              <TextField
+                id="ne-name"
+                label="Name"
+                placeholder="e.g. Final"
+                value={newExam.name}
+                onChange={(v) => setNewExam((n) => ({ ...n, name: v }))}
+                required
+              />
+            </div>
+            <div style={{ width: "200px" }}>
+              <TextField
+                id="ne-date"
+                label="Date"
+                type="date"
+                value={newExam.heldAt}
+                onChange={(v) => setNewExam((n) => ({ ...n, heldAt: v }))}
+              />
+            </div>
+            <Button type="submit" disabled={!newExam.name.trim() || newExam.busy} icon={<ArrowRight size={16} />}>
+              {newExam.busy ? "Creating…" : "Create and set up"}
+            </Button>
+          </form>
+          {newExam.error && (
+            <div style={{ marginTop: "14px" }}>
+              <Notice tone="error">{newExam.error}</Notice>
+            </div>
+          )}
+        </Card>
+      )}
 
       {error && (
         <div role="alert" style={{ padding: "12px 14px", borderRadius: "12px", color: "var(--red-x)", background: "var(--red-t)", fontSize: "13px" }}>

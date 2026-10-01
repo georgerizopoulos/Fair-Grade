@@ -1,5 +1,6 @@
 // Shared Fair Grade UI. Import everything from "@/components/shell".
 export { AppShell, PageHeader, PageTitle, Sidebar, type Crumb, type ShellUser } from "./app-shell";
+export { FIELD_STYLE, LABEL_STYLE, Notice, TextField } from "./fields";
 export { Icon, Logo, type IconName } from "./icons";
 export {
   instructorNav,

@@ -1,10 +1,23 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   type AuthUser,
   CurrentUser,
   Roles,
 } from '../common/auth.decorators.js';
-import { CourseSettingsDto, CreateCourseDto } from './courses.dto.js';
+import {
+  ActivityQuery,
+  CourseSettingsDto,
+  CourseStatsQuery,
+  CreateCourseDto,
+} from './courses.dto.js';
 import { CoursesService } from './courses.service.js';
 
 // Course-level access (owner / member → else 403) is checked inside the
@@ -41,7 +54,21 @@ export class CoursesController {
 
   @Roles('instructor')
   @Get(':id/stats')
-  stats(@CurrentUser() user: AuthUser, @Param('id') id: string) {
-    return this.courses.stats(user, id);
+  stats(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+    @Query() query: CourseStatsQuery,
+  ) {
+    return this.courses.stats(user, id, query.examId);
+  }
+
+  @Roles('instructor')
+  @Get(':id/activity')
+  activity(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+    @Query() query: ActivityQuery,
+  ) {
+    return this.courses.activity(user, id, query.limit ?? 20);
   }
 }

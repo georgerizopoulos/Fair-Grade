@@ -247,4 +247,195 @@ describe('Courses and membership (e2e)', () => {
     expect(invited.status).toBe('ACTIVE');
     expect(invited.lastSignInAt).toBeInstanceOf(Date);
   });
+  it('GET /courses/:id/stats: instructor only, empty before any AI grade', async () => {
+    await http
+      .get(`/courses/${ids.hy335}/stats`)
+      .set(auth('maria'))
+      .expect(403);
+    await http
+      .get(`/courses/${ids.foreign}/stats`)
+      .set(auth('instructor'))
+      .expect(403);
+    const res = await http
+      .get(`/courses/${ids.hy335}/stats`)
+      .set(auth('instructor'))
+      .expect(200);
+    expect(res.body).toMatchObject({
+      course: { code: 'HY335' },
+      trend: [],
+      leaderboard: [],
+      atStake: [],
+      kpis: { papersSubmitted: 0, aiGraded: 0 },
+    });
+    await http
+      .get(`/courses/${ids.hy335}/stats?examId=not-in-this-course`)
+      .set(auth('instructor'))
+      .expect(404);
+  });
+
+  it('GET /courses/:id/stats: a paper whose pass depends on who graded is at stake', async () => {
+    const midterm = await prisma.exam.findFirstOrThrow({
+      where: { courseId: ids.hy335, name: 'Midterm' },
+    });
+    const q = await prisma.question.create({
+      data: {
+        examId: midterm.id,
+        code: 'Q1',
+        title: 'Everything',
+        prompt: 'Explain.',
+        maxPoints: 10,
+        modelAnswer: 'All of it.',
+        order: 1,
+      },
+    });
+    await prisma.paper.create({
+      data: {
+        examId: midterm.id,
+        taId: ids.maria,
+        studentId: 'csd9001',
+        status: 'AI_GRADED',
+        createdAt: new Date('2026-09-30T10:00:00Z'),
+        submittedAt: new Date('2026-09-30T10:20:00Z'),
+        answers: {
+          create: [
+            {
+              questionId: q.id,
+              transcription: 'x',
+              taPoints: 4,
+              aiPoints: 6,
+              uncertainWords: [],
+              pages: [],
+            },
+          ],
+        },
+      },
+    });
+
+    const res = await http
+      .get(`/courses/${ids.hy335}/stats?examId=${midterm.id}`)
+      .set(auth('instructor'))
+      .expect(200);
+    expect(res.body.trend).toHaveLength(1);
+    expect(res.body.trend[0]).toMatchObject({ name: 'Midterm', averageGap: 2 });
+    expect(res.body.atStake).toEqual([
+      expect.objectContaining({ studentId: 'csd9001', failsWithTa: true }),
+    ]);
+    expect(res.body.leaderboard[0]).toMatchObject({
+      name: 'maria',
+      papers: 1,
+      averageGap: 2,
+      direction: 'stricter',
+      medianMinutes: 20,
+    });
+    expect(res.body.distribution).toMatchObject({
+      total: 1,
+      passedTa: 0,
+      passedAi: 1,
+    });
+  });
+
+  it('GET /courses/:id/activity: instructor only, newest first, limit validated', async () => {
+    await prisma.activityLog.createMany({
+      data: [
+        {
+          courseId: ids.hy335,
+          type: 'MEMBER_ADDED',
+          actorId: ids.instructor,
+          payload: { userId: ids.nikos, name: 'nikos' },
+          createdAt: new Date('2026-10-01T09:00:00Z'),
+        },
+        {
+          courseId: ids.hy335,
+          type: 'PAPER_SUBMITTED',
+          actorId: ids.maria,
+          payload: { studentId: 'csd9001' },
+          createdAt: new Date('2026-10-01T10:00:00Z'),
+        },
+      ],
+    });
+    await http
+      .get(`/courses/${ids.hy335}/activity`)
+      .set(auth('maria'))
+      .expect(403);
+    await http
+      .get(`/courses/${ids.hy335}/activity?limit=0`)
+      .set(auth('instructor'))
+      .expect(400);
+    const res = await http
+      .get(`/courses/${ids.hy335}/activity?limit=5`)
+      .set(auth('instructor'))
+      .expect(200);
+    expect(res.body.activity.map((a: { type: string }) => a.type)).toEqual([
+      'PAPER_SUBMITTED',
+      'MEMBER_ADDED',
+    ]);
+    expect(res.body.activity[0]).toMatchObject({
+      actor: { name: 'maria' },
+      paper: { studentId: 'csd9001' },
+    });
+    expect(res.body.activity[1].member).toMatchObject({ name: 'nikos' });
+  });
+  it('exam status: a new exam is a draft, saving questions makes it ready, then it opens for TAs', async () => {
+    const created = await http
+      .post(`/courses/${ids.hy335}/exams`)
+      .set(auth('instructor'))
+      .send({ name: 'Resit', heldAt: '2027-02-10' })
+      .expect(201);
+    expect(created.body.status).toBe('DRAFT');
+    const examId = created.body.id;
+
+    await http
+      .patch(`/exams/${examId}`)
+      .set(auth('instructor'))
+      .send({ status: 'OPEN' })
+      .expect(400);
+    await http
+      .patch(`/exams/${examId}`)
+      .set(auth('instructor'))
+      .send({ status: 'CLOSED' })
+      .expect(400);
+
+    await http
+      .put(`/exams/${examId}/questions`)
+      .set(auth('instructor'))
+      .send({
+        questions: [
+          {
+            code: 'Q1',
+            title: 'Routing',
+            prompt: 'Explain routing.',
+            maxPoints: 2,
+            modelAnswer: 'Forwarding by table.',
+            rubric: [{ text: 'Table lookup', points: 2 }],
+          },
+        ],
+      })
+      .expect(200);
+    expect(
+      (await http.get(`/exams/${examId}`).set(auth('instructor')).expect(200))
+        .body.status,
+    ).toBe('QUESTIONS_READY');
+
+    await http
+      .patch(`/exams/${examId}`)
+      .set(auth('maria'))
+      .send({ status: 'OPEN' })
+      .expect(403);
+    const opened = await http
+      .patch(`/exams/${examId}`)
+      .set(auth('instructor'))
+      .send({ status: 'OPEN' })
+      .expect(200);
+    expect(opened.body.status).toBe('OPEN');
+
+    const asTa = await http
+      .get(`/courses/${ids.hy335}`)
+      .set(auth('maria'))
+      .expect(200);
+    expect(
+      asTa.body.exams.find((e: { id: string }) => e.id === examId),
+    ).toMatchObject({
+      canAddPapers: true,
+    });
+  });
 });

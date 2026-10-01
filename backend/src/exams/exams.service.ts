@@ -92,6 +92,29 @@ export class ExamsService {
   async patch(user: AuthUser, examId: string, dto: PatchExamDto) {
     await this.access.ownedExam(user, examId);
 
+    if (dto.status) {
+      const [questions, papers] = await Promise.all([
+        this.prisma.question.count({ where: { examId } }),
+        this.prisma.paper.count({ where: { examId } }),
+      ]);
+      if (
+        (dto.status === 'OPEN' || dto.status === 'PUBLISHED') &&
+        questions === 0
+      ) {
+        throw new BadRequestException(
+          'Add at least one question before opening the exam for grading',
+        );
+      }
+      if (
+        (dto.status === 'DRAFT' || dto.status === 'QUESTIONS_READY') &&
+        papers > 0
+      ) {
+        throw new ConflictException(
+          `TAs already added ${papers} paper${papers === 1 ? '' : 's'}; the exam can only be open or published`,
+        );
+      }
+    }
+
     await this.prisma.exam.update({
       where: { id: examId },
       data: {
@@ -100,6 +123,7 @@ export class ExamsService {
           ? { heldAt: dto.heldAt ? new Date(dto.heldAt) : null }
           : {}),
         ...(dto.passMark !== undefined ? { passMark: dto.passMark } : {}),
+        ...(dto.status !== undefined ? { status: dto.status } : {}),
       },
     });
 
@@ -150,7 +174,9 @@ export class ExamsService {
 
     const codes = dto.questions.map((question) => question.code);
     if (new Set(codes).size !== codes.length) {
-      throw new BadRequestException('Question codes must be unique within an exam');
+      throw new BadRequestException(
+        'Question codes must be unique within an exam',
+      );
     }
 
     await this.prisma.$transaction(async (tx) => {
@@ -159,7 +185,9 @@ export class ExamsService {
         select: { id: true, code: true },
       });
       const requestedCodes = new Set(codes);
-      const removed = existing.filter((question) => !requestedCodes.has(question.code));
+      const removed = existing.filter(
+        (question) => !requestedCodes.has(question.code),
+      );
 
       if (removed.length > 0) {
         const papersUsingRemovedQuestions = await tx.paperAnswer.count({
@@ -175,7 +203,9 @@ export class ExamsService {
         });
       }
 
-      const existingByCode = new Map(existing.map((question) => [question.code, question]));
+      const existingByCode = new Map(
+        existing.map((question) => [question.code, question]),
+      );
 
       for (let i = 0; i < dto.questions.length; i++) {
         const q = dto.questions[i];
@@ -210,6 +240,14 @@ export class ExamsService {
         }
       }
     });
+
+    // A draft exam with questions is ready to open.
+    if (dto.questions.length > 0) {
+      await this.prisma.exam.updateMany({
+        where: { id: examId, status: 'DRAFT' },
+        data: { status: 'QUESTIONS_READY' },
+      });
+    }
 
     return this.getQuestions(user, examId);
   }

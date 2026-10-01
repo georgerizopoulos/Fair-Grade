@@ -3,6 +3,7 @@ import {
   ArrayNotEmpty,
   IsArray,
   IsDateString,
+  IsIn,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -39,6 +40,11 @@ export class PatchExamDto {
   @Min(0)
   @IsOptional()
   passMark?: number;
+
+  // DRAFT → QUESTIONS_READY → OPEN (TAs grade) → PUBLISHED. OPEN needs questions.
+  @IsIn(['DRAFT', 'QUESTIONS_READY', 'OPEN', 'PUBLISHED'])
+  @IsOptional()
+  status?: 'DRAFT' | 'QUESTIONS_READY' | 'OPEN' | 'PUBLISHED';
 }
 
 export class RubricPointDto {
@@ -90,4 +96,3 @@ export class BulkQuestionsDto {
   @Type(() => QuestionDto)
   questions!: QuestionDto[];
 }
-

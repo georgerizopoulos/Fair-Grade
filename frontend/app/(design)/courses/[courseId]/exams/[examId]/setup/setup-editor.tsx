@@ -11,6 +11,7 @@ import {
   NoAccess,
   PageHeader,
   PageTitle,
+  Pill,
   SecondaryButton,
 } from "@/components/shell";
 import { ApiError, apiFetch } from "@/lib/api";
@@ -58,6 +59,15 @@ interface CourseDetail {
   members: { userId: string; role: string }[];
   exams: { id: string; progress: Progress }[];
 }
+
+type ExamStatus = "DRAFT" | "QUESTIONS_READY" | "OPEN" | "PUBLISHED";
+
+const STATUS_INFO: Record<ExamStatus, { label: string; tone: "neutral" | "blue" | "amber" | "green" }> = {
+  DRAFT: { label: "Draft: save the questions first", tone: "neutral" },
+  QUESTIONS_READY: { label: "Questions ready", tone: "blue" },
+  OPEN: { label: "Open for grading", tone: "amber" },
+  PUBLISHED: { label: "Grades published", tone: "green" },
+};
 
 const FONT = "'Geist', 'Segoe UI', system-ui, sans-serif";
 const RING = "0 0 0 1px rgba(var(--ink-rgb), 0.11)";
@@ -146,7 +156,7 @@ export function SetupEditor() {
   const [heldAt, setHeldAt] = useState("");
   const [passMark, setPassMark] = useState("");
   const [loadError, setLoadError] = useState<ApiError | Error | null>(null);
-  const [busy, setBusy] = useState<"" | "details" | "questions" | "import">("");
+  const [busy, setBusy] = useState<"" | "details" | "questions" | "import" | "status">("");
   const [notice, setNotice] = useState<{ tone: "ok" | "error"; text: string } | null>(null);
   const [importedFrom, setImportedFrom] = useState("");
   const fileInput = useRef<HTMLInputElement>(null);
@@ -258,6 +268,21 @@ export function SetupEditor() {
     ]);
   }
 
+  async function changeStatus(status: ExamStatus, message: string) {
+    setBusy("status");
+    setNotice(null);
+    try {
+      setExam(await apiFetch<ExamDetail>(`/exams/${examId}`, { method: "PATCH", body: { status } }));
+      setNotice({ tone: "ok", text: message });
+    } catch (cause) {
+      setNotice({ tone: "error", text: errorText(cause, "Could not change the exam status.") });
+    } finally {
+      setBusy("");
+    }
+  }
+
+  const statusInfo = STATUS_INFO[exam.status as ExamStatus] ?? STATUS_INFO.DRAFT;
+
   async function saveDetails() {
     setBusy("details");
     setNotice(null);
@@ -288,6 +313,7 @@ export function SetupEditor() {
       });
       setQuestions(clean(saved.questions));
       setSavedQuestions(clean(saved.questions));
+      setExam(await apiFetch<ExamDetail>(`/exams/${examId}`));
       setImportedFrom("");
       setNotice({ tone: "ok", text: "Questions saved. TAs and the AI grade against these now." });
     } catch (cause) {
@@ -325,7 +351,38 @@ export function SetupEditor() {
           { label: exam.name },
           { label: "Setup" },
         ]}
-      />
+      >
+        <Pill tone={statusInfo.tone} dot>
+          {statusInfo.label}
+        </Pill>
+        {exam.status === "QUESTIONS_READY" && (
+          <Button
+            icon={<CheckIcon />}
+            disabled={busy !== "" || questionsDirty || !questionsValid}
+            onClick={() =>
+              changeStatus("OPEN", `${exam.name} is open. TAs of ${exam.course.code ?? "the course"} can add and grade papers.`)
+            }
+          >
+            {busy === "status" ? "Opening…" : "Open for grading"}
+          </Button>
+        )}
+        {exam.status === "OPEN" && (
+          <SecondaryButton
+            disabled={busy !== ""}
+            onClick={() => changeStatus("PUBLISHED", `Grades of ${exam.name} are published. TAs can't add new papers.`)}
+          >
+            <span>{busy === "status" ? "Publishing…" : "Publish grades"}</span>
+          </SecondaryButton>
+        )}
+        {exam.status === "PUBLISHED" && (
+          <SecondaryButton
+            disabled={busy !== ""}
+            onClick={() => changeStatus("OPEN", `${exam.name} is open for grading again.`)}
+          >
+            <span>{busy === "status" ? "Reopening…" : "Reopen for grading"}</span>
+          </SecondaryButton>
+        )}
+      </PageHeader>
       <PageTitle
         title={/\d/.test(exam.name) ? `Set up ${exam.name}` : `Set up the ${exam.name.toLowerCase()}`}
         description={
