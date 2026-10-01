@@ -20,7 +20,7 @@ What is done, what is left, and who owns it. Keep this file short and **true**: 
 3. **The AI grades it** within seconds. The **paper result** shows TA vs AI per question, with the AI's reasoning.
 4. **Instructor:** **Midterm report** → **Maria flagged on Q2 (−1.05)** → her page → the papers behind the flag.
 
-Steps 3 and 4 need two things that aren't done yet: **the AI worker** and **the seeded papers**.
+Step 4 needs **the seeded papers** (not done yet).
 
 ---
 
@@ -32,6 +32,7 @@ Steps 3 and 4 need two things that aren't done yet: **the AI worker** and **the 
 | Schema for courses, members, exams, questions, papers, pages, answers, revisions, activity | Γιώργος |
 | `AccessService`, courses endpoints, members endpoints, users endpoints (with e2e tests) | Γιώργος |
 | Paper lifecycle: get, draft, submit, request-reopen, reopen, retry-ai, my-papers | Γιώργος |
+| AI worker: grades submitted papers (Bedrock, retries, AI_FAILED, TA_FLAGGED), with e2e tests | Γιώργος |
 | Seed: users, HY335 / HY360 / HY359, every exam and question | Γιώργος |
 | Design pages (`frontend/app/(design)`), shared components (`components/shell`), dark mode, real login, role-aware sidebar, "no access" state | Γιώργος |
 | Exams and questions endpoints, questions import from PDF | Σταύρος |
@@ -44,7 +45,6 @@ Steps 3 and 4 need two things that aren't done yet: **the AI worker** and **the 
 
 | # | What | Who | Notes |
 |---|---|---|---|
-| 1 | **AI worker** (`backend/src/ai/`): picks `AI_GRADING` papers, grades each question, writes `aiPoints` / `aiReasoning`, sets `AI_GRADED` or, after 3 tries, `AI_FAILED`; writes the activity entries | Κώστας | Contract in API_SPEC → Paper lifecycle. Reuse `llm.client.ts` and the validation. Never send student IDs, names or TA points. |
 | 2 | **Seeded papers** that produce the demo numbers: Maria −1.05 on Midterm Q2, Nikos's anchor papers csd5121…csd5150, csd5146's transcription and reasoning | Σταύρος | Add to `backend/scripts/seed.ts`. The Midterm first, then Exam 1 and Exam 2. |
 | 3 | **Tests for papers and reports**: `backend/test/papers.e2e-spec.ts` (every lifecycle rule and permission), reports | Γιώργος, Δημήτρης | Pattern: `test/members.e2e-spec.ts`. |
 | 4 | **Wire the remaining pages**: TA **My stats**, **My papers**, instructor **Report** and **TA page** | Δημήτρης (report, TA page), Σταύρος (My stats, My papers) | Endpoints exist. |
@@ -54,7 +54,7 @@ Steps 3 and 4 need two things that aren't done yet: **the AI worker** and **the 
 | 8 | **Real handwriting transcription** with a vision model | Κώστας | Only if a vision model is available on Bedrock. The demo fake works without it. |
 | 9 | **Deck** | Γιώργος | Problem → solution → live demo → how it works → why it matters → team. |
 
-**If time runs short, cut from the bottom:** 8 → 7 → 6 → 5. **Never cut 1–2**, because without them the demo has no AI grade and no flag.
+**If time runs short, cut from the bottom:** 8 → 7 → 6 → 5. **Never cut 2**, because without it the demo has no flag.
 
 ---
 

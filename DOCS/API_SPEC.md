@@ -100,11 +100,13 @@ TRANSCRIBING → DRAFT ──submit──▶ AI_GRADING ──worker──▶ AI
 
 - **`DRAFT`:** the TA edits transcriptions and points. Nobody else can.
 - **Submit:** needs points on every question. It locks the TA's points, sets `submittedAt`, and queues the paper for the AI.
-- **The AI worker** (Κώστας, ⏳ planned):
-  - picks papers with `status = AI_GRADING` and `aiNextAttemptAt <= now`;
+- **The AI worker** (`backend/src/ai/`, ✅ built):
+  - every 2 s picks papers with `status = AI_GRADING` and `aiNextAttemptAt <= now` (3 at a time);
+  - grades each question with one LLM call (prompt `ai/prompts/grade-question.v1.ts`, temperature 0), clamps the points to 0…max in 0.5 steps and keeps at most two sentences of reasoning;
   - writes `aiPoints` and `aiReasoning` only while the paper is still `AI_GRADING`;
-  - tries 3 times with backoff, then sets `AI_FAILED`;
-  - writes `AI_GRADED` / `AI_FAILED` activity.
+  - tries 3 times (waiting 5 s, then 20 s), then sets `AI_FAILED` with `aiError`;
+  - writes `AI_GRADED` / `AI_FAILED` activity, and `TA_FLAGGED` the first time a TA crosses the flag threshold on a question;
+  - logs every call (prompt version, model, latency) without student data. `AI_WORKER=off` in `.env` stops it.
 - **Reopen:** goes back to `DRAFT`, clears `submittedAt`, and writes a `PaperRevision` with the TA's points. The AI grade is kept and re-run on the next submit.
 - **Metrics** count only `AI_GRADED` papers.
 

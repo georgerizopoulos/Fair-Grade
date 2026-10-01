@@ -42,10 +42,11 @@ export async function complete(
     // TODO: inferenceConfig — temperature, maxTokens.
     // Low temp for consistent grading. Try temperature: 0; if the model
     // rejects it, drop it and rely on the prompt wording.
+    // Temperature 0: the same answer should get the same grade every time.
     inferenceConfig: {
-      // temperature: 0,
-      // maxTokens: 1024,
-    }
+      temperature: 0,
+      maxTokens: 1024,
+    },
   });
 
   const response = await client.send(command);
