@@ -45,7 +45,11 @@ export class AuthService {
     });
     // Same message for unknown email and wrong password, so it doesn't reveal
     // which accounts exist.
-    if (!user || !(await bcrypt.compare(dto.password, user.passwordHash))) {
+    if (
+      !user ||
+      user.status === 'DEACTIVATED' ||
+      !(await bcrypt.compare(dto.password, user.passwordHash))
+    ) {
       throw new UnauthorizedException('Invalid email or password');
     }
 

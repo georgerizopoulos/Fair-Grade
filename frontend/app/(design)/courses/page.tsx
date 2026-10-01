@@ -3,25 +3,14 @@
 // to the API yet. When wiring it up, replace the constants with real data.
 import Link from "next/link";
 import type { Metadata } from "next";
-import {
-  AppShell,
-  Avatar,
-  Button,
-  Card,
-  PageHeader,
-  PageTitle,
-  Pill,
-  instructorNav,
-} from "@/components/shell";
+import { AppShell, Avatar, Button, Card, PageHeader, PageTitle, Pill } from "@/components/shell";
 
 export const metadata: Metadata = { title: "Courses \u00b7 Fair Grade" };
-
-const user = { name: "Instructor Demo", role: "instructor" } as const;
 
 export default function CoursesPage() {
   return (
     <>
-      <AppShell user={user} nav={instructorNav({ active: "courses" })}>
+      <AppShell active="courses">
         <PageHeader crumbs={[{ label: "All courses" }]}>
           <Button
             size="lg"

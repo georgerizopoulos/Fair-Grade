@@ -12,19 +12,17 @@ import {
   Pill,
   SecondaryButton,
   SectionHeader,
-  instructorNav,
 } from "@/components/shell";
 
 export const metadata: Metadata = { title: "Midterm report \u00b7 Fair Grade" };
 
-const user = { name: "Instructor Demo", role: "instructor" } as const;
 const course = { id: "hy335", code: "HY335", name: "Computer Networks" };
 const exam = { id: "midterm", name: "Midterm", flagged: 1 };
 
 export default function ExamReportPage() {
   return (
     <>
-      <AppShell user={user} course={course} nav={instructorNav({ course, exam, active: "report" })}>
+      <AppShell course={course} exam={exam} active="report" access="instructor">
         <PageHeader
           crumbs={[
             { label: "HY335 Computer Networks", href: "/courses/hy335" },

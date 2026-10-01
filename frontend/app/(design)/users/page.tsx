@@ -13,17 +13,14 @@ import {
   Pill,
   RoleChip,
   YouTag,
-  instructorNav,
 } from "@/components/shell";
 
 export const metadata: Metadata = { title: "Users \u00b7 Fair Grade" };
 
-const user = { name: "Instructor Demo", role: "instructor" } as const;
-
 export default function UsersPage() {
   return (
     <>
-      <AppShell user={user} nav={instructorNav({ active: "users" })}>
+      <AppShell active="users" access="instructor">
         <PageHeader crumbs={[{ label: "Workspace" }, { label: "Users" }]}>
           <Button
             size="lg"

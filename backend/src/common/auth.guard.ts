@@ -55,14 +55,19 @@ export class AuthGuard implements CanActivate {
 
     const user = await this.prisma.user.findUnique({
       where: { id: payload.sub },
-      select: { id: true, name: true, email: true, role: true },
+      select: { id: true, name: true, email: true, role: true, status: true },
     });
-    if (!user) {
+    if (!user || user.status === 'DEACTIVATED') {
       throw new UnauthorizedException(
         'The user in this token no longer exists, log in again',
       );
     }
-    req.user = user;
+    req.user = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
 
     const roles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, targets);
     if (roles?.length && !roles.includes(user.role)) {

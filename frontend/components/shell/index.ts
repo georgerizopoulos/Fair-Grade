@@ -24,5 +24,6 @@ export {
   YouTag,
   type PillTone,
 } from "./primitives";
+export { NoAccess } from "./states";
 export { THEME_BOOT_SCRIPT, THEME_KEY } from "./theme";
 export { ThemeSwitch } from "./theme-switch";

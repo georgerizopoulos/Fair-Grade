@@ -11,19 +11,17 @@ import {
   PageTitle,
   Pill,
   SecondaryButton,
-  taNav,
 } from "@/components/shell";
 
 export const metadata: Metadata = { title: "Grade the paper \u00b7 Fair Grade" };
 
-const user = { name: "Nikos Georgiou", role: "ta" } as const;
 const course = { id: "hy335", code: "HY335", name: "Computer Networks" };
 const exam = { id: "midterm", name: "Midterm" };
 
 export default function GradePaperPage() {
   return (
     <>
-      <AppShell user={user} course={course} nav={taNav({ course, exam, active: "my-papers" })}>
+      <AppShell course={course} exam={exam} active="my-papers" access="ta">
         <PageHeader
           crumbs={[
             { label: "HY335 Computer Networks", href: "/courses/hy335" },

@@ -11,19 +11,17 @@ import {
   Pill,
   SecondaryButton,
   SectionHeader,
-  taNav,
 } from "@/components/shell";
 
 export const metadata: Metadata = { title: "My stats \u00b7 Fair Grade" };
 
-const user = { name: "Nikos Georgiou", role: "ta" } as const;
 const course = { id: "hy335", code: "HY335", name: "Computer Networks" };
 const exam = { id: "midterm", name: "Midterm" };
 
 export default function TaStatsPage() {
   return (
     <>
-      <AppShell user={user} course={course} nav={taNav({ course, exam, active: "my-stats" })}>
+      <AppShell course={course} exam={exam} active="my-stats" access="ta">
         <PageHeader
           crumbs={[
             { label: "HY335 Computer Networks", href: "/courses/hy335" },

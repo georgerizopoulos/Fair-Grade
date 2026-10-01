@@ -1,8 +1,19 @@
+"use client";
+
 import Link from "next/link";
 import { Fragment, type ReactNode } from "react";
+import { logout, useSession } from "@/lib/auth";
 import { Icon, Logo } from "./icons";
-import type { NavSection, Role, ShellCourse } from "./nav";
+import {
+  instructorNav,
+  taNav,
+  type NavSection,
+  type Role,
+  type ShellCourse,
+  type ShellExam,
+} from "./nav";
 import { Avatar, Kbd, RoleChip } from "./primitives";
+import { NoAccess } from "./states";
 import { ThemeSwitch } from "./theme-switch";
 
 const FONT = "'Geist', 'Segoe UI', system-ui, sans-serif";
@@ -14,23 +25,46 @@ export interface ShellUser {
   role: Role;
 }
 
-// Page frame: sidebar on the left, content column on the right.
+const INSTRUCTOR_KEYS = ["exams", "stats", "members", "setup", "report", "courses", "users"];
+const TA_KEYS = ["exams", "my-stats", "my-papers", "add-paper", "courses"];
+
+// Page frame: sidebar on the left, content column on the right. It loads the
+// signed-in user (or redirects to /login), builds the sidebar for their role,
+// and shows the "no access" state when the page is for the other role.
 //
-//   <AppShell user={user} course={course} nav={instructorNav({ course, active: "exams" })}>
+//   <AppShell course={course} exam={exam} active="report" access="instructor">
 //     <PageHeader crumbs={[...]} />
 //     ...
 //   </AppShell>
 export function AppShell({
-  user,
   course,
-  nav,
+  exam,
+  active,
+  access = "any",
   children,
 }: {
-  user: ShellUser;
   course?: ShellCourse;
-  nav: NavSection[];
+  exam?: ShellExam;
+  active?: string; // sidebar item to highlight, e.g. "report" or "my-papers"
+  access?: Role | "any"; // who may open this page
   children: ReactNode;
 }) {
+  const user = useSession();
+  const role: Role = user?.role ?? (access === "ta" ? "ta" : "instructor");
+  const nav =
+    role === "ta"
+      ? taNav({
+          course,
+          exam,
+          active: TA_KEYS.includes(active ?? "") ? (active as never) : undefined,
+        })
+      : instructorNav({
+          course,
+          exam,
+          active: INSTRUCTOR_KEYS.includes(active ?? "") ? (active as never) : undefined,
+        });
+  const allowed = access === "any" || user?.role === access;
+
   return (
     <div
       className="fg-shell"
@@ -43,7 +77,7 @@ export function AppShell({
           "radial-gradient(1200px 520px at 30% -8%, var(--surface) 0%, rgba(var(--surface-rgb), 0) 70%), var(--bg)",
       }}
     >
-      <Sidebar user={user} course={course} nav={nav} />
+      <Sidebar user={user ?? { name: "", role }} course={course} nav={nav} />
       <main style={{ flexGrow: 1, minWidth: 0, padding: "26px 44px 96px" }}>
         <div
           style={{
@@ -54,7 +88,8 @@ export function AppShell({
             gap: "28px",
           }}
         >
-          {children}
+          {/* Nothing until we know who is looking, so the wrong role never sees the page. */}
+          {user && (allowed ? children : <NoAccess />)}
         </div>
       </main>
     </div>
@@ -193,7 +228,7 @@ export function Sidebar({
             borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
           }}
         >
-          <Avatar initial={user.name.charAt(0)} size={32} ink={instructor} />
+          <Avatar initial={user.name.charAt(0) || " "} size={32} ink={instructor} />
           <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flexGrow: 1 }}>
             <span style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--ink)" }}>
               {user.name}
@@ -202,8 +237,9 @@ export function Sidebar({
               <RoleChip role={user.role} />
             </span>
           </div>
-          <Link
-            href="/login"
+          <button
+            type="button"
+            onClick={logout}
             aria-label="Log out"
             className="fg-press"
             style={{
@@ -221,7 +257,7 @@ export function Sidebar({
             }}
           >
             <Icon name="logout" />
-          </Link>
+          </button>
         </div>
       </div>
     </aside>

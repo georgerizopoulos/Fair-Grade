@@ -14,18 +14,16 @@ import {
   RoleChip,
   SectionHeader,
   YouTag,
-  instructorNav,
 } from "@/components/shell";
 
 export const metadata: Metadata = { title: "Members \u00b7 Fair Grade" };
 
-const user = { name: "Instructor Demo", role: "instructor" } as const;
 const course = { id: "hy335", code: "HY335", name: "Computer Networks" };
 
 export default function MembersPage() {
   return (
     <>
-      <AppShell user={user} course={course} nav={instructorNav({ course, active: "members" })}>
+      <AppShell course={course} active="members" access="instructor">
         <PageHeader
           crumbs={[
             { label: "HY335 Computer Networks", href: "/courses/hy335" },

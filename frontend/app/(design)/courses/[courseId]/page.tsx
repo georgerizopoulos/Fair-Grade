@@ -14,18 +14,16 @@ import {
   SecondaryButton,
   SectionHeader,
   YouTag,
-  instructorNav,
 } from "@/components/shell";
 
 export const metadata: Metadata = { title: "HY335 Computer Networks \u00b7 Fair Grade" };
 
-const user = { name: "Instructor Demo", role: "instructor" } as const;
 const course = { id: "hy335", code: "HY335", name: "Computer Networks" };
 
 export default function CoursePage() {
   return (
     <>
-      <AppShell user={user} course={course} nav={instructorNav({ course, active: "exams" })}>
+      <AppShell course={course} active="exams">
         <PageHeader
           crumbs={[
             { label: "All courses", href: "/courses" },

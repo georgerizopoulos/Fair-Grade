@@ -11,19 +11,17 @@ import {
   PageHeader,
   PageTitle,
   SecondaryButton,
-  instructorNav,
 } from "@/components/shell";
 
 export const metadata: Metadata = { title: "Set up the midterm \u00b7 Fair Grade" };
 
-const user = { name: "Instructor Demo", role: "instructor" } as const;
 const course = { id: "hy335", code: "HY335", name: "Computer Networks" };
 const exam = { id: "midterm", name: "Midterm", flagged: 1 };
 
 export default function ExamSetupPage() {
   return (
     <>
-      <AppShell user={user} course={course} nav={instructorNav({ course, exam, active: "setup" })}>
+      <AppShell course={course} exam={exam} active="setup" access="instructor">
         <PageHeader
           crumbs={[
             { label: "HY335 Computer Networks", href: "/courses/hy335" },
