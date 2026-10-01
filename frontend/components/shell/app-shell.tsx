@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Fragment, type ReactNode } from "react";
-import { logout, useSession } from "@/lib/auth";
+import { useRouter } from "next/navigation";
+import { Fragment, type ReactNode, useEffect } from "react";
+import { HOME_BY_ROLE, logout, useSession } from "@/lib/auth";
 import { Icon, Logo } from "./icons";
 import {
   instructorNav,
@@ -13,7 +14,6 @@ import {
   type ShellExam,
 } from "./nav";
 import { Avatar, Kbd, RoleChip } from "./primitives";
-import { NoAccess } from "./states";
 import { ThemeSwitch } from "./theme-switch";
 
 const FONT = "'Geist', 'Segoe UI', system-ui, sans-serif";
@@ -50,6 +50,15 @@ export function AppShell({
   children: ReactNode;
 }) {
   const user = useSession();
+  const router = useRouter();
+  const allowed = access === "any" || user?.role === access;
+
+  // A signed-in user on a page for the other role is sent to their own home,
+  // not shown the page. (useSession already bounces signed-out users to /login.)
+  useEffect(() => {
+    if (user && !allowed) router.replace(HOME_BY_ROLE[user.role]);
+  }, [user, allowed, router]);
+
   const role: Role = user?.role ?? (access === "ta" ? "ta" : "instructor");
   const nav =
     role === "ta"
@@ -63,7 +72,6 @@ export function AppShell({
           exam,
           active: INSTRUCTOR_KEYS.includes(active ?? "") ? (active as never) : undefined,
         });
-  const allowed = access === "any" || user?.role === access;
 
   return (
     <div
@@ -88,8 +96,9 @@ export function AppShell({
             gap: "28px",
           }}
         >
-          {/* Nothing until we know who is looking, so the wrong role never sees the page. */}
-          {user && (allowed ? children : <NoAccess />)}
+          {/* Nothing until we know who is looking, so the wrong role never sees
+              the page. A wrong-role user is being redirected, so render nothing. */}
+          {user && allowed && children}
         </div>
       </main>
     </div>
