@@ -3,6 +3,12 @@
 // to the API yet. When wiring it up, replace the constants with real data.
 import Link from "next/link";
 import type { Metadata } from "next";
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+import { SetupEditor } from "./setup-editor";
+=======
+>>>>>>> Stashed changes
 import {
   AppShell,
   Button,
@@ -12,6 +18,10 @@ import {
   PageTitle,
   SecondaryButton,
 } from "@/components/shell";
+<<<<<<< Updated upstream
+=======
+>>>>>>> 409f0a8b44b44f99d8e67eeeed705e6801d56e7d
+>>>>>>> Stashed changes
 
 export const metadata: Metadata = { title: "Set up the midterm \u00b7 Fair Grade" };
 
@@ -19,6 +29,10 @@ const course = { id: "hy335", code: "HY335", name: "Computer Networks" };
 const exam = { id: "midterm", name: "Midterm", flagged: 1 };
 
 export default function ExamSetupPage() {
+  return <SetupEditor />;
+}
+
+export function StaticExamSetupPage() {
   return (
     <>
       <AppShell course={course} exam={exam} active="setup" access="instructor">
