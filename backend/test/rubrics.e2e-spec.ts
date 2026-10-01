@@ -4,6 +4,7 @@ import request from 'supertest';
 import { App } from 'supertest/types.js';
 import { AppModule } from './../src/app.module.js';
 import { PrismaService } from './../src/prisma/prisma.service.js';
+import { wipeDb } from './helpers.js';
 
 const TCP_RUBRIC = {
   courseName: 'HY335 - Computer Networks',
@@ -44,13 +45,7 @@ describe('Rubrics (e2e)', () => {
     http = request(app.getHttpServer());
     prisma = app.get(PrismaService);
 
-    await prisma.aiGrade.deleteMany();
-    await prisma.taGrade.deleteMany();
-    await prisma.studentAnswer.deleteMany();
-    await prisma.criterion.deleteMany();
-    await prisma.rubric.deleteMany();
-    await prisma.course.deleteMany();
-    await prisma.user.deleteMany();
+    await wipeDb(prisma);
 
     instructorToken = await tokenFor('prof@test.com', 'instructor');
     taToken = await tokenFor('ta1@test.com', 'ta');

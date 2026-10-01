@@ -4,6 +4,7 @@ import request from 'supertest';
 import { App } from 'supertest/types.js';
 import { AppModule } from './../src/app.module.js';
 import { PrismaService } from './../src/prisma/prisma.service.js';
+import { wipeDb } from './helpers.js';
 
 describe('Auth and roles (e2e)', () => {
   let app: INestApplication<App>;
@@ -31,7 +32,7 @@ describe('Auth and roles (e2e)', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
     http = request(app.getHttpServer());
-    await app.get(PrismaService).user.deleteMany();
+    await wipeDb(app.get(PrismaService));
   });
 
   afterAll(async () => {
