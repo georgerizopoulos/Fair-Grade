@@ -13,6 +13,8 @@ a:hover{color:var(--ink)}
 .fg-press{transition:transform 500ms cubic-bezier(0.32, 0.72, 0, 1),background-color 500ms cubic-bezier(0.32, 0.72, 0, 1),box-shadow 500ms cubic-bezier(0.32, 0.72, 0, 1),color 500ms cubic-bezier(0.32, 0.72, 0, 1)}
 
 .fg-press:active{transform:scale(0.98)}
+.fg-press:disabled{opacity:0.45;cursor:not-allowed;transform:none}
+.fg-press:disabled .fg-knob{transform:none}
 
 .fg-knob{transition:transform 500ms cubic-bezier(0.32, 0.72, 0, 1)}
 

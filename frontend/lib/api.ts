@@ -29,17 +29,19 @@ export async function apiFetch<T = unknown>(
   { body, headers, ...init }: ApiOptions = {},
 ): Promise<T> {
   const token = localStorage.getItem(TOKEN_KEY);
+  // FormData (file uploads) goes as is; the browser sets the multipart header.
+  const isForm = body instanceof FormData;
 
   let res: Response;
   try {
     res = await fetch(`${API_URL}${path}`, {
       ...init,
       headers: {
-        "Content-Type": "application/json",
+        ...(isForm ? {} : { "Content-Type": "application/json" }),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...headers,
       },
-      body: body === undefined ? undefined : JSON.stringify(body),
+      body: body === undefined ? undefined : isForm ? body : JSON.stringify(body),
     });
   } catch {
     throw new ApiError(
