@@ -1,0 +1,9 @@
+# compiled output
+/dist
+
+# tests
+/coverage
+
+# SQLite database files
+*.db
+*.db-journal
