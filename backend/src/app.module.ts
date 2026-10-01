@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { AnswersModule } from './answers/answers.module.js';
 import { AuthModule } from './auth/auth.module.js';
+import { AllExceptionsFilter } from './common/all-exceptions.filter.js';
+import { validationPipe } from './common/validation.pipe.js';
 import { DeviationModule } from './deviation/deviation.module.js';
 import { GradingModule } from './grading/grading.module.js';
 import { HealthModule } from './health/health.module.js';
@@ -24,6 +27,11 @@ import { UsersModule } from './users/users.module.js';
     GradingModule,
     ResultsModule,
     DeviationModule,
+  ],
+  providers: [
+    // Registered here rather than in main.ts so tests using AppModule get them too.
+    { provide: APP_FILTER, useClass: AllExceptionsFilter },
+    { provide: APP_PIPE, useValue: validationPipe },
   ],
 })
 export class AppModule {}
