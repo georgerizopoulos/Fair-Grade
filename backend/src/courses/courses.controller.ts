@@ -38,4 +38,10 @@ export class CoursesController {
   ) {
     return this.courses.updateSettings(user, id, dto);
   }
+
+  @Roles('instructor')
+  @Get(':id/stats')
+  stats(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    return this.courses.stats(user, id);
+  }
 }

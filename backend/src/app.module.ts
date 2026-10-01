@@ -19,6 +19,7 @@ import { ResultsModule } from './results/results.module.js';
 import { RubricsModule } from './rubrics/rubrics.module.js';
 import { TaGradesModule } from './ta-grades/ta-grades.module.js';
 import { UsersModule } from './users/users.module.js';
+import { ReportsModule } from './reports/reports.module.js';
 
 // Owned by Γιώργος. Every feature module is already listed here, so nobody
 // else needs to edit this file.
@@ -39,6 +40,7 @@ import { UsersModule } from './users/users.module.js';
     CoursesModule,
     ExamsModule,
     PapersModule,
+    ReportsModule,
   ],
   providers: [
     // Registered here rather than in main.ts so tests using AppModule get them too.

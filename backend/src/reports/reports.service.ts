@@ -397,4 +397,132 @@ export class ReportsService {
       tas,
     };
   }
+
+  async taExamReport(
+    user: AuthUser,
+    examId: string,
+    taId: string,
+  ): Promise<TaDetailReportResponse> {
+    const exam = await this.access.ownedExam(user, examId);
+
+    const ta = await this.prisma.user.findUnique({
+      where: { id: taId },
+      select: { id: true, name: true, email: true, role: true },
+    });
+    if (!ta || ta.role !== 'ta') {
+      throw new NotFoundException(`TA ${taId} not found`);
+    }
+
+    const questions = await this.prisma.question.findMany({
+      where: { examId },
+      select: { id: true, code: true, title: true, maxPoints: true },
+      orderBy: { order: 'asc' },
+    });
+
+    const papers = await this.prisma.paper.findMany({
+      where: { examId, taId, status: 'AI_GRADED' },
+      include: {
+        answers: {
+          select: {
+            questionId: true,
+            taPoints: true,
+            aiPoints: true,
+            aiReasoning: true,
+          },
+        },
+      },
+      orderBy: { studentId: 'asc' },
+    });
+
+    if (papers.length === 0) {
+      throw new NotFoundException(
+        `TA ${ta.name} has no AI-graded papers in this exam`,
+      );
+    }
+
+    const maxTotal = questions.reduce((s, q) => s + q.maxPoints, 0);
+
+    const questionGaps: TaReportQuestionGap[] = questions.map((q) => {
+      const answersForQ = papers.flatMap((p) =>
+        p.answers
+          .filter((a) => a.questionId === q.id)
+          .map((a) => ({ taPoints: a.taPoints, aiPoints: a.aiPoints })),
+      );
+      return computeQuestionGap(q, answersForQ);
+    });
+
+    const flaggedQuestionCodes = questionGaps
+      .filter((q) => q.flagged)
+      .map((q) => q.code);
+
+    const flaggedPapers: Record<string, TaReportFlaggedPaper[]> = {};
+    for (const qGap of questionGaps) {
+      if (!qGap.flagged) continue;
+      const rows: TaReportFlaggedPaper[] = [];
+      for (const paper of papers) {
+        const answer = paper.answers.find((a) => a.questionId === qGap.questionId);
+        if (answer?.taPoints != null && answer?.aiPoints != null) {
+          const gap = +(answer.taPoints - answer.aiPoints).toFixed(2);
+          rows.push({
+            paperId: paper.id,
+            studentId: paper.studentId,
+            taPoints: answer.taPoints,
+            aiPoints: answer.aiPoints,
+            gap,
+            aiReasoning: answer.aiReasoning,
+          });
+        }
+      }
+      rows.sort((a, b) => Math.abs(b.gap) - Math.abs(a.gap));
+      flaggedPapers[qGap.code] = rows;
+    }
+
+    const paperRows: TaReportPaper[] = papers.map((p) => {
+      const answerMap = new Map(p.answers.map((a) => [a.questionId, a]));
+      const qRows = questions.map((q) => {
+        const a = answerMap.get(q.id);
+        return {
+          questionId: q.id,
+          code: q.code,
+          maxPoints: q.maxPoints,
+          taPoints: a?.taPoints ?? null,
+          aiPoints: a?.aiPoints ?? null,
+        };
+      });
+      const taTotal = qRows.every((r) => r.taPoints != null)
+        ? qRows.reduce((s, r) => s + r.taPoints!, 0)
+        : null;
+      const aiTotal = qRows.every((r) => r.aiPoints != null)
+        ? qRows.reduce((s, r) => s + r.aiPoints!, 0)
+        : null;
+      return {
+        paperId: p.id,
+        studentId: p.studentId,
+        questions: qRows,
+        taTotal,
+        aiTotal,
+        gap: taTotal != null && aiTotal != null ? +(taTotal - aiTotal).toFixed(2) : null,
+      };
+    });
+
+    const allTa = paperRows.filter((p) => p.taTotal != null).map((p) => p.taTotal!);
+    const allAi = paperRows.filter((p) => p.aiTotal != null).map((p) => p.aiTotal!);
+    const taAverage = allTa.length > 0 ? +(allTa.reduce((s, v) => s + v, 0) / allTa.length).toFixed(2) : null;
+    const aiAverage = allAi.length > 0 ? +(allAi.reduce((s, v) => s + v, 0) / allAi.length).toFixed(2) : null;
+    const paperGap = taAverage != null && aiAverage != null ? +(taAverage - aiAverage).toFixed(2) : null;
+
+    return {
+      exam: { id: exam.id, name: exam.name, maxTotal },
+      course: { id: exam.course.id, code: exam.course.code, name: exam.course.name },
+      ta: { id: ta.id, name: ta.name, email: ta.email },
+      papersGraded: papers.length,
+      taAverage,
+      aiAverage,
+      paperGap,
+      flaggedQuestionCodes,
+      questions: questionGaps,
+      flaggedPapers,
+      papers: paperRows,
+    };
+  }
 }

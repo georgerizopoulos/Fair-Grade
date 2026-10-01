@@ -63,9 +63,11 @@ Every error, from every endpoint, has this shape:
 | 11 | `POST /ta-grades/bulk` | instructor, ta | Σταύρος | `/upload` step 3, `/ta` |
 | 12 | `GET /ta-grades?rubricId=` | instructor, ta | Σταύρος | `/upload`, `/ta` |
 | 13 | `POST /grade/run` | instructor | Γιώργος (controller) + Κώστας (grading logic) | `/upload` ("Run AI Grading") |
-| 14 | `GET /grade/results/:rubricId` | instructor | Δημ��τρης | `/dashboard/[taId]` |
-| 15 | `GET /deviation/:rubricId` | instructor | Δημ��τρης (controller) + Κώστας (deviation logic) | `/dashboard`, `/dashboard/[taId]` |
-| 16 | `GET /exams/:id/my-stats` | TA member of the course | Δημ��τρης | `/courses/[courseId]/exams/[examId]/stats` |
+| 14 | `GET /grade/results/:rubricId` | instructor | Δημ��τρης | `/dashboard/[taId]` |
+| 15 | `GET /deviation/:rubricId` | instructor | Δημήτρης (controller) + Κώστας (deviation logic) | `/dashboard`, `/dashboard/[taId]` |
+| 16 | `GET /exams/:id/my-stats` | TA member of the course | Δημήτρης | `/courses/[courseId]/exams/[examId]/stats` |
+| 17 | `GET /exams/:id/report` | instructor or course owner | Δημήτρης | `/courses/[courseId]/exams/[examId]/report` |
+| 18 | `GET /exams/:id/report/tas/:taId` | instructor or course owner | Δημήτρης | `/courses/[courseId]/exams/[examId]/report/[taId]` |
 
 ---
 
@@ -672,7 +674,7 @@ If some answers failed, the rest are still saved and the call still returns 200:
 ## 14. GET /grade/results/:rubricId
 
 **Who can call:** instructor.
-**Built by:** Δημ��τρης.
+**Built by:** Δημ��τρης.
 
 Every answer with the AI's grade and each TA's grade side by side, per criterion. The drill-down page uses this (with `?taId=`) for the full table of answers that TA graded.
 
@@ -733,7 +735,7 @@ Answers sorted by `studentIdAnon`; criteria by `position`.
 ## 15. GET /deviation/:rubricId
 
 **Who can call:** instructor.
-**Built by:** Δημ��τρης (controller, `deviation.controller.ts`), using Κώστας's `computeDeviation()`.
+**Built by:** Δημ��τρης (controller, `deviation.controller.ts`), using Κώστας's `computeDeviation()`.
 
 The deviation report, grouped by TA, computed exactly per the Deviation Rules section. The main dashboard and the drill-down page are built on this.
 
@@ -960,3 +962,141 @@ The nullable comparison fields and empty `leaderboard`/`badges` are temporary st
 - 401 `UNAUTHORIZED` - no token or invalid token
 - 403 `FORBIDDEN` - caller is not a TA or is not a member of the course
 - 404 `NOT_FOUND` - exam does not exist
+
+---
+
+## 17. GET /exams/:id/report
+
+**Who can call:** instructor or course owner.
+
+Returns the exam-level report listing all TAs with their flagged/OK status and average gap. Only `AI_GRADED` papers participate. TAs are sorted by flagged first (highest gap), then by average gap descending.
+
+**Response - 200 OK**
+```json
+{
+  "exam": { "id": "exam-uuid", "name": "Midterm", "maxTotal": 10 },
+  "course": { "id": "course-uuid", "code": "HY335", "name": "Computer Networks" },
+  "totalPapers": 24,
+  "aiGradedPapers": 20,
+  "tas": [
+    {
+      "taId": "ta-uuid",
+      "taName": "Maria",
+      "papersGraded": 8,
+      "averageGap": 0.52,
+      "flagged": true,
+      "flaggedQuestionCodes": ["Q2"]
+    },
+    {
+      "taId": "ta-uuid-2",
+      "taName": "Nikos",
+      "papersGraded": 12,
+      "averageGap": 0.15,
+      "flagged": false,
+      "flaggedQuestionCodes": []
+    }
+  ]
+}
+```
+
+A TA is flagged if at least one question has `n ≥ 3` AI-graded papers and `|averageGap| > 0.15 × maxPoints` for that question.
+
+**Errors**
+- 401 `UNAUTHORIZED` - no token or invalid token
+- 403 `FORBIDDEN` - caller is not the instructor or course owner
+- 404 `NOT_FOUND` - exam does not exist
+
+**Example curl**
+```bash
+# As instructor
+curl -H "Authorization: Bearer $TOKEN" \
+  http://localhost:3001/exams/EXAM_ID/report
+```
+
+---
+
+## 18. GET /exams/:id/report/tas/:taId
+
+**Who can call:** instructor or course owner.
+
+Returns one TA's detailed page in the exam report: the gap per question with flagged/OK status, and for every flagged question the papers behind it (sorted by largest absolute gap first). Also includes the list of all papers that TA graded alongside the AI's points.
+
+**Response - 200 OK**
+```json
+{
+  "exam": { "id": "exam-uuid", "name": "Midterm", "maxTotal": 10 },
+  "course": { "id": "course-uuid", "code": "HY335", "name": "Computer Networks" },
+  "ta": { "id": "ta-uuid", "name": "Maria", "email": "maria@example.com" },
+  "papersGraded": 8,
+  "taAverage": 7.25,
+  "aiAverage": 6.20,
+  "paperGap": 1.05,
+  "flaggedQuestionCodes": ["Q2"],
+  "questions": [
+    {
+      "questionId": "q-uuid",
+      "code": "Q1",
+      "title": "TCP Basics",
+      "maxPoints": 5,
+      "sampleSize": 8,
+      "taAverage": 4.0,
+      "aiAverage": 3.8,
+      "averageGap": 0.2,
+      "threshold": 0.75,
+      "flagged": false
+    },
+    {
+      "questionId": "q-uuid-2",
+      "code": "Q2",
+      "title": "UDP vs TCP",
+      "maxPoints": 5,
+      "sampleSize": 8,
+      "taAverage": 3.25,
+      "aiAverage": 2.40,
+      "averageGap": 0.85,
+      "threshold": 0.75,
+      "flagged": true
+    }
+  ],
+  "flaggedPapers": {
+    "Q2": [
+      {
+        "paperId": "paper-uuid",
+        "studentId": "csd5146",
+        "taPoints": 4,
+        "aiPoints": 2,
+        "gap": 2,
+        "aiReasoning": "Answer only covered basic concepts..."
+      },
+      {
+        "paperId": "paper-uuid-2",
+        "studentId": "csd5147",
+        "taPoints": 3.5,
+        "aiPoints": 2.5,
+        "gap": 1,
+        "aiReasoning": "Partial understanding shown..."
+      }
+    ]
+  },
+  "papers": [
+    {
+      "paperId": "paper-uuid",
+      "studentId": "csd5146",
+      "questions": [
+        { "questionId": "q-uuid", "code": "Q1", "maxPoints": 5, "taPoints": 4, "aiPoints": 4 },
+        { "questionId": "q-uuid-2", "code": "Q2", "maxPoints": 5, "taPoints": 4, "aiPoints": 2 }
+      ],
+      "taTotal": 8,
+      "aiTotal": 6,
+      "gap": 2
+    }
+  ]
+}
+```
+
+The flagging rule: a question is flagged if `sampleSize ≥ 3` and `|averageGap| > 0.15 × maxPoints`. The `threshold` field shows the computed `0.15 × maxPoints` value for reference.
+
+**Errors**
+- 401 `UNAUTHORIZED` - no token or invalid token
+- 403 `FORBIDDEN` - caller is not the instructor or course owner
+- 404 `NOT_FOUND` - exam does not exist, TA does not exist, or TA has no AI-graded papers in this exam

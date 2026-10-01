@@ -178,4 +178,53 @@ export class CoursesService {
       leaderboardVisibility: course.leaderboardVisibility,
     };
   }
+
+  async stats(user: AuthUser, courseId: string) {
+    await this.access.ownedCourse(user, courseId);
+
+    const course = await this.prisma.course.findUniqueOrThrow({
+      where: { id: courseId },
+      include: {
+        exams: {
+          orderBy: { heldAt: 'asc' },
+          select: {
+            id: true,
+            name: true,
+            heldAt: true,
+            passMark: true,
+            status: true,
+          },
+        },
+      },
+    });
+
+    return {
+      course: {
+        id: course.id,
+        code: course.code,
+        name: course.name,
+        semester: course.semester,
+        leaderboardVisibility: course.leaderboardVisibility,
+      },
+      exams: course.exams.map((exam) => ({
+        id: exam.id,
+        name: exam.name,
+        heldAt: exam.heldAt,
+        status: exam.status,
+        passMark: exam.passMark,
+      })),
+      summary: {
+        taCount: 0,
+        papersGraded: 0,
+        flaggedCount: 0,
+        averageGap: null,
+        passRate: null,
+      },
+      leaderboard: [],
+      badges: [],
+      distributions: [],
+      questionsToTighten: [],
+      trend: [],
+    };
+  }
 }
