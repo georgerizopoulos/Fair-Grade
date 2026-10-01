@@ -2,7 +2,7 @@
 // by frontend/scripts/html2jsx.py. Demo content only: nothing here talks
 // to the API yet. When wiring it up, replace the constants with real data.
 import Link from "next/link";
-import type { Metadata } from "next";
+import { CourseLivePage } from "./course-page";
 import {
   AppShell,
   Avatar,
@@ -16,11 +16,13 @@ import {
   YouTag,
 } from "@/components/shell";
 
-export const metadata: Metadata = { title: "HY335 Computer Networks \u00b7 Fair Grade" };
-
 const course = { id: "hy335", code: "HY335", name: "Computer Networks" };
 
 export default function CoursePage() {
+  return <CourseLivePage />;
+}
+
+export function StaticCoursePage() {
   return (
     <>
       <AppShell course={course} active="exams">
