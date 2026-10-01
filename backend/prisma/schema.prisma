@@ -1,0 +1,119 @@
+// Fair Grade database schema — API_SPEC.md → Database Schema.
+// Owned by Γιώργος. Need a change? Ask him, don't edit this file yourself.
+//
+// SQLite instead of PostgreSQL (TASKS.md, Track 1 step 6). Points are Float:
+// half points (0.5, 1.5, ...) are exact in floating point, and Float comes
+// back as a plain JS number instead of a Decimal object.
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum Role {
+  instructor
+  ta
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique // always stored lowercase
+  passwordHash String   @map("password_hash") // bcrypt, never returned
+  role         Role
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  taGrades TaGrade[]
+
+  @@map("users")
+}
+
+model Course {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  rubrics Rubric[]
+
+  @@map("courses")
+}
+
+model Rubric {
+  id           String   @id @default(uuid())
+  courseId     String   @map("course_id")
+  questionText String   @map("question_text")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  course   Course          @relation(fields: [courseId], references: [id])
+  criteria Criterion[]
+  answers  StudentAnswer[]
+
+  @@map("rubrics")
+}
+
+model Criterion {
+  id          String @id @default(uuid())
+  rubricId    String @map("rubric_id")
+  position    Int // 1, 2, 3... in the order the rubric lists them
+  description String
+  maxPoints   Float  @map("max_points") // > 0, checked in the API
+
+  rubric   Rubric    @relation(fields: [rubricId], references: [id])
+  taGrades TaGrade[]
+  aiGrades AiGrade[]
+
+  @@unique([rubricId, position])
+  @@map("criteria")
+}
+
+model StudentAnswer {
+  id            String   @id @default(uuid())
+  rubricId      String   @map("rubric_id")
+  studentIdAnon String   @map("student_id_anon")
+  answerText    String   @map("answer_text")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  rubric   Rubric    @relation(fields: [rubricId], references: [id])
+  taGrades TaGrade[]
+  aiGrades AiGrade[]
+
+  @@unique([rubricId, studentIdAnon])
+  @@map("student_answers")
+}
+
+model TaGrade {
+  id          String   @id @default(uuid())
+  answerId    String   @map("answer_id")
+  criterionId String   @map("criterion_id")
+  taId        String   @map("ta_id") // must be a user with role 'ta', checked in the API
+  pointsGiven Float    @map("points_given") // >= 0, checked in the API
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  answer    StudentAnswer @relation(fields: [answerId], references: [id])
+  criterion Criterion     @relation(fields: [criterionId], references: [id])
+  ta        User          @relation(fields: [taId], references: [id])
+
+  @@unique([answerId, criterionId, taId])
+  @@map("ta_grades")
+}
+
+model AiGrade {
+  id          String   @id @default(uuid())
+  answerId    String   @map("answer_id")
+  criterionId String   @map("criterion_id")
+  points      Float // >= 0, checked in the API
+  reasoning   String
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  answer    StudentAnswer @relation(fields: [answerId], references: [id])
+  criterion Criterion     @relation(fields: [criterionId], references: [id])
+
+  @@unique([answerId, criterionId])
+  @@map("ai_grades")
+}
