@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -47,6 +47,7 @@ interface DeviationReport {
 
 function DashboardInner() {
   const { user, loading: authLoading } = useRequireRole("instructor");
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const [rubrics, setRubrics] = useState<Rubric[]>([]);
@@ -54,16 +55,22 @@ function DashboardInner() {
   const [report, setReport] = useState<DeviationReport | null>(null);
   const [loadingReport, setLoadingReport] = useState(false);
 
-  // Load rubrics
+  // Load rubrics; default: newest with aiGraded, else newest (#7 is newest-first)
   useEffect(() => {
     if (!user) return;
     apiFetch<{ rubrics: Rubric[] }>("/rubrics").then(({ rubrics: r }) => {
       setRubrics(r);
       const qp = searchParams.get("rubricId");
       if (qp && r.some((x) => x.id === qp)) setSelectedRubricId(qp);
-      else if (r.length > 0) setSelectedRubricId(r[0].id);
+      else setSelectedRubricId(r.find((x) => x.aiGraded)?.id ?? r[0]?.id ?? null);
     });
   }, [user, searchParams]);
+
+  // Keep rubricId in the URL so refreshing keeps the same view.
+  function pickRubric(id: string) {
+    setSelectedRubricId(id);
+    router.replace(`/dashboard?rubricId=${id}`);
+  }
 
   // Load deviation report
   useEffect(() => {
@@ -81,15 +88,15 @@ function DashboardInner() {
     <div className="mx-auto max-w-4xl space-y-6 p-4">
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-semibold">Dashboard</h1>
-        {rubrics.length > 1 && (
+        {rubrics.length > 0 && (
           <select
             className="h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm"
             value={selectedRubricId ?? ""}
-            onChange={(e) => setSelectedRubricId(e.target.value)}
+            onChange={(e) => pickRubric(e.target.value)}
           >
             {rubrics.map((r) => (
               <option key={r.id} value={r.id}>
-                {r.courseName}
+                {r.courseName} — {r.questionText.slice(0, 50)}
               </option>
             ))}
           </select>

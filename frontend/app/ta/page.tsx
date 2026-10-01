@@ -49,6 +49,8 @@ export default function TaGradingPage() {
   const [rubricDetail, setRubricDetail] = useState<RubricDetail | null>(null);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [grades, setGrades] = useState<Record<string, number>>({});
+  // Answer ids with every criterion saved on the server.
+  const [savedAnswers, setSavedAnswers] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -81,10 +83,19 @@ export default function TaGradingPage() {
         setAnswers(ans.answers);
         // Pre-fill existing grades
         const map: Record<string, number> = {};
+        const perAnswer = new Map<string, number>();
         for (const g of existing.grades) {
           map[`${g.answerId}:${g.criterionId}`] = g.pointsGiven;
+          perAnswer.set(g.answerId, (perAnswer.get(g.answerId) ?? 0) + 1);
         }
         setGrades(map);
+        setSavedAnswers(
+          new Set(
+            [...perAnswer]
+              .filter(([, n]) => n >= detail.criteria.length)
+              .map(([id]) => id),
+          ),
+        );
         setCurrentIdx(0);
       })
       .catch((e) => setError(e instanceof Error ? e.message : "Failed to load grading data"));
@@ -104,30 +115,34 @@ export default function TaGradingPage() {
     }));
   }
 
-  async function handleSave() {
+  // Save one answer: all its criteria, no taId (the backend uses the token).
+  async function saveAnswer(answerId: string) {
     if (!rubricDetail) return;
     setError("");
     setSuccess("");
+
+    const gradesList = rubricDetail.criteria.map((c) => ({
+      answerId,
+      criterionId: c.id,
+      pointsGiven: grades[`${answerId}:${c.id}`] ?? 0,
+    }));
+    const bad = rubricDetail.criteria.find((c) => {
+      const pts = grades[`${answerId}:${c.id}`];
+      return pts !== undefined && (pts < 0 || pts > c.maxPoints);
+    });
+    if (bad) {
+      setError(`C${bad.position} must be between 0 and ${bad.maxPoints}`);
+      return;
+    }
+
     setSaving(true);
-
     try {
-      const gradesList: { answerId: string; criterionId: string; pointsGiven: number }[] = [];
-      for (const [key, pts] of Object.entries(grades)) {
-        const [answerId, criterionId] = key.split(":");
-        gradesList.push({ answerId, criterionId, pointsGiven: pts });
-      }
-
-      if (gradesList.length === 0) {
-        setError("No grades to save");
-        setSaving(false);
-        return;
-      }
-
-      const result = await apiFetch<{ saved: number }>("/ta-grades/bulk", {
+      await apiFetch("/ta-grades/bulk", {
         method: "POST",
         body: { grades: gradesList },
       });
-      setSuccess(`Saved ${result.saved} grades`);
+      setSavedAnswers((prev) => new Set(prev).add(answerId));
+      setSuccess("Saved");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to save");
     } finally {
@@ -144,7 +159,14 @@ export default function TaGradingPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6 p-4">
-      <h1 className="text-lg font-semibold">Grade Answers</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-lg font-semibold">Grade Answers</h1>
+        {answers.length > 0 && (
+          <Badge variant="outline">
+            Graded {savedAnswers.size} of {answers.length}
+          </Badge>
+        )}
+      </div>
 
       {/* Messages */}
       {error && <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
@@ -159,7 +181,7 @@ export default function TaGradingPage() {
         >
           {rubrics.map((r) => (
             <option key={r.id} value={r.id}>
-              {r.courseName} ? {r.questionText.slice(0, 60)}
+              {r.courseName} — {r.questionText.slice(0, 60)}
             </option>
           ))}
         </select>
@@ -178,7 +200,7 @@ export default function TaGradingPage() {
             disabled={currentIdx === 0}
             onClick={() => setCurrentIdx(currentIdx - 1)}
           >
-            ? Prev
+            ← Prev
           </Button>
           <span className="text-sm text-muted-foreground">
             {currentIdx + 1} / {answers.length}
@@ -189,9 +211,12 @@ export default function TaGradingPage() {
             disabled={currentIdx === answers.length - 1}
             onClick={() => setCurrentIdx(currentIdx + 1)}
           >
-            Next ?
+            Next →
           </Button>
           <Badge variant="outline">{currentAnswer?.studentIdAnon}</Badge>
+          {currentAnswer && savedAnswers.has(currentAnswer.id) && (
+            <Badge variant="secondary">Saved</Badge>
+          )}
         </div>
       )}
 
@@ -223,19 +248,22 @@ export default function TaGradingPage() {
                     max={c.maxPoints}
                     value={getGrade(currentAnswer.id, c.id)}
                     onChange={(e) => setGrade(currentAnswer.id, c.id, e.target.value)}
-                    placeholder="?"
+                    placeholder="0"
                   />
                 </div>
               ))}
             </div>
+
+            <Button onClick={() => saveAnswer(currentAnswer.id)} disabled={saving}>
+              {saving
+                ? "Saving…"
+                : savedAnswers.has(currentAnswer.id)
+                  ? "Saved ✓ (save again)"
+                  : "Save"}
+            </Button>
           </CardContent>
         </Card>
       )}
-
-      {/* Save */}
-      <Button onClick={handleSave} disabled={saving || Object.keys(grades).length === 0}>
-        {saving ? "Saving?" : "Save All Grades"}
-      </Button>
     </div>
   );
 }
