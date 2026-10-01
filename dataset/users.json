@@ -1,0 +1,8 @@
+{
+  "users": [
+    { "name": "Instructor Demo", "email": "instructor@demo.com", "password": "demo1234", "role": "instructor" },
+    { "name": "Maria Papadaki",  "email": "maria@demo.com",      "password": "demo1234", "role": "ta" },
+    { "name": "Nikos Georgiou",  "email": "nikos@demo.com",      "password": "demo1234", "role": "ta" },
+    { "name": "Eleni Markou",    "email": "eleni@demo.com",      "password": "demo1234", "role": "ta" }
+  ]
+}

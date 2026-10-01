@@ -1,0 +1,76 @@
+{
+  "answers": [
+    {
+      "studentIdAnon": "student_001",
+      "answerText": "The client sends a SYN with its initial sequence number. The server replies with SYN-ACK, acknowledging the client's number and sending its own. The client sends ACK. Now both sides know each other's starting sequence numbers, so they can detect lost or reordered data, and the connection is established."
+    },
+    {
+      "studentIdAnon": "student_002",
+      "answerText": "TCP handshake is when two computers agree to talk. One says hello and the other says hello back and then they send data."
+    },
+    {
+      "studentIdAnon": "student_003",
+      "answerText": "Ok so basically before any data TCP has to make sure both ends are ready and in sync, otherwise data could get lost. The server sends back a SYN-ACK which acks the client's sequence number plus one and has its own number in it. Oh and first of all the client sends SYN with a random starting sequence number. Then the client ACKs. Sequence numbers are so they know which bytes they got. That's why it's called three-way, 3 messages. Also both sides agree on the numbers so it's reliable."
+    },
+    {
+      "studentIdAnon": "student_004",
+      "answerText": "The handshake has three steps. First the client sends a SYN packet. Then the server sends an ACK to confirm it got the SYN, and finally the server sends SYN-ACK so the connection opens. Each side picks a starting sequence number during this so the other side can number and acknowledge the bytes it receives. The handshake is needed so both sides are synchronized before data is sent."
+    },
+    {
+      "studentIdAnon": "student_005",
+      "answerText": "1. Client -> Server: SYN (client's initial sequence number x). 2. Server -> Client: SYN-ACK (server's initial sequence number y, ack = x+1). 3. Client -> Server: ACK (ack = y+1). After step 3 the connection is open."
+    },
+    {
+      "studentIdAnon": "student_006",
+      "answerText": "The TCP handshake is how the connection gets encrypted. First the client sends a HELLO message. Then the server sends its certificate. Finally the client sends a key. After that all data is secure so nobody can read it, which is why HTTPS is safe."
+    },
+    {
+      "studentIdAnon": "student_007",
+      "answerText": "The computer that wants to connect sends a 'request' message with a starting number. The other computer answers with a 'request + confirm' message that confirms that number and gives its own starting number. Then the first one sends a final 'confirm'. The numbers are used so each side can count the bytes and notice if something is missing or out of order. You need this so both sides are ready and agree on the numbers before real data is sent, otherwise data could be lost."
+    },
+    {
+      "studentIdAnon": "student_008",
+      "answerText": "TCP uses a three-way handshake to open a connection. Step 1: the client sends a SYN segment containing its initial sequence number (ISN). Step 2: the server replies with SYN-ACK, acknowledging the client's ISN (ack = ISN+1) and sending its own ISN. Step 3: the client sends an ACK acknowledging the server's ISN. Sequence numbers are how TCP keeps track of every byte, so the receiver can put data in order, detect missing segments and acknowledge what arrived. The handshake is needed because both sides must agree on these starting numbers and confirm the other side is reachable before any data is sent; otherwise reliable delivery isn't possible."
+    },
+    {
+      "studentIdAnon": "student_009",
+      "answerText": "First the client sends SYN. The server answers with SYN-ACK. Then the client sends ACK. Sequence numbers are in the packets so they are numbered. After the ACK the connection is established and they can send data."
+    },
+    {
+      "studentIdAnon": "student_010",
+      "answerText": "The client sends a SYN to the server's port to say it wants to connect, and the server sends back an acknowledgement. Then the client confirms. Port numbers are exchanged here so the server knows which application to send the data back to. It's done so the server is ready."
+    },
+    {
+      "studentIdAnon": "student_011",
+      "answerText": "TCP sends a SYN and then gets an ACK back, so that's the handshake, and the sequence number goes up by one. It makes the connection reliable."
+    },
+    {
+      "studentIdAnon": "student_012",
+      "answerText": "The three-way handshake is SYN, SYN-ACK, ACK, and it's also used to close the connection with FIN and FIN-ACK. Both sides send their sequence numbers so they can acknowledge data. When closing there are actually four messages because each side closes separately. The handshake makes sure both hosts are ready."
+    },
+    {
+      "studentIdAnon": "student_013",
+      "answerText": "The handshake has three messages. First, the client sends SYN to ask for a connection. Second, the server replies with SYN-ACK to accept and acknowledge. Third, the client sends ACK to confirm. Sequence numbers are also included in these messages. The point is that both sides confirm they can send and receive before any data is transferred, so nothing is sent to a host that isn't listening."
+    },
+    {
+      "studentIdAnon": "student_014",
+      "answerText": "so tcp is connection oriented unlike udp which just sends, and there are sequence numbers which are basically the byte count starting from a random number (random for security too) and the receiver uses them to reorder and spot lost stuff and ack them, and to set that up there's the handshake which is SYN from client then SYN-ACK from server then ACK from client and then both know the other's starting number. you need it because otherwise the receiver wouldn't know where the data starts"
+    },
+    {
+      "studentIdAnon": "student_015",
+      "answerText": "Before sending data, two hosts need to make sure the other one is actually there and ready, and agree on how they will keep track of the data, otherwise packets could get lost without anyone noticing. That's why TCP does a handshake before it sends anything. It is the reason TCP is called reliable."
+    },
+    {
+      "studentIdAnon": "student_016",
+      "answerText": "The client starts by sending SYN with a sequence number. The server responds with SYN-ACK, which acknowledges the client's number and includes the server's own sequence number. The client finishes with ACK. Sequence numbers let each side acknowledge received data and detect missing segments. This setup ensures both sides are synchronized before the data transfer begins."
+    },
+    {
+      "studentIdAnon": "student_017",
+      "answerText": "Both TCP and UDP open a connection with a three-way handshake: SYN, SYN-ACK, ACK. The sequence numbers are agreed here so later the receiver can put packets back in order and ask for missing ones again. After this the data goes."
+    },
+    {
+      "studentIdAnon": "student_018",
+      "answerText": "Three-way handshake: (1) SYN: the client picks an initial sequence number and sends it. (2) SYN-ACK: the server acknowledges it and sends its own initial sequence number. (3) ACK: the client acknowledges the server's number. These numbers are the starting point for counting bytes, so every later segment can be acknowledged, reordered or retransmitted. It's needed so both ends are in sync."
+    }
+  ]
+}
