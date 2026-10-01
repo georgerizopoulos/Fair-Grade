@@ -1,7 +1,8 @@
 "use client";
 
+import Papa from "papaparse";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -42,6 +43,17 @@ interface TaUser {
   email: string;
 }
 
+/* ?? preview row types ?? */
+interface AnswerRow {
+  studentIdAnon: string;
+  answerText: string;
+}
+interface GradeRow {
+  studentIdAnon: string;
+  scores: number[];
+  warnings: string[];
+}
+
 /* ?? inner component (uses useSearchParams) ?? */
 function UploadInner() {
   const { user, loading: authLoading } = useRequireRole("instructor");
@@ -53,6 +65,7 @@ function UploadInner() {
   const [selectedRubricId, setSelectedRubricId] = useState<string | null>(null);
   const [rubricDetail, setRubricDetail] = useState<RubricDetail | null>(null);
   const [tas, setTas] = useState<TaUser[]>([]);
+  const [existingAnswers, setExistingAnswers] = useState<{ id: string; studentIdAnon: string }[]>([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -96,18 +109,137 @@ function UploadInner() {
       .catch(() => {});
   }, [user, loadRubrics]);
 
-  // Load rubric detail when selection changes
+  // Load rubric detail + existing answers when selection changes
   useEffect(() => {
     if (!selectedRubricId) return;
     apiFetch<RubricDetail>(`/rubrics/${selectedRubricId}`)
       .then(setRubricDetail)
       .catch(() => {});
+    apiFetch<{ answers: { id: string; studentIdAnon: string }[] }>(
+      `/answers?rubricId=${selectedRubricId}`,
+    )
+      .then(({ answers }) => setExistingAnswers(answers))
+      .catch(() => setExistingAnswers([]));
   }, [selectedRubricId]);
 
   const clearMessages = () => {
     setError("");
     setSuccess("");
   };
+
+  /* ?? Step 2: parse answers CSV with papaparse ?? */
+  const answerPreview = useMemo<{ rows: AnswerRow[]; errors: string[] }>(() => {
+    if (!answersCsv.trim()) return { rows: [], errors: [] };
+    const result = Papa.parse<Record<string, string>>(answersCsv, {
+      header: true,
+      skipEmptyLines: true,
+    });
+    const errors: string[] = [];
+    const rows: AnswerRow[] = [];
+    const seen = new Set<string>();
+
+    // If no header row detected, try headerless
+    const hasHeader = result.meta.fields?.includes("studentIdAnon");
+    if (!hasHeader) {
+      const raw = Papa.parse<string[]>(answersCsv, { skipEmptyLines: true });
+      for (let i = 0; i < raw.data.length; i++) {
+        const cols = raw.data[i];
+        if (cols.length < 2) {
+          errors.push(`Row ${i + 1}: needs at least 2 columns (studentIdAnon, answerText)`);
+          continue;
+        }
+        const sid = cols[0].trim();
+        const text = cols.slice(1).join(",").trim();
+        if (!sid) { errors.push(`Row ${i + 1}: empty studentIdAnon`); continue; }
+        if (!text) { errors.push(`Row ${i + 1}: empty answerText`); continue; }
+        if (seen.has(sid)) { errors.push(`Row ${i + 1}: duplicate "${sid}"`); continue; }
+        seen.add(sid);
+        rows.push({ studentIdAnon: sid, answerText: text });
+      }
+      return { rows, errors };
+    }
+
+    for (let i = 0; i < result.data.length; i++) {
+      const row = result.data[i];
+      const sid = row.studentIdAnon?.trim() ?? "";
+      const text = row.answerText?.trim() ?? "";
+      if (!sid) { errors.push(`Row ${i + 1}: empty studentIdAnon`); continue; }
+      if (!text) { errors.push(`Row ${i + 1}: empty answerText`); continue; }
+      if (seen.has(sid)) { errors.push(`Row ${i + 1}: duplicate "${sid}"`); continue; }
+      seen.add(sid);
+      rows.push({ studentIdAnon: sid, answerText: text });
+    }
+    return { rows, errors };
+  }, [answersCsv]);
+
+  /* ?? Step 3: parse grades CSV with papaparse + validate ?? */
+  const sortedCriteria = useMemo(
+    () => (rubricDetail?.criteria ?? []).sort((a, b) => (a.position ?? 0) - (b.position ?? 0)),
+    [rubricDetail],
+  );
+  const answerMap = useMemo(
+    () => new Map(existingAnswers.map((a) => [a.studentIdAnon, a.id])),
+    [existingAnswers],
+  );
+
+  const gradePreview = useMemo<{ rows: GradeRow[]; errors: string[] }>(() => {
+    if (!gradesCsv.trim() || sortedCriteria.length === 0) return { rows: [], errors: [] };
+    const raw = Papa.parse<string[]>(gradesCsv, { skipEmptyLines: true });
+    const errors: string[] = [];
+    const rows: GradeRow[] = [];
+
+    let startIdx = 0;
+    // Skip header row if present
+    if (raw.data.length > 0) {
+      const first = raw.data[0][0]?.trim().toLowerCase();
+      if (first === "studentidanon" || first === "student_id_anon" || first === "student") {
+        startIdx = 1;
+      }
+    }
+
+    for (let i = startIdx; i < raw.data.length; i++) {
+      const cols = raw.data[i];
+      const sid = cols[0]?.trim() ?? "";
+      if (!sid) { errors.push(`Row ${i + 1}: empty studentIdAnon`); continue; }
+
+      const warnings: string[] = [];
+      if (!answerMap.has(sid)) warnings.push("Unknown student");
+
+      const scores: number[] = [];
+      for (let j = 0; j < sortedCriteria.length; j++) {
+        const val = cols[j + 1]?.trim();
+        if (val === undefined || val === "") {
+          warnings.push(`C${j + 1}: missing`);
+          scores.push(0);
+          continue;
+        }
+        const pts = parseFloat(val);
+        if (isNaN(pts)) {
+          warnings.push(`C${j + 1}: "${val}" is not a number`);
+          scores.push(0);
+        } else if (pts < 0) {
+          warnings.push(`C${j + 1}: ${pts} < 0`);
+          scores.push(pts);
+        } else if (pts > sortedCriteria[j].maxPoints) {
+          warnings.push(`C${j + 1}: ${pts} > max ${sortedCriteria[j].maxPoints}`);
+          scores.push(pts);
+        } else {
+          scores.push(pts);
+        }
+      }
+      rows.push({ studentIdAnon: sid, scores, warnings });
+    }
+    return { rows, errors };
+  }, [gradesCsv, sortedCriteria, answerMap]);
+
+  const gradeHasBlockingErrors = useMemo(
+    () =>
+      gradePreview.errors.length > 0 ||
+      gradePreview.rows.some(
+        (r) => !answerMap.has(r.studentIdAnon) || r.warnings.some((w) => w.includes(">") || w.includes("not a number")),
+      ),
+    [gradePreview, answerMap],
+  );
 
   // ?? Step 1: Create Rubric ??
   async function handleCreateRubric() {
@@ -140,28 +272,22 @@ function UploadInner() {
 
   // ?? Step 2: Upload Answers ??
   async function handleUploadAnswers() {
-    if (!selectedRubricId) return;
+    if (!selectedRubricId || answerPreview.rows.length === 0) return;
     clearMessages();
     setUploadingAnswers(true);
     try {
-      const lines = answersCsv.trim().split("\n");
-      const answers = lines
-        .filter((l) => l.trim())
-        .map((line) => {
-          const idx = line.indexOf(",");
-          if (idx === -1) throw new Error(`Bad CSV line: ${line}`);
-          return {
-            studentIdAnon: line.substring(0, idx).trim(),
-            answerText: line.substring(idx + 1).trim(),
-          };
-        });
       const result = await apiFetch<{ created: unknown[] }>("/answers/bulk", {
         method: "POST",
-        body: { rubricId: selectedRubricId, answers },
+        body: { rubricId: selectedRubricId, answers: answerPreview.rows },
       });
       setSuccess(`Uploaded ${result.created.length} answers`);
       setAnswersCsv("");
       await loadRubrics();
+      // Refresh existing answers
+      const { answers } = await apiFetch<{ answers: { id: string; studentIdAnon: string }[] }>(
+        `/answers?rubricId=${selectedRubricId}`,
+      );
+      setExistingAnswers(answers);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to upload answers");
     } finally {
@@ -171,37 +297,19 @@ function UploadInner() {
 
   // ?? Step 3: Upload TA Grades ??
   async function handleUploadGrades() {
-    if (!selectedRubricId || !selectedTaId || !rubricDetail) return;
+    if (!selectedRubricId || !selectedTaId || sortedCriteria.length === 0) return;
     clearMessages();
     setUploadingGrades(true);
     try {
-      // Load answers to map studentIdAnon ? answerId
-      const { answers } = await apiFetch<{
-        answers: { id: string; studentIdAnon: string }[];
-      }>(`/answers?rubricId=${selectedRubricId}`);
-      const answerMap = new Map(answers.map((a) => [a.studentIdAnon, a.id]));
-
-      const criteriaList = rubricDetail.criteria.sort(
-        (a, b) => (a.position ?? 0) - (b.position ?? 0),
-      );
-
-      const lines = gradesCsv.trim().split("\n");
       const grades: { answerId: string; criterionId: string; pointsGiven: number }[] = [];
-
-      for (const line of lines) {
-        if (!line.trim()) continue;
-        const parts = line.split(",").map((s) => s.trim());
-        const studentId = parts[0];
-        const answerId = answerMap.get(studentId);
-        if (!answerId) throw new Error(`Unknown student: ${studentId}`);
-
-        for (let i = 1; i < parts.length && i - 1 < criteriaList.length; i++) {
-          const pts = parseFloat(parts[i]);
-          if (isNaN(pts)) throw new Error(`Invalid score at column ${i} for ${studentId}`);
+      for (const row of gradePreview.rows) {
+        const answerId = answerMap.get(row.studentIdAnon);
+        if (!answerId) throw new Error(`Unknown student: ${row.studentIdAnon}`);
+        for (let j = 0; j < sortedCriteria.length; j++) {
           grades.push({
             answerId,
-            criterionId: criteriaList[i - 1].id!,
-            pointsGiven: pts,
+            criterionId: sortedCriteria[j].id!,
+            pointsGiven: row.scores[j],
           });
         }
       }
@@ -359,17 +467,57 @@ function UploadInner() {
       <Card>
         <CardHeader>
           <CardTitle>Step 2 ? Student Answers</CardTitle>
-          <CardDescription>Paste CSV: studentIdAnon,answerText (one per line)</CardDescription>
+          <CardDescription>
+            Paste CSV with header <code>studentIdAnon,answerText</code> ? or without header (first column = student ID, rest = answer)
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <Textarea
             rows={6}
-            placeholder={`student_001,The client sends a SYN packet...\nstudent_002,TCP handshake is when two computers...`}
+            placeholder={`studentIdAnon,answerText\nstudent_001,"The client sends a SYN packet..."\nstudent_002,"TCP handshake is when two computers..."`}
             value={answersCsv}
             onChange={(e) => setAnswersCsv(e.target.value)}
           />
-          <Button onClick={handleUploadAnswers} disabled={uploadingAnswers || !selectedRubricId || !answersCsv.trim()}>
-            {uploadingAnswers ? "Uploading?" : "Upload Answers"}
+
+          {/* Preview table */}
+          {answerPreview.rows.length > 0 && (
+            <div className="rounded-md border">
+              <div className="border-b bg-muted/50 px-3 py-1.5 text-xs font-medium text-muted-foreground">
+                Preview ? {answerPreview.rows.length} answers
+              </div>
+              <div className="max-h-48 overflow-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b text-left text-xs text-muted-foreground">
+                      <th className="px-3 py-1.5 w-32">Student</th>
+                      <th className="px-3 py-1.5">Answer</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {answerPreview.rows.map((r, i) => (
+                      <tr key={i} className="border-b last:border-0">
+                        <td className="px-3 py-1 font-mono text-xs">{r.studentIdAnon}</td>
+                        <td className="px-3 py-1 text-xs text-muted-foreground truncate max-w-md">
+                          {r.answerText.slice(0, 80)}{r.answerText.length > 80 ? "?" : ""}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+          {answerPreview.errors.length > 0 && (
+            <div className="rounded-md border border-destructive/50 bg-destructive/10 p-2 text-xs text-destructive">
+              {answerPreview.errors.map((e, i) => <div key={i}>{e}</div>)}
+            </div>
+          )}
+
+          <Button
+            onClick={handleUploadAnswers}
+            disabled={uploadingAnswers || !selectedRubricId || answerPreview.rows.length === 0 || answerPreview.errors.length > 0}
+          >
+            {uploadingAnswers ? "Uploading?" : `Upload ${answerPreview.rows.length} Answers`}
           </Button>
         </CardContent>
       </Card>
@@ -378,7 +526,9 @@ function UploadInner() {
       <Card>
         <CardHeader>
           <CardTitle>Step 3 ? TA Grades</CardTitle>
-          <CardDescription>Pick a TA, then paste CSV: studentIdAnon,score1,score2,?</CardDescription>
+          <CardDescription>
+            Pick a TA, then paste CSV: <code>studentIdAnon,c1,c2,?</code> (columns match criteria in position order)
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex flex-col gap-1.5">
@@ -398,12 +548,74 @@ function UploadInner() {
           </div>
           <Textarea
             rows={6}
-            placeholder={`student_001,3,2,2,1.5\nstudent_002,2,3,1,1`}
+            placeholder={`studentIdAnon,c1,c2,c3,c4\nstudent_001,3,3,2,1.5\nstudent_002,2,3,1,1`}
             value={gradesCsv}
             onChange={(e) => setGradesCsv(e.target.value)}
           />
-          <Button onClick={handleUploadGrades} disabled={uploadingGrades || !selectedRubricId || !selectedTaId || !gradesCsv.trim()}>
-            {uploadingGrades ? "Uploading?" : "Upload TA Grades"}
+
+          {/* Preview table */}
+          {gradePreview.rows.length > 0 && (
+            <div className="rounded-md border">
+              <div className="border-b bg-muted/50 px-3 py-1.5 text-xs font-medium text-muted-foreground">
+                Preview ? {gradePreview.rows.length} students ? {sortedCriteria.length} criteria
+              </div>
+              <div className="max-h-56 overflow-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b text-left text-xs text-muted-foreground">
+                      <th className="px-3 py-1.5">Student</th>
+                      {sortedCriteria.map((c, j) => (
+                        <th key={j} className="px-2 py-1.5 text-center">
+                          C{c.position ?? j + 1}
+                          <span className="block text-[10px] font-normal">max {c.maxPoints}</span>
+                        </th>
+                      ))}
+                      <th className="px-3 py-1.5">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {gradePreview.rows.map((r, i) => {
+                      const unknown = !answerMap.has(r.studentIdAnon);
+                      return (
+                        <tr key={i} className={`border-b last:border-0 ${unknown || r.warnings.length > 0 ? "bg-destructive/5" : ""}`}>
+                          <td className={`px-3 py-1 font-mono text-xs ${unknown ? "text-destructive font-bold" : ""}`}>
+                            {r.studentIdAnon}
+                          </td>
+                          {r.scores.map((s, j) => {
+                            const over = s > sortedCriteria[j]?.maxPoints;
+                            const neg = s < 0;
+                            return (
+                              <td key={j} className={`px-2 py-1 text-center text-xs ${over || neg ? "text-destructive font-bold" : ""}`}>
+                                {s}
+                              </td>
+                            );
+                          })}
+                          <td className="px-3 py-1 text-xs">
+                            {r.warnings.length > 0 ? (
+                              <span className="text-destructive">{r.warnings.join("; ")}</span>
+                            ) : (
+                              <span className="text-green-600">?</span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+          {gradePreview.errors.length > 0 && (
+            <div className="rounded-md border border-destructive/50 bg-destructive/10 p-2 text-xs text-destructive">
+              {gradePreview.errors.map((e, i) => <div key={i}>{e}</div>)}
+            </div>
+          )}
+
+          <Button
+            onClick={handleUploadGrades}
+            disabled={uploadingGrades || !selectedRubricId || !selectedTaId || gradePreview.rows.length === 0 || gradeHasBlockingErrors}
+          >
+            {uploadingGrades ? "Uploading?" : `Upload ${gradePreview.rows.length} Grade Rows`}
           </Button>
         </CardContent>
       </Card>
