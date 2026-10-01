@@ -7,6 +7,7 @@ import { PrismaLibSql } from '@prisma/adapter-libsql';
 import bcrypt from 'bcryptjs';
 import { PrismaClient } from '../src/generated/prisma/client.js';
 import { COURSES, DEMO_PASSWORD, USERS } from './demo-data.js';
+import { seedActivity, seedPapers } from './demo-papers.js';
 
 const prisma = new PrismaClient({
   adapter: new PrismaLibSql({ url: process.env.DATABASE_URL! }),
@@ -128,6 +129,11 @@ async function main() {
   await seedCourses(userId);
   console.log(
     `✔ ${COURSES.length} courses, ${COURSES.reduce((n, c) => n + c.exams.length, 0)} exams`,
+  );
+  const papers = await seedPapers(prisma, userId);
+  await seedActivity(prisma, userId);
+  console.log(
+    `✔ ${papers} HY335 papers with TA and AI grades, today's activity`,
   );
 
   console.log(`\nDemo logins (password ${DEMO_PASSWORD}):`);
