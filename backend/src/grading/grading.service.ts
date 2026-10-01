@@ -12,6 +12,7 @@ const CONCURRENCY = 5; // up to 5 answers graded in parallel
 // --- Input shapes (the service maps Prisma rows into these) ---
 
 export interface GradingRubric {
+  courseName: string;
   questionText: string;
   criteria: { id: string; description: string; maxPoints: number }[];
 }

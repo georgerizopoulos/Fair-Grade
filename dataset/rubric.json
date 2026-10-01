@@ -2,9 +2,9 @@
   "courseName": "HY335 - Computer Networks",
   "questionText": "Explain how the TCP three-way handshake works.",
   "criteria": [
-    { "description": "Correctly names all 3 steps in order (SYN, SYN-ACK, ACK)", "maxPoints": 3 },
-    { "description": "Explains what sequence numbers are used for in the handshake", "maxPoints": 3 },
-    { "description": "States why a handshake is needed before data transfer (reliability/sync)", "maxPoints": 2 },
-    { "description": "Answer is clearly organized and easy to follow", "maxPoints": 2 }
+    { "id": "1","description": "Correctly names all 3 steps in order (SYN, SYN-ACK, ACK)", "maxPoints": 3 },
+    { "id": "2", "description": "Explains what sequence numbers are used for in the handshake", "maxPoints": 3 },
+    { "id": "3","description": "States why a handshake is needed before data transfer (reliability/sync)", "maxPoints": 2 },
+    { "id": "4", "description": "Answer is clearly organized and easy to follow", "maxPoints": 2 }
   ]
 }
