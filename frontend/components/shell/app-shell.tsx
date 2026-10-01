@@ -158,7 +158,6 @@ export function Sidebar({
 
         <RoleCard role={user.role} />
         {course && <CourseSwitcher course={course} />}
-        <SearchButton />
 
         <nav aria-label="Main" style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
           {nav.map((section, i) => (
@@ -384,36 +383,6 @@ function CourseSwitcher({ course }: { course: ShellCourse }) {
       <span style={{ color: "var(--faint)" }}>
         <Icon name="chevrons" size={16} />
       </span>
-    </button>
-  );
-}
-
-function SearchButton() {
-  return (
-    <button
-      type="button"
-      className="fg-press"
-      aria-label="Search, shortcut Command K"
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "10px",
-        width: "100%",
-        height: "38px",
-        padding: "0 8px 0 12px",
-        marginBottom: "18px",
-        border: 0,
-        borderRadius: "12px",
-        background: "rgba(var(--ink-rgb), 0.04)",
-        color: "var(--muted)",
-        fontFamily: FONT,
-        fontSize: "13.5px",
-        cursor: "pointer",
-      }}
-    >
-      <Icon name="search" size={16} />
-      <span style={{ flexGrow: 1, textAlign: "left" }}>Search</span>
-      <Kbd>⌘K</Kbd>
     </button>
   );
 }

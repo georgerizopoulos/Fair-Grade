@@ -28,6 +28,7 @@ const PILL_TONE: Record<string, "red" | "green" | "blue" | undefined> = {
 export default function CoursesPage() {
   const user = useSession();
   const [showAll, setShowAll] = useState(false);
+  const [search, setSearch] = useState("");
   const [courses, setCourses] = useState<CourseSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,7 +45,10 @@ export default function CoursesPage() {
 
   const currentCourses = courses.filter((c) => c.semester === CURRENT_SEMESTER);
   const pastCourses = courses.filter((c) => c.semester !== CURRENT_SEMESTER);
-  const visible = showAll ? courses : currentCourses;
+  const q = search.trim().toLowerCase();
+  const visible = (showAll ? courses : currentCourses).filter(
+    (c) => !q || c.name.toLowerCase().includes(q) || (c.code?.toLowerCase().includes(q) ?? false),
+  );
 
   return (
     <AppShell active="courses">
@@ -86,7 +90,7 @@ export default function CoursesPage() {
                   <circle cx="11" cy="11" r="6.5" /><path d="M16 16l4 4" />
                 </svg>
               </span>
-              <input id="cs" type="text" placeholder="Search courses" aria-label="Search courses" style={{ width: "100%", height: "44px", padding: "0 14px 0 42px", border: 0, borderRadius: "12px", background: "var(--surface)", boxShadow: "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", fontFamily: "'Geist', 'Segoe UI', system-ui, sans-serif", fontSize: "14px", color: "var(--text)", outline: "none" }} />
+              <input id="cs" type="text" placeholder="Search courses" aria-label="Search courses" value={search} onChange={(e) => setSearch(e.target.value)} style={{ width: "100%", height: "44px", padding: "0 14px 0 42px", border: 0, borderRadius: "12px", background: "var(--surface)", boxShadow: "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", fontFamily: "'Geist', 'Segoe UI', system-ui, sans-serif", fontSize: "14px", color: "var(--text)", outline: "none" }} />
             </div>
           </div>
         </div>
