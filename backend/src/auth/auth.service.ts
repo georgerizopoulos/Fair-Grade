@@ -49,6 +49,12 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
+    // First sign-in activates an invited account.
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { lastSignInAt: new Date(), status: 'ACTIVE' },
+    });
+
     const payload: JwtPayload = {
       sub: user.id,
       role: user.role,

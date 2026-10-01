@@ -1,0 +1,83 @@
+/* Fair Grade design tokens and motion, from design-reference/html.
+   Light/dark: the sidebar switch is a checkbox; .fg-root:has(:checked) swaps the tokens. */
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&family=Caveat:wght@400..600&display=swap');
+
+
+body{margin:0;background:var(--bg);font-family:'Geist', 'Segoe UI', system-ui, sans-serif;-webkit-font-smoothing:antialiased}
+
+*{box-sizing:border-box}
+
+a{color:var(--blue)}
+a:hover{color:var(--ink)}
+
+.fg-press{transition:transform 500ms cubic-bezier(0.32, 0.72, 0, 1),background-color 500ms cubic-bezier(0.32, 0.72, 0, 1),box-shadow 500ms cubic-bezier(0.32, 0.72, 0, 1),color 500ms cubic-bezier(0.32, 0.72, 0, 1)}
+
+.fg-press:active{transform:scale(0.98)}
+
+.fg-knob{transition:transform 500ms cubic-bezier(0.32, 0.72, 0, 1)}
+
+.fg-press:hover .fg-knob{transform:translate(2px,-1px) scale(1.06)}
+
+.fg-row{transition:background-color 400ms cubic-bezier(0.32, 0.72, 0, 1)}
+
+.fg-row:hover{background:rgba(var(--ink-rgb), 0.025)}
+
+.fg-in{animation:fgUp 900ms cubic-bezier(0.32, 0.72, 0, 1) both}
+
+.fg-d1{animation-delay:70ms}
+.fg-d2{animation-delay:140ms}
+.fg-d3{animation-delay:210ms}
+.fg-d4{animation-delay:280ms}
+.fg-d5{animation-delay:350ms}
+.fg-d6{animation-delay:420ms}
+
+@keyframes fgUp{from{opacity:0;transform:translateY(16px);filter:blur(6px)}
+to{opacity:1;transform:none;filter:none}
+}
+
+@keyframes fgBar{0%{transform:translateX(-100%)}
+100%{transform:translateX(260%)}
+}
+
+.fg-bar{animation:fgBar 1600ms cubic-bezier(0.32, 0.72, 0, 1) infinite}
+
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+@media (prefers-reduced-motion: reduce){.fg-in,.fg-bar{animation:none}
+.fg-press,.fg-knob,.fg-row{transition:none}
+}
+
+@media (max-width: 900px){.fg-shell{flex-direction:column}
+.fg-side{width:auto !important;padding:12px 12px 0 !important}
+.fg-side > div{position:static !important;min-height:0 !important}
+.fg-grid{grid-template-columns:1fr !important}
+.fg-span{grid-column:auto !important}
+.fg-split{grid-template-columns:1fr !important}
+main{padding:20px 16px 64px !important}
+.fg-hide-sm{display:none !important}
+}
+
+@keyframes fgPulse{0%{box-shadow:0 0 0 0 rgba(46,139,87,0.45)}
+70%{box-shadow:0 0 0 7px rgba(46,139,87,0)}
+100%{box-shadow:0 0 0 0 rgba(46,139,87,0)}
+}
+.fg-pulse{animation:fgPulse 2s cubic-bezier(0.32,0.72,0,1) infinite}
+@keyframes fgBlink{0%,49%{opacity:1}
+50%,100%{opacity:0}
+}
+.fg-caret{animation:fgBlink 1.1s steps(1) infinite}
+@media (prefers-reduced-motion: reduce){.fg-pulse,.fg-caret{animation:none}
+}
+body{background:#EEF0F3}
+.fg-root{--bg:#EEF0F3;--surface:#FFFFFF;--surface-2:#FAFAFB;--raised:#FFFFFF;--ink:#0E1116;--text:#14171C;--text-2:#40444D;--muted:#5B606B;--faint:#8A8F99;--dot:#9AA0AA;--avatar-bg:#E6E8EC;--avatar-fg:#30343C;--ink-rgb:14, 17, 22;--surface-rgb:255, 255, 255;--shadow-rgb:14, 17, 22;--blue:#3358D4;--blue-x:#2A47AE;--blue-t:#EDF1FD;--blue-t3:#CCD6F7;--blue-x3:#203A90;--red:#D64545;--red-x:#A82E2E;--red-t:#FCEEEE;--red-t2:#FFF8F8;--red-t3:#F6CACA;--red-x3:#8A2323;--green:#2E8B57;--green-x:#21704A;--green-t:#E7F4EC;--amber:#B7791F;--amber-x:#8A5A12;--amber-t:#FBF3E0;--chart-grey:#B9BEC7;--teal:#1F7A66;--gold-icon:#F3D58A;--disabled-bg:#E3E5EA;--disabled-fg:#7A808B;min-height:100vh;background:var(--bg);color:var(--text);transition:background-color 500ms cubic-bezier(0.32,0.72,0,1)}
+.fg-root:has(.fg-theme-input:checked){--bg:#0B0D11;--surface:#14171D;--surface-2:#191C23;--raised:#262A33;--ink:#F2F4F7;--text:#E3E6EB;--text-2:#C4C9D2;--muted:#959CA8;--faint:#656C79;--dot:#7D8491;--avatar-bg:#272B33;--avatar-fg:#DDE1E7;--ink-rgb:226, 231, 240;--surface-rgb:20, 23, 29;--shadow-rgb:0, 0, 0;--blue:#7091FF;--blue-x:#A9BBFF;--blue-t:rgba(112, 145, 255, 0.15);--blue-t3:rgba(112, 145, 255, 0.30);--blue-x3:#C9D4FF;--red:#F06A6A;--red-x:#FF9E9E;--red-t:rgba(240, 106, 106, 0.15);--red-t2:rgba(240, 106, 106, 0.07);--red-t3:rgba(240, 106, 106, 0.30);--red-x3:#FFC2C2;--green:#4CBB80;--green-x:#86D9AC;--green-t:rgba(76, 187, 128, 0.15);--amber:#E3A848;--amber-x:#F2CB7E;--amber-t:rgba(227, 168, 72, 0.15);--chart-grey:#4A515E;--teal:#7FD3BE;--gold-icon:#9A7A24;--disabled-bg:#22262E;--disabled-fg:#6A717D;color-scheme:dark}
+.fg-dark{--bg:#EEF0F3;--surface:#FFFFFF;--surface-2:#FAFAFB;--raised:#FFFFFF;--ink:#0E1116;--text:#14171C;--text-2:#40444D;--muted:#5B606B;--faint:#8A8F99;--dot:#9AA0AA;--avatar-bg:#E6E8EC;--avatar-fg:#30343C;--ink-rgb:14, 17, 22;--surface-rgb:255, 255, 255;--shadow-rgb:14, 17, 22;--blue:#3358D4;--blue-x:#2A47AE;--blue-t:#EDF1FD;--blue-t3:#CCD6F7;--blue-x3:#203A90;--red:#D64545;--red-x:#A82E2E;--red-t:#FCEEEE;--red-t2:#FFF8F8;--red-t3:#F6CACA;--red-x3:#8A2323;--green:#2E8B57;--green-x:#21704A;--green-t:#E7F4EC;--amber:#B7791F;--amber-x:#8A5A12;--amber-t:#FBF3E0;--chart-grey:#B9BEC7;--teal:#1F7A66;--gold-icon:#F3D58A;--disabled-bg:#E3E5EA;--disabled-fg:#7A808B;color-scheme:light}
+.fg-root:has(.fg-theme-input:checked) .fg-dark{--ink:#181C25}
+.fg-theme-input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
+.fg-theme-thumb{transition:transform 500ms cubic-bezier(0.32,0.72,0,1)}
+.fg-root:has(.fg-theme-input:checked) .fg-theme-thumb{transform:translateX(28px)}
+.fg-theme-sun{color:var(--ink)}
+.fg-theme-moon{color:var(--faint)}
+.fg-root:has(.fg-theme-input:checked) .fg-theme-sun{color:var(--faint)}
+.fg-root:has(.fg-theme-input:checked) .fg-theme-moon{color:var(--ink)}
+.fg-theme-switch:has(.fg-theme-input:focus-visible){outline:2px solid var(--blue);outline-offset:2px}

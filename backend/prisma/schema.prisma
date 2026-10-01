@@ -21,28 +21,242 @@ enum Role {
   ta
 }
 
-model User {
-  id           String   @id @default(uuid())
-  name         String
-  email        String   @unique // always stored lowercase
-  passwordHash String   @map("password_hash") // bcrypt, never returned
-  role         Role
-  createdAt    DateTime @default(now()) @map("created_at")
+enum UserStatus {
+  ACTIVE
+  INVITED // created by an instructor, hasn't signed in yet
+}
 
-  taGrades TaGrade[]
+enum LeaderboardVisibility {
+  OFF
+  ANONYMOUS
+  NAMED
+}
+
+enum ExamStatus {
+  DRAFT
+  QUESTIONS_READY
+  OPEN
+  PUBLISHED
+}
+
+enum PaperStatus {
+  TRANSCRIBING
+  DRAFT
+  AI_GRADING
+  AI_GRADED
+  AI_FAILED
+}
+
+enum PageStatus {
+  WAITING
+  READING
+  READ
+  UNREADABLE
+}
+
+enum ActivityType {
+  PAPER_DRAFT_SAVED
+  PAPER_SUBMITTED
+  AI_GRADED
+  AI_FAILED
+  TA_FLAGGED
+  MEMBER_ADDED
+  MEMBER_REMOVED
+  PAPER_REOPENED
+  REOPEN_REQUESTED
+}
+
+model User {
+  id           String     @id @default(uuid())
+  name         String
+  email        String     @unique // always stored lowercase
+  passwordHash String     @map("password_hash") // bcrypt, never returned
+  role         Role
+  status       UserStatus @default(ACTIVE)
+  lastSignInAt DateTime?  @map("last_sign_in_at")
+  createdAt    DateTime   @default(now()) @map("created_at")
+
+  taGrades     TaGrade[]
+  ownedCourses Course[]        @relation("CourseOwner")
+  memberships  CourseMember[]
+  papers       Paper[]
+  revisions    PaperRevision[]
+  activities   ActivityLog[]
 
   @@map("users")
 }
 
 model Course {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  createdAt DateTime @default(now()) @map("created_at")
+  id                    String                @id @default(uuid())
+  // code / semester / owner are required by the API; nullable only so legacy
+  // rubric uploads (POST /rubrics) that create a course by name keep working.
+  code                  String?               @unique
+  name                  String                @unique
+  semester              String?
+  ownerId               String?               @map("owner_id")
+  leaderboardVisibility LeaderboardVisibility @default(ANONYMOUS) @map("leaderboard_visibility")
+  createdAt             DateTime              @default(now()) @map("created_at")
 
-  rubrics Rubric[]
+  owner      User?          @relation("CourseOwner", fields: [ownerId], references: [id])
+  members    CourseMember[]
+  exams      Exam[]
+  activities ActivityLog[]
+  rubrics    Rubric[] // legacy
 
   @@map("courses")
 }
+
+// Course membership is the only thing that gives a TA access to a course.
+model CourseMember {
+  courseId String   @map("course_id")
+  userId   String   @map("user_id")
+  role     Role
+  addedAt  DateTime @default(now()) @map("added_at")
+
+  course Course @relation(fields: [courseId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id([courseId, userId])
+  @@map("course_members")
+}
+
+model Exam {
+  id        String     @id @default(uuid())
+  courseId  String     @map("course_id")
+  name      String
+  heldAt    DateTime?  @map("held_at")
+  status    ExamStatus @default(DRAFT)
+  passMark  Float      @default(5) @map("pass_mark")
+  createdAt DateTime   @default(now()) @map("created_at")
+
+  course    Course     @relation(fields: [courseId], references: [id])
+  questions Question[]
+  papers    Paper[]
+
+  @@map("exams")
+}
+
+model Question {
+  id          String @id @default(uuid())
+  examId      String @map("exam_id")
+  code        String // Q1, Q2...
+  title       String
+  prompt      String
+  maxPoints   Float  @map("max_points")
+  modelAnswer String @map("model_answer")
+  order       Int
+
+  exam         Exam          @relation(fields: [examId], references: [id])
+  rubricPoints RubricPoint[]
+  answers      PaperAnswer[]
+
+  @@unique([examId, code])
+  @@map("questions")
+}
+
+model RubricPoint {
+  id         String @id @default(uuid())
+  questionId String @map("question_id")
+  text       String
+  points     Float
+  order      Int
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("rubric_points")
+}
+
+// One physical paper = one student, graded by one TA.
+model Paper {
+  id              String      @id @default(uuid())
+  examId          String      @map("exam_id")
+  taId            String      @map("ta_id")
+  studentId       String      @map("student_id")
+  pdfPath         String?     @map("pdf_path")
+  pageCount       Int         @default(0) @map("page_count")
+  status          PaperStatus @default(TRANSCRIBING)
+  reopenRequested Boolean     @default(false) @map("reopen_requested")
+  aiAttempts      Int         @default(0) @map("ai_attempts")
+  aiNextAttemptAt DateTime?   @map("ai_next_attempt_at")
+  aiError         String?     @map("ai_error")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  submittedAt     DateTime?   @map("submitted_at")
+  aiGradedAt      DateTime?   @map("ai_graded_at")
+
+  exam       Exam            @relation(fields: [examId], references: [id])
+  ta         User            @relation(fields: [taId], references: [id])
+  pages      PaperPage[]
+  answers    PaperAnswer[]
+  revisions  PaperRevision[]
+  activities ActivityLog[]
+
+  @@unique([examId, studentId])
+  @@map("papers")
+}
+
+model PaperPage {
+  paperId String     @map("paper_id")
+  index   Int
+  status  PageStatus @default(WAITING)
+
+  paper Paper @relation(fields: [paperId], references: [id], onDelete: Cascade)
+
+  @@id([paperId, index])
+  @@map("paper_pages")
+}
+
+model PaperAnswer {
+  paperId        String  @map("paper_id")
+  questionId     String  @map("question_id")
+  transcription  String  @default("")
+  uncertainWords Json    @map("uncertain_words")
+  pages          Json
+  taPoints       Float?  @map("ta_points")
+  aiPoints       Float?  @map("ai_points")
+  aiReasoning    String? @map("ai_reasoning")
+
+  paper    Paper    @relation(fields: [paperId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id])
+
+  @@id([paperId, questionId])
+  @@map("paper_answers")
+}
+
+// Snapshot of the TA's points, written on every reopen.
+model PaperRevision {
+  id               String   @id @default(uuid())
+  paperId          String   @map("paper_id")
+  taPointsSnapshot Json     @map("ta_points_snapshot")
+  createdAt        DateTime @default(now()) @map("created_at")
+  createdBy        String   @map("created_by")
+
+  paper   Paper @relation(fields: [paperId], references: [id], onDelete: Cascade)
+  creator User  @relation(fields: [createdBy], references: [id])
+
+  @@map("paper_revisions")
+}
+
+model ActivityLog {
+  id        String       @id @default(uuid())
+  courseId  String       @map("course_id")
+  type      ActivityType
+  actorId   String?      @map("actor_id")
+  paperId   String?      @map("paper_id")
+  payload   Json
+  createdAt DateTime     @default(now()) @map("created_at")
+
+  course Course @relation(fields: [courseId], references: [id])
+  actor  User?  @relation(fields: [actorId], references: [id])
+  paper  Paper? @relation(fields: [paperId], references: [id])
+
+  @@index([courseId, createdAt])
+  @@map("activity_log")
+}
+
+// ---------------------------------------------------------------------------
+// Legacy single-question flow (rubric → answers → TA/AI grades per criterion).
+// Kept until the frontend moves to the course/exam/paper flow above.
+// ---------------------------------------------------------------------------
 
 model Rubric {
   id           String   @id @default(uuid())

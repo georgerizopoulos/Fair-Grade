@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
-import { APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { AccessModule } from './access/access.module.js';
 import { AnswersModule } from './answers/answers.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { AllExceptionsFilter } from './common/all-exceptions.filter.js';
 import { AuthGuard } from './common/auth.guard.js';
+import { UserRoleInterceptor } from './common/user-role.interceptor.js';
+import { CoursesModule } from './courses/courses.module.js';
 import { validationPipe } from './common/validation.pipe.js';
 import { DeviationModule } from './deviation/deviation.module.js';
 import { GradingModule } from './grading/grading.module.js';
@@ -19,6 +22,7 @@ import { UsersModule } from './users/users.module.js';
 @Module({
   imports: [
     PrismaModule,
+    AccessModule,
     HealthModule,
     AuthModule,
     UsersModule,
@@ -28,12 +32,14 @@ import { UsersModule } from './users/users.module.js';
     GradingModule,
     ResultsModule,
     DeviationModule,
+    CoursesModule,
   ],
   providers: [
     // Registered here rather than in main.ts so tests using AppModule get them too.
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
     { provide: APP_PIPE, useValue: validationPipe },
     { provide: APP_GUARD, useClass: AuthGuard },
+    { provide: APP_INTERCEPTOR, useClass: UserRoleInterceptor },
   ],
 })
 export class AppModule {}
