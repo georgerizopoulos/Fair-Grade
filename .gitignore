@@ -3,3 +3,6 @@ node_modules
 package-lock.json
 .env.local
 dev.db
+.claude
+.idea
+.DS_Store
