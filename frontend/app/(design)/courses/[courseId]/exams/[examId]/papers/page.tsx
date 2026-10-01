@@ -4,6 +4,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { AppShell, Card, PageHeader, PageTitle, Pill, SecondaryButton } from "@/components/shell";
+import { TaPapersLivePage } from "../../../../../papers/paper-pages";
 
 export const metadata: Metadata = { title: "My midterm papers \u00b7 Fair Grade" };
 
@@ -11,6 +12,10 @@ const course = { id: "hy335", code: "HY335", name: "Computer Networks" };
 const exam = { id: "midterm", name: "Midterm" };
 
 export default function TaPapersPage() {
+  return <TaPapersLivePage />;
+}
+
+export function StaticTaPapersPage() {
   return (
     <>
       <AppShell course={course} exam={exam} active="my-papers" access="ta">

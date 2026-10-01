@@ -2,6 +2,7 @@
 // by frontend/scripts/html2jsx.py. Demo content only: nothing here talks
 // to the API yet. When wiring it up, replace the constants with real data.
 import type { Metadata } from "next";
+import { PaperResultLivePage } from "../paper-pages";
 import {
   AppShell,
   Button,
@@ -19,6 +20,10 @@ const course = { id: "hy335", code: "HY335", name: "Computer Networks" };
 const exam = { id: "midterm", name: "Midterm" };
 
 export default function PaperResultPage() {
+  return <PaperResultLivePage />;
+}
+
+export function StaticPaperResultPage() {
   return (
     <>
       <AppShell course={course} exam={exam} active="my-papers">
