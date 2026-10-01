@@ -1,34 +1,42 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
+  ArrayMinSize,
   IsArray,
   IsNotEmpty,
   IsNumber,
+  IsPositive,
   IsString,
-  Min,
   ValidateNested,
 } from 'class-validator';
 
-export class CriterionDto {
+const trim = ({ value }: { value: unknown }) =>
+  typeof value === 'string' ? value.trim() : value;
+
+export class CriterionInput {
+  @Transform(trim)
   @IsString()
   @IsNotEmpty()
-  description!: string;
+  description: string;
 
   @IsNumber()
-  @Min(0.000001)
-  maxPoints!: number;
+  @IsPositive()
+  maxPoints: number;
 }
 
 export class CreateRubricDto {
+  @Transform(trim)
   @IsString()
   @IsNotEmpty()
-  courseName!: string;
+  courseName: string;
 
+  @Transform(trim)
   @IsString()
   @IsNotEmpty()
-  questionText!: string;
+  questionText: string;
 
   @IsArray()
+  @ArrayMinSize(1)
   @ValidateNested({ each: true })
-  @Type(() => CriterionDto)
-  criteria!: CriterionDto[];
+  @Type(() => CriterionInput)
+  criteria: CriterionInput[];
 }
