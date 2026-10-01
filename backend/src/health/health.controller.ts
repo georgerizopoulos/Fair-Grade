@@ -1,8 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
+import { Public } from '../common/auth.decorators.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 // API_SPEC #1. Always 200 so the frontend can tell "backend down" apart from
 // "backend up, database unreachable".
+@Public()
 @Controller('health')
 export class HealthController {
   constructor(private readonly prisma: PrismaService) {}
