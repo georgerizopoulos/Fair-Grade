@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
+import { TaGradesController } from './ta-grades.controller.js';
+import { TaGradesService } from './ta-grades.service.js';
 
-// Owned by Ξ£Ο„Ξ±ΟΟΞΏΟ‚. Add your controllers and providers here; this module is
-// already wired into app.module.ts.
+// Owned by Σταύρος. Wired into app.module.ts.
 @Module({
-  controllers: [],
-  providers: [],
+  controllers: [TaGradesController],
+  providers: [TaGradesService],
 })
 export class TaGradesModule {}

@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
+import { AnswersController } from './answers.controller.js';
+import { AnswersService } from './answers.service.js';
 
-// Owned by Ξ£Ο„Ξ±ΟΟΞΏΟ‚. Add your controllers and providers here; this module is
-// already wired into app.module.ts.
+// Owned by Σταύρος. Wired into app.module.ts.
 @Module({
-  controllers: [],
-  providers: [],
+  controllers: [AnswersController],
+  providers: [AnswersService],
 })
 export class AnswersModule {}
