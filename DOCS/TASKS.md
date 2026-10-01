@@ -45,7 +45,7 @@ Steps 3 and 4 need two things that aren't done yet: **the AI worker** and **the 
 | # | What | Who | Notes |
 |---|---|---|---|
 | 1 | **AI worker** (`backend/src/ai/`): picks `AI_GRADING` papers, grades each question, writes `aiPoints` / `aiReasoning`, sets `AI_GRADED` or, after 3 tries, `AI_FAILED`; writes the activity entries | Κώστας | Contract in API_SPEC → Paper lifecycle. Reuse `llm.client.ts` and the validation. Never send student IDs, names or TA points. |
-| 2 | **Seeded papers** that produce the demo numbers: Maria −1.05 on Midterm Q2, Nikos's anchor papers csd5121…csd5150, csd5146's transcription and reasoning | Σταύρος | Add to `backend/scripts/seed.ts`. The Midterm first, then the quizzes. |
+| 2 | **Seeded papers** that produce the demo numbers: Maria −1.05 on Midterm Q2, Nikos's anchor papers csd5121…csd5150, csd5146's transcription and reasoning | Σταύρος | Add to `backend/scripts/seed.ts`. The Midterm first, then Exam 1 and Exam 2. |
 | 3 | **Tests for papers and reports**: `backend/test/papers.e2e-spec.ts` (every lifecycle rule and permission), reports | Γιώργος, Δημήτρης | Pattern: `test/members.e2e-spec.ts`. |
 | 4 | **Wire the remaining pages**: TA **My stats**, **My papers**, instructor **Report** and **TA page** | Δημήτρης (report, TA page), Σταύρος (My stats, My papers) | Endpoints exist. |
 | 5 | **Members** and **Users** pages wired | Γιώργος | Endpoints exist. |

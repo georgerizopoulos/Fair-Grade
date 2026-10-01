@@ -64,7 +64,7 @@ describe('Courses and membership (e2e)', () => {
           create: [
             { name: 'Midterm', heldAt: new Date('2026-09-30'), status: 'OPEN' },
             {
-              name: 'Quiz 1',
+              name: 'Exam 1',
               heldAt: new Date('2026-09-16'),
               status: 'PUBLISHED',
             },
@@ -146,7 +146,7 @@ describe('Courses and membership (e2e)', () => {
       .set(auth('maria'))
       .expect(200);
     expect(res.body.exams.map((e: { name: string }) => e.name)).toEqual([
-      'Quiz 1',
+      'Exam 1',
       'Midterm',
     ]);
     const me = res.body.members.find(
@@ -166,7 +166,7 @@ describe('Courses and membership (e2e)', () => {
       .expect(200);
     // DRAFT "Final" is hidden; only OPEN/PUBLISHED exams show.
     expect(ta.body.exams.map((e: { name: string }) => e.name)).toEqual([
-      'Quiz 1',
+      'Exam 1',
       'Midterm',
     ]);
     expect(ta.body).not.toHaveProperty('leaderboardVisibility');
@@ -174,7 +174,7 @@ describe('Courses and membership (e2e)', () => {
     const byName = (n: string) =>
       ta.body.exams.find((e: { name: string }) => e.name === n);
     expect(byName('Midterm').canAddPapers).toBe(true);
-    expect(byName('Quiz 1').canAddPapers).toBe(false);
+    expect(byName('Exam 1').canAddPapers).toBe(false);
 
     const instructor = await http
       .get(`/courses/${ids.hy335}`)
@@ -182,7 +182,7 @@ describe('Courses and membership (e2e)', () => {
       .expect(200);
     // The instructor sees every exam, including the draft, and the setting.
     expect(instructor.body.exams.map((e: { name: string }) => e.name)).toEqual([
-      'Quiz 1',
+      'Exam 1',
       'Midterm',
       'Final',
     ]);

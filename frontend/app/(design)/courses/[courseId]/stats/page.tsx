@@ -80,7 +80,7 @@ export default function CourseStatsPage() {
                 color: "var(--muted)",
               }}
             >
-              Quiz 1
+              Exam 1
             </button>
             <button
               type="button"
@@ -100,7 +100,7 @@ export default function CourseStatsPage() {
                 color: "var(--muted)",
               }}
             >
-              Quiz 2
+              Exam 2
             </button>
             <button
               type="button"
@@ -247,7 +247,7 @@ export default function CourseStatsPage() {
                     maxWidth: "560px",
                   }}
                 >
-                  Four of five TAs moved closer to the AI since Quiz 1. Maria moved further away,
+                  Four of five TAs moved closer to the AI since Exam 1. Maria moved further away,
                   all of it on questions that compare protocols.
                 </p>
                 <div
@@ -270,7 +270,7 @@ export default function CourseStatsPage() {
                       minWidth: "0",
                     }}
                   >
-                    <span style={{ fontSize: "12.5px", color: "#8E95A3" }}>Quiz 1, 16 Sep</span>
+                    <span style={{ fontSize: "12.5px", color: "#8E95A3" }}>Exam 1, 16 Sep</span>
                     <span>
                       <span
                         style={{
@@ -315,7 +315,7 @@ export default function CourseStatsPage() {
                       minWidth: "0",
                     }}
                   >
-                    <span style={{ fontSize: "12.5px", color: "#8E95A3" }}>Quiz 2, 23 Sep</span>
+                    <span style={{ fontSize: "12.5px", color: "#8E95A3" }}>Exam 2, 23 Sep</span>
                     <span>
                       <span
                         style={{
@@ -574,7 +574,7 @@ export default function CourseStatsPage() {
                     csd5124
                   </span>
                   <span style={{ fontSize: "12.5px", color: "var(--muted)", minWidth: "0" }}>
-                    Quiz 1, Giannis
+                    Exam 1, Giannis
                   </span>
                   <span
                     style={{
@@ -674,7 +674,7 @@ export default function CourseStatsPage() {
                 0.48
               </span>
               <span style={{ fontSize: "13px", color: "var(--green-x)", marginLeft: "8px" }}>
-                −25% since Quiz 1
+                −25% since Exam 1
               </span>
             </div>
             <div style={{ marginTop: "8px", fontSize: "12.5px", color: "var(--muted)" }}>
@@ -698,7 +698,7 @@ export default function CourseStatsPage() {
               </span>
             </div>
             <div style={{ marginTop: "8px", fontSize: "12.5px", color: "var(--muted)" }}>
-              2 on Quiz 1, then 1 on each exam
+              2 on Exam 1, then 1 on each exam
             </div>
           </Card>
           <Card padding="20px 22px">
@@ -890,7 +890,7 @@ export default function CourseStatsPage() {
                     fontVariantNumeric: "tabular-nums",
                   }}
                 >
-                  −0.30 since Quiz 1, 33 papers
+                  −0.30 since Exam 1, 33 papers
                 </span>
                 <span
                   style={{
@@ -1012,7 +1012,7 @@ export default function CourseStatsPage() {
                       fontVariantNumeric: "tabular-nums",
                     }}
                   >
-                    −0.10 since Quiz 1, 34 papers
+                    −0.10 since Exam 1, 34 papers
                   </span>
                   <span
                     style={{
@@ -1121,7 +1121,7 @@ export default function CourseStatsPage() {
                     fontVariantNumeric: "tabular-nums",
                   }}
                 >
-                  −0.10 since Quiz 1, 33 papers
+                  −0.10 since Exam 1, 33 papers
                 </span>
               </div>
             </Card>
@@ -1141,8 +1141,8 @@ export default function CourseStatsPage() {
             <span>TA</span>
             <span>Papers</span>
             <span>Average gap</span>
-            <span>Quiz 1 to Midterm</span>
-            <span>Since Quiz 1</span>
+            <span>Exam 1 to Midterm</span>
+            <span>Since Exam 1</span>
             <span>Flags</span>
             <span></span>
           </div>
@@ -1871,7 +1871,7 @@ export default function CourseStatsPage() {
                 viewBox="0 0 640 380"
                 width="100%"
                 role="img"
-                aria-label="Average gap per TA across Quiz 1, Quiz 2 and the midterm"
+                aria-label="Average gap per TA across Exam 1, Exam 2 and the midterm"
                 style={{ display: "block", overflow: "visible" }}
               >
                 <line x1="20" x2="480" y1="330.0" y2="330.0" stroke="rgba(var(--ink-rgb), 0.07)" />
@@ -1926,7 +1926,7 @@ export default function CourseStatsPage() {
                   fill="var(--ink)"
                   fontFamily="Geist, sans-serif"
                 >
-                  Quiz 1
+                  Exam 1
                 </text>
                 <text
                   x="30.0"
@@ -1946,7 +1946,7 @@ export default function CourseStatsPage() {
                   fill="var(--ink)"
                   fontFamily="Geist, sans-serif"
                 >
-                  Quiz 2
+                  Exam 2
                 </text>
                 <text
                   x="250.0"
@@ -3484,7 +3484,7 @@ export default function CourseStatsPage() {
                   }}
                 >
                   <span style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>
-                    <span style={{ color: "var(--faint)", marginRight: "6px" }}>Quiz 1 Q2</span>
+                    <span style={{ color: "var(--faint)", marginRight: "6px" }}>Exam 1 Q2</span>
                     Subnetting a /26
                   </span>
                   <span
@@ -3577,7 +3577,7 @@ export default function CourseStatsPage() {
                   }}
                 >
                   <span style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>
-                    <span style={{ color: "var(--faint)", marginRight: "6px" }}>Quiz 2 Q1</span>HTTP
+                    <span style={{ color: "var(--faint)", marginRight: "6px" }}>Exam 2 Q1</span>HTTP
                     persistent connections
                   </span>
                   <span

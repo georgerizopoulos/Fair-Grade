@@ -544,7 +544,7 @@ export function StaticCoursePage() {
                 >
                   <span style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
                     <span style={{ fontSize: "14.5px", fontWeight: "600", color: "var(--ink)" }}>
-                      Quiz 2
+                      Exam 2
                     </span>
                     <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>
                       23 Sep 2026, grades published
@@ -606,7 +606,7 @@ export function StaticCoursePage() {
                 >
                   <span style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
                     <span style={{ fontSize: "14.5px", fontWeight: "600", color: "var(--ink)" }}>
-                      Quiz 1
+                      Exam 1
                     </span>
                     <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>
                       16 Sep 2026, grades published

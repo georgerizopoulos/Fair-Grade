@@ -109,7 +109,7 @@ const MIDTERM_QUESTIONS: DemoQuestion[] = [
   },
 ];
 
-const QUIZ1_QUESTIONS: DemoQuestion[] = [
+const EXAM1_QUESTIONS: DemoQuestion[] = [
   {
     code: 'Q1',
     title: 'OSI layers',
@@ -151,7 +151,7 @@ const QUIZ1_QUESTIONS: DemoQuestion[] = [
   },
 ];
 
-const QUIZ2_QUESTIONS: DemoQuestion[] = [
+const EXAM2_QUESTIONS: DemoQuestion[] = [
   {
     code: 'Q1',
     title: 'HTTP persistent connections',
@@ -284,18 +284,18 @@ export const COURSES: DemoCourse[] = [
     tas: ['maria', 'giannis', 'eleni', 'nikos', 'katerina'],
     exams: [
       {
-        key: 'quiz1',
-        name: 'Quiz 1',
+        key: 'exam1',
+        name: 'Exam 1',
         heldAt: '2026-09-16',
         status: 'PUBLISHED',
-        questions: QUIZ1_QUESTIONS,
+        questions: EXAM1_QUESTIONS,
       },
       {
-        key: 'quiz2',
-        name: 'Quiz 2',
+        key: 'exam2',
+        name: 'Exam 2',
         heldAt: '2026-09-23',
         status: 'PUBLISHED',
-        questions: QUIZ2_QUESTIONS,
+        questions: EXAM2_QUESTIONS,
       },
       {
         key: 'midterm',
