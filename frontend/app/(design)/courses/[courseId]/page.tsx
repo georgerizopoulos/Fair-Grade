@@ -1,12 +1,1084 @@
-// Static design, generated from design-reference/html/Course.html.
-// Demo content only: nothing here talks to the API yet.
+// Static design, generated from design-reference/html/Course.html
+// by frontend/scripts/html2jsx.py. Demo content only: nothing here talks
+// to the API yet. When wiring it up, replace the constants with real data.
 import Link from "next/link";
 import type { Metadata } from "next";
+import {
+  AppShell,
+  Avatar,
+  Button,
+  Card,
+  PageHeader,
+  Pill,
+  RoleChip,
+  SecondaryButton,
+  SectionHeader,
+  YouTag,
+  instructorNav,
+} from "@/components/shell";
 
 export const metadata: Metadata = { title: "HY335 Computer Networks \u00b7 Fair Grade" };
 
+const user = { name: "Instructor Demo", role: "instructor" } as const;
+const course = { id: "hy335", code: "HY335", name: "Computer Networks" };
+
 export default function CoursePage() {
   return (
-    <><div className="fg-shell" style={{"display": "flex", "minHeight": "100vh", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "color": "var(--text)", "background": "radial-gradient(1200px 520px at 30% -8%, var(--surface) 0%, rgba(var(--surface-rgb), 0) 70%), var(--bg)"}}><aside className="fg-side" style={{"width": "252px", "flexShrink": "0", "padding": "14px 0 14px 14px"}}><div style={{"position": "sticky", "top": "14px", "minHeight": "calc(100vh - 28px)", "background": "rgba(var(--surface-rgb), 0.62)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "borderRadius": "24px", "padding": "18px 12px", "display": "flex", "flexDirection": "column"}}><div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "2px 2px 16px 8px"}}><svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><rect width="32" height="32" rx="10" fill="var(--ink)" /><rect x="8" y="11" width="16" height="2.6" rx="1.3" fill="var(--surface)" /><rect x="8" y="18.4" width="11" height="2.6" rx="1.3" fill="var(--surface)" /><circle cx="23" cy="19.7" r="2.2" fill="var(--red)" /></svg><span style={{"fontSize": "16px", "fontWeight": "600", "letterSpacing": "-0.02em", "color": "var(--ink)", "flexGrow": "1"}}>Fair Grade</span><label className="fg-theme-switch fg-press" title="Light or dark" style={{"position": "relative", "display": "inline-flex", "alignItems": "center", "width": "62px", "height": "32px", "padding": "3px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "boxShadow": "inset 0 0 0 1px rgba(var(--ink-rgb), 0.06)", "cursor": "pointer", "flexShrink": "0"}}><input type="checkbox" className="fg-theme-input" aria-label="Dark mode" /><span className="fg-theme-thumb" style={{"position": "absolute", "left": "3px", "top": "3px", "width": "26px", "height": "26px", "borderRadius": "999px", "background": "var(--raised)", "boxShadow": "0 1px 2px rgba(var(--shadow-rgb), 0.14), 0 0 0 1px rgba(var(--ink-rgb), 0.06)"}}></span><span className="fg-theme-sun" style={{"position": "relative", "width": "26px", "height": "26px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="12" cy="12" r="3.6" /><path d="M12 3.5v1.6M12 18.9v1.6M3.5 12h1.6M18.9 12h1.6M6 6l1.1 1.1M16.9 16.9L18 18M18 6l-1.1 1.1M7.1 16.9L6 18" /></svg></span><span className="fg-theme-moon" style={{"position": "relative", "width": "26px", "height": "26px", "marginLeft": "2px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M19 14.2A7.5 7.5 0 0 1 9.8 5a7.5 7.5 0 1 0 9.2 9.2z" /></svg></span></label></div><div className="fg-dark" style={{"display": "flex", "alignItems": "center", "gap": "11px", "padding": "11px 12px", "margin": "0 0 14px", "borderRadius": "16px", "background": "radial-gradient(180px 90px at 100% 0%, #2A3142 0%, rgba(42, 49, 66, 0) 70%), var(--ink)", "boxShadow": "inset 0 1px 0 rgba(var(--surface-rgb), 0.08), 0 12px 26px -16px rgba(var(--shadow-rgb), 0.75)"}}><span style={{"width": "32px", "height": "32px", "borderRadius": "10px", "background": "rgba(var(--surface-rgb), 0.09)", "boxShadow": "inset 0 0 0 1px rgba(var(--surface-rgb), 0.10)", "color": "var(--gold-icon)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "flexShrink": "0"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="8" cy="15" r="3.5" /><path d="M10.5 12.5L19 4M16 7l2 2" /></svg></span><span style={{"display": "flex", "flexDirection": "column", "minWidth": "0", "flexGrow": "1"}}><span style={{"fontSize": "11.5px", "color": "#8E95A3"}}>You are signed in as</span><span style={{"fontSize": "14.5px", "fontWeight": "600", "letterSpacing": "-0.01em", "color": "var(--surface)", "whiteSpace": "nowrap"}}>Instructor</span></span><span style={{"width": "8px", "height": "8px", "borderRadius": "999px", "background": "var(--gold-icon)", "boxShadow": "0 0 0 3px rgba(var(--surface-rgb), 0.06)", "flexShrink": "0"}} title="Full access"></span></div><button type="button" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "10px", "width": "100%", "padding": "10px 12px", "marginBottom": "20px", "border": "0", "borderRadius": "14px", "background": "var(--surface)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "cursor": "pointer", "textAlign": "left", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif"}}><span style={{"width": "30px", "height": "30px", "borderRadius": "9px", "background": "var(--blue-t)", "color": "var(--blue-x)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "11px", "fontWeight": "600"}}>335</span><span style={{"display": "flex", "flexDirection": "column", "minWidth": "0", "flexGrow": "1"}}><span style={{"fontSize": "13.5px", "fontWeight": "600", "color": "var(--ink)"}}>HY335</span><span style={{"fontSize": "12px", "color": "var(--muted)"}}>Computer Networks</span></span><span style={{"color": "var(--faint)"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M8 9.5l4-4 4 4" /><path d="M8 14.5l4 4 4-4" /></svg></span></button><button type="button" className="fg-press" aria-label="Search, shortcut Command K" style={{"display": "flex", "alignItems": "center", "gap": "10px", "width": "100%", "height": "38px", "padding": "0 8px 0 12px", "marginBottom": "18px", "border": "0", "borderRadius": "12px", "background": "rgba(var(--ink-rgb), 0.04)", "color": "var(--muted)", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "13.5px", "cursor": "pointer"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4 4" /></svg><span style={{"flexGrow": "1", "textAlign": "left"}}>Search</span><kbd style={{"display": "inline-flex", "alignItems": "center", "height": "22px", "padding": "0 7px", "borderRadius": "7px", "background": "var(--surface)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 0 rgba(var(--ink-rgb), 0.11)", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "11.5px", "fontWeight": "500", "color": "var(--muted)"}}>⌘K</kbd></button><nav aria-label="Main" style={{"display": "flex", "flexDirection": "column", "gap": "2px"}}><div style={{"fontSize": "12px", "color": "var(--faint)", "padding": "0 12px 6px"}}>HY335</div><Link href="/courses/hy335" aria-current="page" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "11px", "height": "38px", "padding": "0 12px", "borderRadius": "12px", "textDecoration": "none", "fontSize": "14px", "fontWeight": "500", "background": "var(--raised)", "color": "var(--ink)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07), 0 1px 2px rgba(var(--shadow-rgb), 0.06)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M13.5 3.5H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z" /><path d="M13.5 3.5V9H19" /></svg><span>Exams</span></Link><Link href="/courses/hy335/stats" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "11px", "height": "38px", "padding": "0 12px", "borderRadius": "12px", "textDecoration": "none", "fontSize": "14px", "fontWeight": "500", "color": "var(--muted)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 19v-7" /><path d="M10 19V5" /><path d="M15 19v-9" /><path d="M20 19v-4" /></svg><span>Stats</span></Link><Link href="/courses/hy335/members" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "11px", "height": "38px", "padding": "0 12px", "borderRadius": "12px", "textDecoration": "none", "fontSize": "14px", "fontWeight": "500", "color": "var(--muted)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="9" cy="8.5" r="3.2" /><path d="M3.5 19c.8-3.3 3-5 5.5-5s4.7 1.7 5.5 5" /><circle cx="17" cy="9.5" r="2.4" /><path d="M16 14.2c2.3.1 4 1.6 4.6 4.3" /></svg><span>Members</span></Link><div style={{"fontSize": "12px", "color": "var(--faint)", "padding": "20px 12px 6px"}}>Workspace</div><Link href="/courses" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "11px", "height": "38px", "padding": "0 12px", "borderRadius": "12px", "textDecoration": "none", "fontSize": "14px", "fontWeight": "500", "color": "var(--muted)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M4 5.5h6.5a2 2 0 0 1 2 2V19a1.6 1.6 0 0 0-1.6-1.6H4z" /><path d="M20 5.5h-6.5a2 2 0 0 0-2 2V19a1.6 1.6 0 0 1 1.6-1.6H20z" /></svg><span>All courses</span></Link><Link href="/users" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "11px", "height": "38px", "padding": "0 12px", "borderRadius": "12px", "textDecoration": "none", "fontSize": "14px", "fontWeight": "500", "color": "var(--muted)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><rect x="4" y="5" width="16" height="14" rx="3" /><circle cx="10" cy="11" r="2.3" /><path d="M6.8 16.5c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4" /><path d="M15 10h2.5M15 13h2.5" /></svg><span>Users</span></Link></nav><div style={{"flexGrow": "1"}}></div><div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "12px 6px 2px 8px", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><span style={{"width": "32px", "height": "32px", "borderRadius": "999px", "background": "var(--ink)", "color": "var(--surface)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "13px", "fontWeight": "600", "flexShrink": "0"}}>I</span><div style={{"display": "flex", "flexDirection": "column", "minWidth": "0", "flexGrow": "1"}}><span style={{"fontSize": "13.5px", "fontWeight": "600", "color": "var(--ink)"}}>Instructor Demo</span><span style={{"marginTop": "3px"}}><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "22px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "var(--ink)", "color": "var(--surface)", "fontSize": "11.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--gold-icon)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="8" cy="15" r="3.5" /><path d="M10.5 12.5L19 4M16 7l2 2" /></svg>Instructor</span></span></div><Link href="/login" aria-label="Log out" className="fg-press" style={{"width": "40px", "height": "40px", "borderRadius": "999px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "background": "transparent", "color": "var(--muted)", "border": "0", "cursor": "pointer", "textDecoration": "none"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4" /><path d="M10 16l-4-4 4-4" /><path d="M6 12h9" /></svg></Link></div></div></aside><main style={{"flexGrow": "1", "minWidth": "0", "padding": "26px 44px 96px"}}><div style={{"maxWidth": "1120px", "margin": "0 auto", "display": "flex", "flexDirection": "column", "gap": "28px"}}><div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "gap": "16px", "minHeight": "40px", "flexWrap": "wrap"}}><div style={{"display": "flex", "alignItems": "center", "gap": "8px", "fontSize": "13.5px", "fontWeight": "500"}}><span style={{"color": "var(--muted)"}}><Link href="/courses" style={{"color": "var(--muted)", "textDecoration": "none"}}>All courses</Link></span><span style={{"color": "var(--faint)", "padding": "0 2px"}}>/</span><span style={{"color": "var(--ink)"}}>HY335 Computer Networks</span></div><div style={{"display": "flex", "alignItems": "center", "gap": "10px", "flexWrap": "wrap"}}><button type="button" className="fg-press" style={{"display": "inline-flex", "alignItems": "center", "gap": "12px", "height": "48px", "padding": "6px 7px 6px 20px", "borderRadius": "999px", "background": "var(--ink)", "color": "var(--surface)", "boxShadow": "none", "border": "0", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "15px", "fontWeight": "500", "letterSpacing": "-0.01em", "textDecoration": "none", "cursor": "pointer", "whiteSpace": "nowrap"}}><span>New exam</span><span className="fg-knob" style={{"width": "34px", "height": "34px", "borderRadius": "999px", "background": "rgba(var(--surface-rgb), 0.12)", "color": "var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M12 5v14M5 12h14" /></svg></span></button></div></div><div className="fg-in" style={{"display": "flex", "alignItems": "center", "gap": "18px"}}><span style={{"width": "60px", "height": "60px", "borderRadius": "18px", "background": "var(--blue-t)", "color": "var(--blue-x)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "20px", "fontWeight": "600", "flexShrink": "0", "fontVariantNumeric": "tabular-nums"}}>335</span><div><div><h1 style={{"margin": "0", "fontSize": "34px", "fontWeight": "600", "letterSpacing": "-0.035em", "lineHeight": "1.1", "color": "var(--ink)"}}>HY335 Computer Networks</h1></div><p style={{"margin": "6px 0 0", "fontSize": "14.5px", "color": "var(--muted)"}}>Winter semester 2026–27. Instructor Demo with 5 TAs.</p></div></div><div className="fg-grid" style={{"display": "grid", "gridTemplateColumns": "repeat(12, minmax(0, 1fr))", "gap": "20px", "alignItems": "start"}}><div className="fg-span" style={{"gridColumn": "span 8", "minWidth": "0"}}><div className="fg-in fg-d1" style={{"background": "rgba(var(--ink-rgb), 0.028)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.05)", "borderRadius": "26px", "padding": "6px"}}><div style={{"background": "var(--surface)", "borderRadius": "20px", "padding": "26px", "boxShadow": "inset 0 1px 0 rgba(var(--surface-rgb), 0.9), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)"}}><div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "flex-start", "gap": "16px", "marginBottom": "20px"}}><div><h2 style={{"margin": "0", "fontSize": "17px", "fontWeight": "600", "letterSpacing": "-0.02em", "color": "var(--ink)"}}>Exams</h2><p style={{"margin": "5px 0 0", "fontSize": "13.5px", "lineHeight": "1.5", "color": "var(--muted)", "maxWidth": "560px"}}>For each exam you upload the questions and model answers. TAs then scan and grade the papers they hold.</p></div></div><div style={{"display": "flex", "flexDirection": "column", "gap": "14px"}}><div style={{"padding": "22px 24px", "borderRadius": "20px", "background": "var(--surface)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "display": "flex", "flexDirection": "column", "gap": "18px"}}><div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "flex-start", "gap": "16px", "flexWrap": "wrap"}}><div><div style={{"display": "flex", "alignItems": "center", "gap": "10px"}}><h3 style={{"margin": "0", "fontSize": "19px", "fontWeight": "600", "letterSpacing": "-0.025em", "color": "var(--ink)"}}>Midterm</h3><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--red-t)", "color": "var(--red-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--red)"}}></span>1 TA flagged</span></div><p style={{"margin": "5px 0 0", "fontSize": "13.5px", "color": "var(--muted)"}}>Held 30 Sep 2026. Grading in progress.</p></div><div style={{"display": "flex", "gap": "10px", "flexWrap": "wrap"}}><Link href="/courses/hy335/exams/midterm/setup" className="fg-press" style={{"display": "inline-flex", "alignItems": "center", "gap": "8px", "height": "40px", "padding": "0 16px", "borderRadius": "999px", "background": "var(--surface)", "color": "var(--ink)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "border": "0", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "14px", "fontWeight": "500", "textDecoration": "none", "cursor": "pointer", "whiteSpace": "nowrap"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 7h9" /><path d="M18 7h1" /><circle cx="16" cy="7" r="2" /><path d="M5 17h1" /><path d="M10 17h9" /><circle cx="8" cy="17" r="2" /></svg><span>Setup</span></Link><Link href="/courses/hy335/exams/midterm/report" className="fg-press" style={{"display": "inline-flex", "alignItems": "center", "gap": "12px", "height": "40px", "padding": "6px 7px 6px 16px", "borderRadius": "999px", "background": "var(--ink)", "color": "var(--surface)", "boxShadow": "none", "border": "0", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "14px", "fontWeight": "500", "letterSpacing": "-0.01em", "textDecoration": "none", "cursor": "pointer", "whiteSpace": "nowrap"}}><span>Open report</span><span className="fg-knob" style={{"width": "28px", "height": "28px", "borderRadius": "999px", "background": "rgba(var(--surface-rgb), 0.12)", "color": "var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M7 17L17 7" /><path d="M9 7h8v8" /></svg></span></Link></div></div><div className="fg-grid" style={{"display": "grid", "gridTemplateColumns": "repeat(4, minmax(0, 1fr))", "gap": "22px", "alignItems": "end"}}><div style={{"display": "flex", "flexDirection": "column", "gap": "8px"}}><span style={{"fontSize": "12.5px", "color": "var(--muted)"}}>Papers graded</span><span style={{"fontSize": "26px", "fontWeight": "500", "letterSpacing": "-0.04em", "color": "var(--ink)", "fontVariantNumeric": "tabular-nums", "lineHeight": "1"}}>58</span></div><div style={{"display": "flex", "flexDirection": "column", "gap": "8px"}}><span style={{"fontSize": "12.5px", "color": "var(--muted)"}}>Graders</span><span style={{"display": "flex"}}><span style={{"marginLeft": "0px"}}><span style={{"width": "26px", "height": "26px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "10px", "fontWeight": "600", "flexShrink": "0"}}>M</span></span><span style={{"marginLeft": "-7px"}}><span style={{"width": "26px", "height": "26px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "10px", "fontWeight": "600", "flexShrink": "0"}}>G</span></span><span style={{"marginLeft": "-7px"}}><span style={{"width": "26px", "height": "26px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "10px", "fontWeight": "600", "flexShrink": "0"}}>E</span></span><span style={{"marginLeft": "-7px"}}><span style={{"width": "26px", "height": "26px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "10px", "fontWeight": "600", "flexShrink": "0"}}>N</span></span><span style={{"marginLeft": "-7px"}}><span style={{"width": "26px", "height": "26px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "10px", "fontWeight": "600", "flexShrink": "0"}}>K</span></span></span></div><div style={{"display": "flex", "flexDirection": "column", "gap": "7px", "minWidth": "0"}}><div style={{"display": "flex", "justifyContent": "space-between", "fontSize": "12.5px"}}><span style={{"color": "var(--muted)"}}>AI graded</span><span style={{"color": "var(--ink)", "fontVariantNumeric": "tabular-nums"}}>57 / 58</span></div><div style={{"height": "4px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)"}}><div style={{"width": "98%", "height": "4px", "borderRadius": "999px", "background": "var(--blue)"}}></div></div></div><div style={{"display": "flex", "flexDirection": "column", "gap": "8px"}}><span style={{"fontSize": "12.5px", "color": "var(--muted)"}}>Questions</span><span style={{"fontSize": "14px", "color": "var(--ink)"}}>3, 10 points</span></div></div></div><div style={{"padding": "22px 24px", "borderRadius": "20px", "background": "rgba(var(--ink-rgb), 0.02)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07)", "display": "flex", "flexDirection": "column", "gap": "18px"}}><div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "flex-start", "gap": "16px", "flexWrap": "wrap"}}><div><div style={{"display": "flex", "alignItems": "center", "gap": "10px"}}><h3 style={{"margin": "0", "fontSize": "19px", "fontWeight": "600", "letterSpacing": "-0.025em", "color": "var(--ink)"}}>Final</h3><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.05)", "color": "var(--text-2)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--dot)"}}></span>Questions ready</span></div><p style={{"margin": "5px 0 0", "fontSize": "13.5px", "color": "var(--muted)"}}>January 2027.</p></div><div style={{"display": "flex", "gap": "10px", "flexWrap": "wrap"}}><Link href="/courses/hy335/exams/midterm/setup" className="fg-press" style={{"display": "inline-flex", "alignItems": "center", "gap": "8px", "height": "40px", "padding": "0 16px", "borderRadius": "999px", "background": "var(--surface)", "color": "var(--ink)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "border": "0", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "14px", "fontWeight": "500", "textDecoration": "none", "cursor": "pointer", "whiteSpace": "nowrap"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg><span>Edit questions</span></Link></div></div><div className="fg-grid" style={{"display": "grid", "gridTemplateColumns": "repeat(3, minmax(0, 1fr))", "gap": "22px"}}><div style={{"display": "flex", "alignItems": "center", "gap": "10px", "fontSize": "13.5px", "color": "var(--ink)"}}><span style={{"width": "20px", "height": "20px", "borderRadius": "999px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "background": "var(--green)"}}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--surface)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>Questions and model answers</div><div style={{"display": "flex", "alignItems": "center", "gap": "10px", "fontSize": "13.5px", "color": "var(--muted)"}}><span style={{"width": "20px", "height": "20px", "borderRadius": "999px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "background": "rgba(var(--ink-rgb), 0.06)"}}></span>Open for grading</div><div style={{"display": "flex", "alignItems": "center", "gap": "10px", "fontSize": "13.5px", "color": "var(--muted)"}}><span style={{"width": "20px", "height": "20px", "borderRadius": "999px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "background": "rgba(var(--ink-rgb), 0.06)"}}></span>Papers scanned by TAs</div></div></div><div style={{"padding": "22px 24px", "borderRadius": "20px", "background": "rgba(var(--ink-rgb), 0.02)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07)", "display": "flex", "flexDirection": "column", "gap": "18px"}}><div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "flex-start", "gap": "16px", "flexWrap": "wrap"}}><div><div style={{"display": "flex", "alignItems": "center", "gap": "10px"}}><h3 style={{"margin": "0", "fontSize": "19px", "fontWeight": "600", "letterSpacing": "-0.025em", "color": "var(--ink)"}}>Resit</h3><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.05)", "color": "var(--text-2)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}>Not started</span></div><p style={{"margin": "5px 0 0", "fontSize": "13.5px", "color": "var(--muted)"}}>September 2027.</p></div><div style={{"display": "flex", "gap": "10px", "flexWrap": "wrap"}}><button type="button" className="fg-press" style={{"display": "inline-flex", "alignItems": "center", "gap": "8px", "height": "40px", "padding": "0 16px", "borderRadius": "999px", "background": "var(--surface)", "color": "var(--ink)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "border": "0", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "14px", "fontWeight": "500", "textDecoration": "none", "cursor": "pointer", "whiteSpace": "nowrap"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M12 5v14M5 12h14" /></svg><span>Add questions</span></button></div></div><p style={{"margin": "0", "fontSize": "13.5px", "color": "var(--muted)"}}>Upload the questions and model answers when the paper is ready.</p></div></div><div style={{"margin": "24px 0 10px", "fontSize": "12.5px", "color": "var(--muted)"}}>Graded earlier</div><div style={{"borderRadius": "18px", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07)", "overflow": "hidden"}}><Link href="/courses/hy335/exams/midterm/report" className="fg-row" style={{"display": "grid", "gridTemplateColumns": "minmax(0, 1fr) 90px 130px 110px 24px", "gap": "14px", "alignItems": "center", "padding": "14px 20px", "textDecoration": "none", "color": "var(--text)", "borderTop": "0"}}><span style={{"display": "flex", "flexDirection": "column", "gap": "2px"}}><span style={{"fontSize": "14.5px", "fontWeight": "600", "color": "var(--ink)"}}>Quiz 2</span><span style={{"fontSize": "12.5px", "color": "var(--muted)"}}>23 Sep 2026, grades published</span></span><span style={{"fontSize": "13px", "color": "var(--muted)", "fontVariantNumeric": "tabular-nums"}}>54 papers</span><span style={{"fontSize": "13px", "color": "var(--muted)", "fontVariantNumeric": "tabular-nums"}}>Avg gap <span style={{"color": "var(--ink)", "fontWeight": "500"}}>0.53</span></span><span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--red-t)", "color": "var(--red-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--red)"}}></span>1 flagged</span></span><span style={{"color": "var(--faint)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M9.5 6l6 6-6 6" /></svg></span></Link><Link href="/courses/hy335/exams/midterm/report" className="fg-row" style={{"display": "grid", "gridTemplateColumns": "minmax(0, 1fr) 90px 130px 110px 24px", "gap": "14px", "alignItems": "center", "padding": "14px 20px", "textDecoration": "none", "color": "var(--text)", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><span style={{"display": "flex", "flexDirection": "column", "gap": "2px"}}><span style={{"fontSize": "14.5px", "fontWeight": "600", "color": "var(--ink)"}}>Quiz 1</span><span style={{"fontSize": "12.5px", "color": "var(--muted)"}}>16 Sep 2026, grades published</span></span><span style={{"fontSize": "13px", "color": "var(--muted)", "fontVariantNumeric": "tabular-nums"}}>55 papers</span><span style={{"fontSize": "13px", "color": "var(--muted)", "fontVariantNumeric": "tabular-nums"}}>Avg gap <span style={{"color": "var(--ink)", "fontWeight": "500"}}>0.64</span></span><span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--red-t)", "color": "var(--red-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--red)"}}></span>2 flagged</span></span><span style={{"color": "var(--faint)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M9.5 6l6 6-6 6" /></svg></span></Link></div></div></div></div><div className="fg-span" style={{"gridColumn": "span 4", "minWidth": "0"}}><div style={{"position": "sticky", "top": "24px", "display": "flex", "flexDirection": "column", "gap": "20px"}}><div className="fg-in fg-d2" style={{"background": "rgba(var(--ink-rgb), 0.028)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.05)", "borderRadius": "26px", "padding": "6px"}}><div style={{"background": "var(--surface)", "borderRadius": "20px", "padding": "24px", "boxShadow": "inset 0 1px 0 rgba(var(--surface-rgb), 0.9), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)"}}><div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "center"}}><h2 style={{"margin": "0", "fontSize": "17px", "fontWeight": "600", "letterSpacing": "-0.02em", "color": "var(--ink)"}}>Course stats</h2><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--green-t)", "color": "var(--green-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--green)"}}></span>Improving</span></div><div style={{"display": "flex", "alignItems": "flex-end", "justifyContent": "space-between", "gap": "12px", "marginTop": "16px"}}><div><div style={{"fontSize": "12.5px", "color": "var(--muted)"}}>Average gap per paper</div><div style={{"marginTop": "8px"}}><span style={{"fontSize": "34px", "fontWeight": "500", "letterSpacing": "-0.04em", "color": "var(--ink)", "fontVariantNumeric": "tabular-nums", "lineHeight": "1"}}>0.48</span><span style={{"fontSize": "12.5px", "color": "var(--green-x)", "marginLeft": "8px"}}>−25%</span></div></div><div style={{"paddingBottom": "6px"}}><svg width="110" height="40" viewBox="0 0 110 40" aria-hidden="true" style={{"display": "block"}}><polyline points="6,8 55,22 104,28" fill="none" stroke="var(--ink)" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" /><circle cx="6" cy="8" r="2.6" fill="var(--surface)" stroke="var(--ink)" strokeWidth="1.5" /><circle cx="55" cy="22" r="2.6" fill="var(--surface)" stroke="var(--ink)" strokeWidth="1.5" /><circle cx="104" cy="28" r="3.6" fill="var(--green)" /></svg></div></div><div style={{"display": "flex", "alignItems": "center", "gap": "10px", "marginTop": "18px", "padding": "12px 14px", "borderRadius": "14px", "background": "rgba(243, 213, 138, 0.22)"}}><span style={{"width": "30px", "height": "30px", "borderRadius": "999px", "background": "var(--gold-icon)", "color": "var(--ink)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "13px", "fontWeight": "600"}}>K</span><span style={{"display": "flex", "flexDirection": "column", "flexGrow": "1"}}><span style={{"fontSize": "13.5px", "fontWeight": "500", "color": "var(--ink)"}}>Katerina Vlachou</span><span style={{"fontSize": "12px", "color": "var(--muted)"}}>Closest to the AI, 0.13</span></span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9A7A24" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M8 4h8v5a4 4 0 0 1-8 0z" /><path d="M8 6H5.5A2.5 2.5 0 0 0 8 10.3" /><path d="M16 6h2.5A2.5 2.5 0 0 1 16 10.3" /><path d="M12 13v3" /><path d="M8.5 20h7" /><path d="M10 20c0-1.8.9-3 2-3s2 1.2 2 3" /></svg></div><div style={{"marginTop": "16px"}}><Link href="/courses/hy335/stats" className="fg-press" style={{"display": "inline-flex", "alignItems": "center", "gap": "12px", "height": "40px", "padding": "6px 7px 6px 16px", "borderRadius": "999px", "background": "var(--ink)", "color": "var(--surface)", "boxShadow": "none", "border": "0", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "14px", "fontWeight": "500", "letterSpacing": "-0.01em", "textDecoration": "none", "cursor": "pointer", "whiteSpace": "nowrap", "width": "100%", "justifyContent": "space-between"}}><span>Open course stats</span><span className="fg-knob" style={{"width": "28px", "height": "28px", "borderRadius": "999px", "background": "rgba(var(--surface-rgb), 0.12)", "color": "var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M7 17L17 7" /><path d="M9 7h8v8" /></svg></span></Link></div></div></div><div className="fg-in fg-d2" style={{"background": "rgba(var(--ink-rgb), 0.028)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.05)", "borderRadius": "26px", "padding": "6px"}}><div style={{"background": "var(--surface)", "borderRadius": "20px", "padding": "24px", "boxShadow": "inset 0 1px 0 rgba(var(--surface-rgb), 0.9), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)"}}><div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "flex-start", "gap": "16px", "marginBottom": "20px"}}><div><h2 style={{"margin": "0", "fontSize": "17px", "fontWeight": "600", "letterSpacing": "-0.02em", "color": "var(--ink)"}}>People</h2><p style={{"margin": "5px 0 0", "fontSize": "13.5px", "lineHeight": "1.5", "color": "var(--muted)", "maxWidth": "560px"}}>6 people. TAs see every exam in this course.</p></div></div><div style={{"display": "flex", "alignItems": "center", "gap": "12px", "padding": "10px 0", "borderTop": "0"}}><span style={{"width": "32px", "height": "32px", "borderRadius": "999px", "background": "var(--ink)", "color": "var(--surface)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "13px", "fontWeight": "600", "flexShrink": "0"}}>I</span><span style={{"display": "flex", "flexDirection": "column", "flexGrow": "1", "minWidth": "0"}}><span style={{"fontSize": "14px", "fontWeight": "500", "color": "var(--ink)"}}>Instructor Demo<span style={{"display": "inline-flex", "alignItems": "center", "height": "20px", "padding": "0 7px", "marginLeft": "8px", "borderRadius": "999px", "background": "var(--blue)", "color": "var(--surface)", "fontSize": "11px", "fontWeight": "600", "letterSpacing": "0.01em", "verticalAlign": "1px"}}>You</span></span><span style={{"marginTop": "4px"}}><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "22px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "var(--ink)", "color": "var(--surface)", "fontSize": "11.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--gold-icon)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="8" cy="15" r="3.5" /><path d="M10.5 12.5L19 4M16 7l2 2" /></svg>Instructor</span></span></span><span style={{"fontSize": "12.5px", "color": "var(--muted)", "fontVariantNumeric": "tabular-nums"}}></span></div><div style={{"display": "flex", "alignItems": "center", "gap": "12px", "padding": "10px 0", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><span style={{"width": "32px", "height": "32px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "13px", "fontWeight": "600", "flexShrink": "0"}}>M</span><span style={{"display": "flex", "flexDirection": "column", "flexGrow": "1", "minWidth": "0"}}><span style={{"fontSize": "14px", "fontWeight": "500", "color": "var(--ink)"}}>Maria Papadaki</span><span style={{"marginTop": "4px"}}><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "22px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "color": "var(--ink)", "fontSize": "11.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 19l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L9 18z" /><path d="M14.5 6.5l3 3" /></svg>TA</span></span></span><span style={{"fontSize": "12.5px", "color": "var(--muted)", "fontVariantNumeric": "tabular-nums"}}>12 papers</span></div><div style={{"display": "flex", "alignItems": "center", "gap": "12px", "padding": "10px 0", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><span style={{"width": "32px", "height": "32px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "13px", "fontWeight": "600", "flexShrink": "0"}}>G</span><span style={{"display": "flex", "flexDirection": "column", "flexGrow": "1", "minWidth": "0"}}><span style={{"fontSize": "14px", "fontWeight": "500", "color": "var(--ink)"}}>Giannis Petrou</span><span style={{"marginTop": "4px"}}><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "22px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "color": "var(--ink)", "fontSize": "11.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 19l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L9 18z" /><path d="M14.5 6.5l3 3" /></svg>TA</span></span></span><span style={{"fontSize": "12.5px", "color": "var(--muted)", "fontVariantNumeric": "tabular-nums"}}>11 papers</span></div><div style={{"display": "flex", "alignItems": "center", "gap": "12px", "padding": "10px 0", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><span style={{"width": "32px", "height": "32px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "13px", "fontWeight": "600", "flexShrink": "0"}}>E</span><span style={{"display": "flex", "flexDirection": "column", "flexGrow": "1", "minWidth": "0"}}><span style={{"fontSize": "14px", "fontWeight": "500", "color": "var(--ink)"}}>Eleni Markou</span><span style={{"marginTop": "4px"}}><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "22px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "color": "var(--ink)", "fontSize": "11.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 19l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L9 18z" /><path d="M14.5 6.5l3 3" /></svg>TA</span></span></span><span style={{"fontSize": "12.5px", "color": "var(--muted)", "fontVariantNumeric": "tabular-nums"}}>12 papers</span></div><div style={{"display": "flex", "alignItems": "center", "gap": "12px", "padding": "10px 0", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><span style={{"width": "32px", "height": "32px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "13px", "fontWeight": "600", "flexShrink": "0"}}>N</span><span style={{"display": "flex", "flexDirection": "column", "flexGrow": "1", "minWidth": "0"}}><span style={{"fontSize": "14px", "fontWeight": "500", "color": "var(--ink)"}}>Nikos Georgiou</span><span style={{"marginTop": "4px"}}><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "22px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "color": "var(--ink)", "fontSize": "11.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 19l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L9 18z" /><path d="M14.5 6.5l3 3" /></svg>TA</span></span></span><span style={{"fontSize": "12.5px", "color": "var(--muted)", "fontVariantNumeric": "tabular-nums"}}>11 papers</span></div><div style={{"display": "flex", "alignItems": "center", "gap": "12px", "padding": "10px 0", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><span style={{"width": "32px", "height": "32px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "13px", "fontWeight": "600", "flexShrink": "0"}}>K</span><span style={{"display": "flex", "flexDirection": "column", "flexGrow": "1", "minWidth": "0"}}><span style={{"fontSize": "14px", "fontWeight": "500", "color": "var(--ink)"}}>Katerina Vlachou</span><span style={{"marginTop": "4px"}}><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "22px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "color": "var(--ink)", "fontSize": "11.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 19l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L9 18z" /><path d="M14.5 6.5l3 3" /></svg>TA</span></span></span><span style={{"fontSize": "12.5px", "color": "var(--muted)", "fontVariantNumeric": "tabular-nums"}}>12 papers</span></div><div style={{"marginTop": "16px"}}><Link href="/courses/hy335/members" className="fg-press" style={{"display": "inline-flex", "alignItems": "center", "gap": "8px", "height": "40px", "padding": "0 16px", "borderRadius": "999px", "background": "var(--surface)", "color": "var(--ink)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "border": "0", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "14px", "fontWeight": "500", "textDecoration": "none", "cursor": "pointer", "whiteSpace": "nowrap"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="9" cy="8.5" r="3.2" /><path d="M3.5 19c.8-3.3 3-5 5.5-5s4.7 1.7 5.5 5" /><circle cx="17" cy="9.5" r="2.4" /><path d="M16 14.2c2.3.1 4 1.6 4.6 4.3" /></svg><span>Manage members</span></Link></div></div></div></div></div></div></div></main></div></>
+    <>
+      <AppShell user={user} course={course} nav={instructorNav({ course, active: "exams" })}>
+        <PageHeader
+          crumbs={[
+            { label: "All courses", href: "/courses" },
+            { label: "HY335 Computer Networks" },
+          ]}
+        >
+          <Button
+            size="lg"
+            icon={
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                style={{ flexShrink: "0", display: "block" }}
+              >
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            }
+          >
+            New exam
+          </Button>
+        </PageHeader>
+        <div className="fg-in" style={{ display: "flex", alignItems: "center", gap: "18px" }}>
+          <span
+            style={{
+              width: "60px",
+              height: "60px",
+              borderRadius: "18px",
+              background: "var(--blue-t)",
+              color: "var(--blue-x)",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "20px",
+              fontWeight: "600",
+              flexShrink: "0",
+              fontVariantNumeric: "tabular-nums",
+            }}
+          >
+            335
+          </span>
+          <div>
+            <div>
+              <h1
+                style={{
+                  margin: "0",
+                  fontSize: "34px",
+                  fontWeight: "600",
+                  letterSpacing: "-0.035em",
+                  lineHeight: "1.1",
+                  color: "var(--ink)",
+                }}
+              >
+                HY335 Computer Networks
+              </h1>
+            </div>
+            <p style={{ margin: "6px 0 0", fontSize: "14.5px", color: "var(--muted)" }}>
+              Winter semester 2026–27. Instructor Demo with 5 TAs.
+            </p>
+          </div>
+        </div>
+        <div
+          className="fg-grid"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
+            gap: "20px",
+            alignItems: "start",
+          }}
+        >
+          <div className="fg-span" style={{ gridColumn: "span 8", minWidth: "0" }}>
+            <Card className="fg-in fg-d1" padding="26px">
+              <SectionHeader
+                title={<>Exams</>}
+                description={
+                  <>
+                    For each exam you upload the questions and model answers. TAs then scan and
+                    grade the papers they hold.
+                  </>
+                }
+              />
+              <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                <div
+                  style={{
+                    padding: "22px 24px",
+                    borderRadius: "20px",
+                    background: "var(--surface)",
+                    boxShadow:
+                      "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "18px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                      gap: "16px",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <h3
+                          style={{
+                            margin: "0",
+                            fontSize: "19px",
+                            fontWeight: "600",
+                            letterSpacing: "-0.025em",
+                            color: "var(--ink)",
+                          }}
+                        >
+                          Midterm
+                        </h3>
+                        <Pill tone="red" dot>
+                          1 TA flagged
+                        </Pill>
+                      </div>
+                      <p style={{ margin: "5px 0 0", fontSize: "13.5px", color: "var(--muted)" }}>
+                        Held 30 Sep 2026. Grading in progress.
+                      </p>
+                    </div>
+                    <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                      <SecondaryButton
+                        icon={
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.4"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                            style={{ flexShrink: "0", display: "block" }}
+                          >
+                            <path d="M5 7h9" />
+                            <path d="M18 7h1" />
+                            <circle cx="16" cy="7" r="2" />
+                            <path d="M5 17h1" />
+                            <path d="M10 17h9" />
+                            <circle cx="8" cy="17" r="2" />
+                          </svg>
+                        }
+                        href="/courses/hy335/exams/midterm/setup"
+                      >
+                        <span>Setup</span>
+                      </SecondaryButton>
+                      <Button
+                        href="/courses/hy335/exams/midterm/report"
+                        icon={
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                            style={{ flexShrink: "0", display: "block" }}
+                          >
+                            <path d="M7 17L17 7" />
+                            <path d="M9 7h8v8" />
+                          </svg>
+                        }
+                      >
+                        Open report
+                      </Button>
+                    </div>
+                  </div>
+                  <div
+                    className="fg-grid"
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+                      gap: "22px",
+                      alignItems: "end",
+                    }}
+                  >
+                    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                      <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>
+                        Papers graded
+                      </span>
+                      <span
+                        style={{
+                          fontSize: "26px",
+                          fontWeight: "500",
+                          letterSpacing: "-0.04em",
+                          color: "var(--ink)",
+                          fontVariantNumeric: "tabular-nums",
+                          lineHeight: "1",
+                        }}
+                      >
+                        58
+                      </span>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                      <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>Graders</span>
+                      <span style={{ display: "flex" }}>
+                        <span style={{ marginLeft: "0px" }}>
+                          <Avatar initial="M" size={26} />
+                        </span>
+                        <span style={{ marginLeft: "-7px" }}>
+                          <Avatar initial="G" size={26} />
+                        </span>
+                        <span style={{ marginLeft: "-7px" }}>
+                          <Avatar initial="E" size={26} />
+                        </span>
+                        <span style={{ marginLeft: "-7px" }}>
+                          <Avatar initial="N" size={26} />
+                        </span>
+                        <span style={{ marginLeft: "-7px" }}>
+                          <Avatar initial="K" size={26} />
+                        </span>
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "7px",
+                        minWidth: "0",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          fontSize: "12.5px",
+                        }}
+                      >
+                        <span style={{ color: "var(--muted)" }}>AI graded</span>
+                        <span style={{ color: "var(--ink)", fontVariantNumeric: "tabular-nums" }}>
+                          57 / 58
+                        </span>
+                      </div>
+                      <div
+                        style={{
+                          height: "4px",
+                          borderRadius: "999px",
+                          background: "rgba(var(--ink-rgb), 0.06)",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "98%",
+                            height: "4px",
+                            borderRadius: "999px",
+                            background: "var(--blue)",
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                      <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>Questions</span>
+                      <span style={{ fontSize: "14px", color: "var(--ink)" }}>3, 10 points</span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    padding: "22px 24px",
+                    borderRadius: "20px",
+                    background: "rgba(var(--ink-rgb), 0.02)",
+                    boxShadow: "0 0 0 1px rgba(var(--ink-rgb), 0.07)",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "18px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                      gap: "16px",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <h3
+                          style={{
+                            margin: "0",
+                            fontSize: "19px",
+                            fontWeight: "600",
+                            letterSpacing: "-0.025em",
+                            color: "var(--ink)",
+                          }}
+                        >
+                          Final
+                        </h3>
+                        <Pill dot>Questions ready</Pill>
+                      </div>
+                      <p style={{ margin: "5px 0 0", fontSize: "13.5px", color: "var(--muted)" }}>
+                        January 2027.
+                      </p>
+                    </div>
+                    <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                      <SecondaryButton
+                        icon={
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.4"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                            style={{ flexShrink: "0", display: "block" }}
+                          >
+                            <path d="M5 12h14" />
+                            <path d="M13 6l6 6-6 6" />
+                          </svg>
+                        }
+                        href="/courses/hy335/exams/midterm/setup"
+                      >
+                        <span>Edit questions</span>
+                      </SecondaryButton>
+                    </div>
+                  </div>
+                  <div
+                    className="fg-grid"
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                      gap: "22px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        fontSize: "13.5px",
+                        color: "var(--ink)",
+                      }}
+                    >
+                      <span
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                          borderRadius: "999px",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          background: "var(--green)",
+                        }}
+                      >
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="var(--surface)"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                          style={{ flexShrink: "0", display: "block" }}
+                        >
+                          <path d="M5 12.5l4.5 4.5L19 7.5" />
+                        </svg>
+                      </span>
+                      Questions and model answers
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        fontSize: "13.5px",
+                        color: "var(--muted)",
+                      }}
+                    >
+                      <span
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                          borderRadius: "999px",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          background: "rgba(var(--ink-rgb), 0.06)",
+                        }}
+                      ></span>
+                      Open for grading
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        fontSize: "13.5px",
+                        color: "var(--muted)",
+                      }}
+                    >
+                      <span
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                          borderRadius: "999px",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          background: "rgba(var(--ink-rgb), 0.06)",
+                        }}
+                      ></span>
+                      Papers scanned by TAs
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    padding: "22px 24px",
+                    borderRadius: "20px",
+                    background: "rgba(var(--ink-rgb), 0.02)",
+                    boxShadow: "0 0 0 1px rgba(var(--ink-rgb), 0.07)",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "18px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                      gap: "16px",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <h3
+                          style={{
+                            margin: "0",
+                            fontSize: "19px",
+                            fontWeight: "600",
+                            letterSpacing: "-0.025em",
+                            color: "var(--ink)",
+                          }}
+                        >
+                          Resit
+                        </h3>
+                        <Pill>Not started</Pill>
+                      </div>
+                      <p style={{ margin: "5px 0 0", fontSize: "13.5px", color: "var(--muted)" }}>
+                        September 2027.
+                      </p>
+                    </div>
+                    <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                      <SecondaryButton
+                        icon={
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.4"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                            style={{ flexShrink: "0", display: "block" }}
+                          >
+                            <path d="M12 5v14M5 12h14" />
+                          </svg>
+                        }
+                      >
+                        <span>Add questions</span>
+                      </SecondaryButton>
+                    </div>
+                  </div>
+                  <p style={{ margin: "0", fontSize: "13.5px", color: "var(--muted)" }}>
+                    Upload the questions and model answers when the paper is ready.
+                  </p>
+                </div>
+              </div>
+              <div style={{ margin: "24px 0 10px", fontSize: "12.5px", color: "var(--muted)" }}>
+                Graded earlier
+              </div>
+              <div
+                style={{
+                  borderRadius: "18px",
+                  boxShadow: "0 0 0 1px rgba(var(--ink-rgb), 0.07)",
+                  overflow: "hidden",
+                }}
+              >
+                <Link
+                  href="/courses/hy335/exams/midterm/report"
+                  className="fg-row"
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "minmax(0, 1fr) 90px 130px 110px 24px",
+                    gap: "14px",
+                    alignItems: "center",
+                    padding: "14px 20px",
+                    textDecoration: "none",
+                    color: "var(--text)",
+                    borderTop: "0",
+                  }}
+                >
+                  <span style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                    <span style={{ fontSize: "14.5px", fontWeight: "600", color: "var(--ink)" }}>
+                      Quiz 2
+                    </span>
+                    <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>
+                      23 Sep 2026, grades published
+                    </span>
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "13px",
+                      color: "var(--muted)",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    54 papers
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "13px",
+                      color: "var(--muted)",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    Avg gap <span style={{ color: "var(--ink)", fontWeight: "500" }}>0.53</span>
+                  </span>
+                  <span>
+                    <Pill tone="red" dot>
+                      1 flagged
+                    </Pill>
+                  </span>
+                  <span style={{ color: "var(--faint)" }}>
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                      style={{ flexShrink: "0", display: "block" }}
+                    >
+                      <path d="M9.5 6l6 6-6 6" />
+                    </svg>
+                  </span>
+                </Link>
+                <Link
+                  href="/courses/hy335/exams/midterm/report"
+                  className="fg-row"
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "minmax(0, 1fr) 90px 130px 110px 24px",
+                    gap: "14px",
+                    alignItems: "center",
+                    padding: "14px 20px",
+                    textDecoration: "none",
+                    color: "var(--text)",
+                    borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                  }}
+                >
+                  <span style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                    <span style={{ fontSize: "14.5px", fontWeight: "600", color: "var(--ink)" }}>
+                      Quiz 1
+                    </span>
+                    <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>
+                      16 Sep 2026, grades published
+                    </span>
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "13px",
+                      color: "var(--muted)",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    55 papers
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "13px",
+                      color: "var(--muted)",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    Avg gap <span style={{ color: "var(--ink)", fontWeight: "500" }}>0.64</span>
+                  </span>
+                  <span>
+                    <Pill tone="red" dot>
+                      2 flagged
+                    </Pill>
+                  </span>
+                  <span style={{ color: "var(--faint)" }}>
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                      style={{ flexShrink: "0", display: "block" }}
+                    >
+                      <path d="M9.5 6l6 6-6 6" />
+                    </svg>
+                  </span>
+                </Link>
+              </div>
+            </Card>
+          </div>
+          <div className="fg-span" style={{ gridColumn: "span 4", minWidth: "0" }}>
+            <div
+              style={{
+                position: "sticky",
+                top: "24px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "20px",
+              }}
+            >
+              <Card className="fg-in fg-d2">
+                <div
+                  style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+                >
+                  <h2
+                    style={{
+                      margin: "0",
+                      fontSize: "17px",
+                      fontWeight: "600",
+                      letterSpacing: "-0.02em",
+                      color: "var(--ink)",
+                    }}
+                  >
+                    Course stats
+                  </h2>
+                  <Pill tone="green" dot>
+                    Improving
+                  </Pill>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-end",
+                    justifyContent: "space-between",
+                    gap: "12px",
+                    marginTop: "16px",
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: "12.5px", color: "var(--muted)" }}>
+                      Average gap per paper
+                    </div>
+                    <div style={{ marginTop: "8px" }}>
+                      <span
+                        style={{
+                          fontSize: "34px",
+                          fontWeight: "500",
+                          letterSpacing: "-0.04em",
+                          color: "var(--ink)",
+                          fontVariantNumeric: "tabular-nums",
+                          lineHeight: "1",
+                        }}
+                      >
+                        0.48
+                      </span>
+                      <span
+                        style={{ fontSize: "12.5px", color: "var(--green-x)", marginLeft: "8px" }}
+                      >
+                        −25%
+                      </span>
+                    </div>
+                  </div>
+                  <div style={{ paddingBottom: "6px" }}>
+                    <svg
+                      width="110"
+                      height="40"
+                      viewBox="0 0 110 40"
+                      aria-hidden="true"
+                      style={{ display: "block" }}
+                    >
+                      <polyline
+                        points="6,8 55,22 104,28"
+                        fill="none"
+                        stroke="var(--ink)"
+                        strokeWidth="2"
+                        strokeLinejoin="round"
+                        strokeLinecap="round"
+                      />
+                      <circle
+                        cx="6"
+                        cy="8"
+                        r="2.6"
+                        fill="var(--surface)"
+                        stroke="var(--ink)"
+                        strokeWidth="1.5"
+                      />
+                      <circle
+                        cx="55"
+                        cy="22"
+                        r="2.6"
+                        fill="var(--surface)"
+                        stroke="var(--ink)"
+                        strokeWidth="1.5"
+                      />
+                      <circle cx="104" cy="28" r="3.6" fill="var(--green)" />
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    marginTop: "18px",
+                    padding: "12px 14px",
+                    borderRadius: "14px",
+                    background: "rgba(243, 213, 138, 0.22)",
+                  }}
+                >
+                  <span
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      borderRadius: "999px",
+                      background: "var(--gold-icon)",
+                      color: "var(--ink)",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "13px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    K
+                  </span>
+                  <span style={{ display: "flex", flexDirection: "column", flexGrow: "1" }}>
+                    <span style={{ fontSize: "13.5px", fontWeight: "500", color: "var(--ink)" }}>
+                      Katerina Vlachou
+                    </span>
+                    <span style={{ fontSize: "12px", color: "var(--muted)" }}>
+                      Closest to the AI, 0.13
+                    </span>
+                  </span>
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#9A7A24"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                    style={{ flexShrink: "0", display: "block" }}
+                  >
+                    <path d="M8 4h8v5a4 4 0 0 1-8 0z" />
+                    <path d="M8 6H5.5A2.5 2.5 0 0 0 8 10.3" />
+                    <path d="M16 6h2.5A2.5 2.5 0 0 1 16 10.3" />
+                    <path d="M12 13v3" />
+                    <path d="M8.5 20h7" />
+                    <path d="M10 20c0-1.8.9-3 2-3s2 1.2 2 3" />
+                  </svg>
+                </div>
+                <div style={{ marginTop: "16px" }}>
+                  <Button
+                    fullWidth
+                    href="/courses/hy335/stats"
+                    icon={
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        style={{ flexShrink: "0", display: "block" }}
+                      >
+                        <path d="M7 17L17 7" />
+                        <path d="M9 7h8v8" />
+                      </svg>
+                    }
+                  >
+                    Open course stats
+                  </Button>
+                </div>
+              </Card>
+              <Card className="fg-in fg-d2">
+                <SectionHeader
+                  title={<>People</>}
+                  description={<>6 people. TAs see every exam in this course.</>}
+                />
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    padding: "10px 0",
+                    borderTop: "0",
+                  }}
+                >
+                  <Avatar initial="I" size={32} ink />
+                  <span
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      flexGrow: "1",
+                      minWidth: "0",
+                    }}
+                  >
+                    <span style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>
+                      Instructor Demo
+                      <YouTag />
+                    </span>
+                    <span style={{ marginTop: "4px" }}>
+                      <RoleChip role="instructor" />
+                    </span>
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "12.5px",
+                      color: "var(--muted)",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  ></span>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    padding: "10px 0",
+                    borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                  }}
+                >
+                  <Avatar initial="M" size={32} />
+                  <span
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      flexGrow: "1",
+                      minWidth: "0",
+                    }}
+                  >
+                    <span style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>
+                      Maria Papadaki
+                    </span>
+                    <span style={{ marginTop: "4px" }}>
+                      <RoleChip role="ta" />
+                    </span>
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "12.5px",
+                      color: "var(--muted)",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    12 papers
+                  </span>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    padding: "10px 0",
+                    borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                  }}
+                >
+                  <Avatar initial="G" size={32} />
+                  <span
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      flexGrow: "1",
+                      minWidth: "0",
+                    }}
+                  >
+                    <span style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>
+                      Giannis Petrou
+                    </span>
+                    <span style={{ marginTop: "4px" }}>
+                      <RoleChip role="ta" />
+                    </span>
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "12.5px",
+                      color: "var(--muted)",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    11 papers
+                  </span>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    padding: "10px 0",
+                    borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                  }}
+                >
+                  <Avatar initial="E" size={32} />
+                  <span
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      flexGrow: "1",
+                      minWidth: "0",
+                    }}
+                  >
+                    <span style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>
+                      Eleni Markou
+                    </span>
+                    <span style={{ marginTop: "4px" }}>
+                      <RoleChip role="ta" />
+                    </span>
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "12.5px",
+                      color: "var(--muted)",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    12 papers
+                  </span>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    padding: "10px 0",
+                    borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                  }}
+                >
+                  <Avatar initial="N" size={32} />
+                  <span
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      flexGrow: "1",
+                      minWidth: "0",
+                    }}
+                  >
+                    <span style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>
+                      Nikos Georgiou
+                    </span>
+                    <span style={{ marginTop: "4px" }}>
+                      <RoleChip role="ta" />
+                    </span>
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "12.5px",
+                      color: "var(--muted)",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    11 papers
+                  </span>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    padding: "10px 0",
+                    borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                  }}
+                >
+                  <Avatar initial="K" size={32} />
+                  <span
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      flexGrow: "1",
+                      minWidth: "0",
+                    }}
+                  >
+                    <span style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>
+                      Katerina Vlachou
+                    </span>
+                    <span style={{ marginTop: "4px" }}>
+                      <RoleChip role="ta" />
+                    </span>
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "12.5px",
+                      color: "var(--muted)",
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    12 papers
+                  </span>
+                </div>
+                <div style={{ marginTop: "16px" }}>
+                  <SecondaryButton
+                    icon={
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        style={{ flexShrink: "0", display: "block" }}
+                      >
+                        <circle cx="9" cy="8.5" r="3.2" />
+                        <path d="M3.5 19c.8-3.3 3-5 5.5-5s4.7 1.7 5.5 5" />
+                        <circle cx="17" cy="9.5" r="2.4" />
+                        <path d="M16 14.2c2.3.1 4 1.6 4.6 4.3" />
+                      </svg>
+                    }
+                    href="/courses/hy335/members"
+                  >
+                    <span>Manage members</span>
+                  </SecondaryButton>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </AppShell>
+    </>
   );
 }

@@ -1,12 +1,957 @@
-// Static design, generated from design-reference/html/Login.html.
-// Demo content only: nothing here talks to the API yet.
+// Static design, generated from design-reference/html/Login.html
+// by frontend/scripts/html2jsx.py. Demo content only: nothing here talks
+// to the API yet. When wiring it up, replace the constants with real data.
 import Link from "next/link";
 import type { Metadata } from "next";
+import { Avatar, Button, Pill, RoleChip, ThemeSwitch } from "@/components/shell";
 
 export const metadata: Metadata = { title: "Sign in \u00b7 Fair Grade" };
 
 export default function LoginPage() {
   return (
-    <><div style={{"minHeight": "100vh", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "color": "var(--text)", "background": "radial-gradient(1000px 520px at 10% 0%, var(--surface) 0%, rgba(var(--surface-rgb), 0) 70%), var(--bg)", "padding": "20px", "display": "grid", "gridTemplateColumns": "minmax(0, 1fr) minmax(0, 1.08fr)", "gap": "20px"}} className="fg-split"><section style={{"display": "flex", "flexDirection": "column", "justifyContent": "space-between", "padding": "36px 56px 32px"}}><div className="fg-in" style={{"display": "flex", "alignItems": "center", "gap": "10px"}}><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><rect width="32" height="32" rx="10" fill="var(--ink)" /><rect x="8" y="11" width="16" height="2.6" rx="1.3" fill="var(--surface)" /><rect x="8" y="18.4" width="11" height="2.6" rx="1.3" fill="var(--surface)" /><circle cx="23" cy="19.7" r="2.2" fill="var(--red)" /></svg><span style={{"fontSize": "17px", "fontWeight": "600", "letterSpacing": "-0.02em", "color": "var(--ink)", "flexGrow": "1"}}>Fair Grade</span><label className="fg-theme-switch fg-press" title="Light or dark" style={{"position": "relative", "display": "inline-flex", "alignItems": "center", "width": "62px", "height": "32px", "padding": "3px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "boxShadow": "inset 0 0 0 1px rgba(var(--ink-rgb), 0.06)", "cursor": "pointer", "flexShrink": "0"}}><input type="checkbox" className="fg-theme-input" aria-label="Dark mode" /><span className="fg-theme-thumb" style={{"position": "absolute", "left": "3px", "top": "3px", "width": "26px", "height": "26px", "borderRadius": "999px", "background": "var(--raised)", "boxShadow": "0 1px 2px rgba(var(--shadow-rgb), 0.14), 0 0 0 1px rgba(var(--ink-rgb), 0.06)"}}></span><span className="fg-theme-sun" style={{"position": "relative", "width": "26px", "height": "26px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="12" cy="12" r="3.6" /><path d="M12 3.5v1.6M12 18.9v1.6M3.5 12h1.6M18.9 12h1.6M6 6l1.1 1.1M16.9 16.9L18 18M18 6l-1.1 1.1M7.1 16.9L6 18" /></svg></span><span className="fg-theme-moon" style={{"position": "relative", "width": "26px", "height": "26px", "marginLeft": "2px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M19 14.2A7.5 7.5 0 0 1 9.8 5a7.5 7.5 0 1 0 9.2 9.2z" /></svg></span></label></div><form className="fg-in fg-d1" style={{"width": "100%", "maxWidth": "400px", "display": "flex", "flexDirection": "column", "gap": "18px", "padding": "48px 0"}} aria-labelledby="t"><div><span style={{"display": "inline-flex", "alignItems": "center", "height": "24px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--surface)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11)", "color": "var(--muted)", "fontSize": "10.5px", "fontWeight": "500", "letterSpacing": "0.16em", "textTransform": "uppercase"}}>Course staff</span><h1 id="t" style={{"margin": "14px 0 0", "fontSize": "40px", "fontWeight": "600", "letterSpacing": "-0.04em", "lineHeight": "1.05", "color": "var(--ink)"}}>Sign in</h1><p style={{"margin": "10px 0 0", "fontSize": "15px", "lineHeight": "1.55", "color": "var(--muted)"}}>Use the account your instructor created for you.</p></div><div style={{"width": "100%"}}><label htmlFor="email" style={{"display": "block", "fontSize": "13px", "fontWeight": "500", "color": "var(--text)", "marginBottom": "8px"}}>Email</label><div style={{"position": "relative"}}><input id="email" type="email" defaultValue="instructor@demo.com" aria-label="Email" style={{"width": "100%", "height": "44px", "padding": "0 14px 0 14px", "border": "0", "borderRadius": "12px", "background": "var(--surface)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "14px", "color": "var(--text)", "outline": "none"}} /></div></div><div style={{"width": "100%"}}><label htmlFor="password" style={{"display": "block", "fontSize": "13px", "fontWeight": "500", "color": "var(--text)", "marginBottom": "8px"}}>Password</label><div style={{"position": "relative"}}><input id="password" type="password" defaultValue="demo1234" aria-label="Password" style={{"width": "100%", "height": "44px", "padding": "0 14px 0 14px", "border": "0", "borderRadius": "12px", "background": "var(--surface)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "14px", "color": "var(--text)", "outline": "none"}} /></div></div><Link href="/courses" className="fg-press" style={{"display": "inline-flex", "alignItems": "center", "gap": "12px", "height": "48px", "padding": "6px 7px 6px 20px", "borderRadius": "999px", "background": "var(--ink)", "color": "var(--surface)", "boxShadow": "none", "border": "0", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "15px", "fontWeight": "500", "letterSpacing": "-0.01em", "textDecoration": "none", "cursor": "pointer", "whiteSpace": "nowrap", "width": "100%", "justifyContent": "space-between"}}><span>Sign in</span><span className="fg-knob" style={{"width": "34px", "height": "34px", "borderRadius": "999px", "background": "rgba(var(--surface-rgb), 0.12)", "color": "var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg></span></Link><div style={{"marginTop": "10px", "paddingTop": "18px", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><p style={{"margin": "0 0 10px", "fontSize": "12.5px", "color": "var(--muted)"}}>Demo accounts. Password <span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace"}}>demo1234</span></p><Link href="/courses" className="fg-press fg-row" style={{"display": "flex", "alignItems": "center", "gap": "12px", "padding": "8px 10px", "margin": "0 -10px", "borderRadius": "12px", "textDecoration": "none", "color": "var(--text)"}}><span style={{"width": "26px", "height": "26px", "borderRadius": "999px", "background": "var(--ink)", "color": "var(--surface)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "10px", "fontWeight": "600", "flexShrink": "0"}}>I</span><span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "13px", "flexGrow": "1"}}>instructor@demo.com</span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "22px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "var(--ink)", "color": "var(--surface)", "fontSize": "11.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--gold-icon)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="8" cy="15" r="3.5" /><path d="M10.5 12.5L19 4M16 7l2 2" /></svg>Instructor</span></Link><Link href="/courses/hy335/exams/midterm/stats" className="fg-press fg-row" style={{"display": "flex", "alignItems": "center", "gap": "12px", "padding": "8px 10px", "margin": "0 -10px", "borderRadius": "12px", "textDecoration": "none", "color": "var(--text)"}}><span style={{"width": "26px", "height": "26px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "10px", "fontWeight": "600", "flexShrink": "0"}}>N</span><span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "13px", "flexGrow": "1"}}>nikos@demo.com</span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "22px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "color": "var(--ink)", "fontSize": "11.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 19l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L9 18z" /><path d="M14.5 6.5l3 3" /></svg>TA</span></Link><Link href="/courses/hy335/exams/midterm/stats" className="fg-press fg-row" style={{"display": "flex", "alignItems": "center", "gap": "12px", "padding": "8px 10px", "margin": "0 -10px", "borderRadius": "12px", "textDecoration": "none", "color": "var(--text)"}}><span style={{"width": "26px", "height": "26px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "10px", "fontWeight": "600", "flexShrink": "0"}}>M</span><span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "13px", "flexGrow": "1"}}>maria@demo.com</span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "22px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "color": "var(--ink)", "fontSize": "11.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 19l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L9 18z" /><path d="M14.5 6.5l3 3" /></svg>TA</span></Link></div></form><p style={{"margin": "0", "fontSize": "12.5px", "color": "var(--faint)"}}>FuturEd AI Hackathon 2026. Team Byte Me.</p></section><section className="fg-in fg-d2 fg-dark" style={{"position": "relative", "overflow": "hidden", "borderRadius": "32px", "background": "radial-gradient(700px 420px at 80% 10%, #23293A 0%, rgba(35, 41, 58, 0) 70%), var(--ink)", "color": "var(--surface)", "padding": "56px", "display": "flex", "flexDirection": "column", "justifyContent": "space-between", "gap": "32px"}}><div style={{"maxWidth": "520px"}}><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "rgba(var(--surface-rgb), 0.10)", "color": "#E8EAEE", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}>For instructors and TAs</span><h2 style={{"margin": "22px 0 0", "fontSize": "50px", "fontWeight": "600", "letterSpacing": "-0.045em", "lineHeight": "1.02"}}>Same rubric.<br />Same standard.<br /><span style={{"color": "#8E95A3"}}>Every grader.</span></h2><p style={{"margin": "18px 0 0", "fontSize": "16px", "lineHeight": "1.6", "color": "#A6ACB8", "maxWidth": "440px"}}>TAs scan and grade each paper. The AI grades the same answers. You see where they disagree, before grades go out.</p></div><div style={{"position": "relative", "height": "480px"}}><div style={{"position": "absolute", "left": "0", "top": "0", "width": "450px", "transform": "rotate(-1.5deg)"}}><div className="fg-dark" style={{"background": "rgba(var(--surface-rgb), 0.06)", "boxShadow": "0 0 0 1px rgba(var(--surface-rgb), 0.10)", "borderRadius": "26px", "padding": "6px"}}><div style={{"background": "var(--surface)", "borderRadius": "20px", "padding": "20px 22px", "boxShadow": "inset 0 1px 0 rgba(var(--surface-rgb), 0.08), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)"}}><div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "center", "marginBottom": "6px"}}><span style={{"fontSize": "13.5px", "fontWeight": "600", "color": "var(--ink)"}}>Midterm, gap per question</span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--red-t)", "color": "var(--red-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--red)"}}></span>1 flagged</span></div><div style={{"display": "grid", "gridTemplateColumns": "minmax(0, 1fr)", "gap": "24px", "alignItems": "center", "borderTop": "0"}}><div style={{"position": "relative", "height": "92px"}}><span style={{"position": "absolute", "left": "35.00%", "width": "30.00%", "top": "10px", "bottom": "10px", "borderRadius": "10px", "background": "rgba(var(--ink-rgb), 0.045)"}}></span><span style={{"position": "absolute", "left": "0%", "top": "0", "bottom": "0", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "25%", "top": "0", "bottom": "0", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "75%", "top": "0", "bottom": "0", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "100%", "top": "0", "bottom": "0", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "50%", "top": "0", "bottom": "0", "width": "1.5px", "marginLeft": "-0.75px", "background": "var(--ink)"}}></span><span title="Maria Papadaki \u22120.20" style={{"position": "absolute", "left": "45.00%", "top": "calc(50% + 0px)", "transform": "translate(-50%, -50%)"}}><span style={{"width": "18px", "height": "18px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "7px", "fontWeight": "600", "flexShrink": "0"}}>M</span></span><span title="Katerina Vlachou 0.00" style={{"position": "absolute", "left": "50.00%", "top": "calc(50% + -16px)", "transform": "translate(-50%, -50%)"}}><span style={{"width": "18px", "height": "18px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "7px", "fontWeight": "600", "flexShrink": "0"}}>K</span></span><span title="Nikos Georgiou +0.05" style={{"position": "absolute", "left": "51.25%", "top": "calc(50% + 0px)", "transform": "translate(-50%, -50%)"}}><span style={{"width": "18px", "height": "18px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "7px", "fontWeight": "600", "flexShrink": "0"}}>N</span></span><span title="Eleni Markou +0.10" style={{"position": "absolute", "left": "52.50%", "top": "calc(50% + 16px)", "transform": "translate(-50%, -50%)"}}><span style={{"width": "18px", "height": "18px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "7px", "fontWeight": "600", "flexShrink": "0"}}>E</span></span><span title="Giannis Petrou +0.40" style={{"position": "absolute", "left": "60.00%", "top": "calc(50% + 0px)", "transform": "translate(-50%, -50%)"}}><span style={{"width": "18px", "height": "18px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "7px", "fontWeight": "600", "flexShrink": "0"}}>G</span></span></div></div><div style={{"display": "grid", "gridTemplateColumns": "minmax(0, 1fr)", "gap": "24px", "alignItems": "center", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><div style={{"position": "relative", "height": "92px"}}><span style={{"position": "absolute", "left": "38.75%", "width": "22.50%", "top": "10px", "bottom": "10px", "borderRadius": "10px", "background": "rgba(var(--ink-rgb), 0.045)"}}></span><span style={{"position": "absolute", "left": "0%", "top": "0", "bottom": "0", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "25%", "top": "0", "bottom": "0", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "75%", "top": "0", "bottom": "0", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "100%", "top": "0", "bottom": "0", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "50%", "top": "0", "bottom": "0", "width": "1.5px", "marginLeft": "-0.75px", "background": "var(--ink)"}}></span><span title="Maria Papadaki \u22121.05" style={{"position": "absolute", "left": "23.75%", "top": "calc(50% + 0px)", "transform": "translate(-50%, -50%)"}}><span style={{"width": "18px", "height": "18px", "borderRadius": "999px", "background": "var(--red)", "color": "var(--surface)", "boxShadow": "0 0 0 3px var(--surface), 0 0 0 4px rgba(214, 69, 69, 0.35)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "7px", "fontWeight": "600", "flexShrink": "0"}}>M</span></span><span style={{"position": "absolute", "left": "calc(23.75% + 17px)", "top": "calc(50% + 0px - 11px)", "height": "22px", "padding": "0 8px", "borderRadius": "999px", "background": "var(--red)", "color": "var(--surface)", "fontSize": "12px", "fontWeight": "600", "display": "inline-flex", "alignItems": "center", "fontVariantNumeric": "tabular-nums"}}>−1.05</span><span title="Nikos Georgiou \u22120.10" style={{"position": "absolute", "left": "47.50%", "top": "calc(50% + 0px)", "transform": "translate(-50%, -50%)"}}><span style={{"width": "18px", "height": "18px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "7px", "fontWeight": "600", "flexShrink": "0"}}>N</span></span><span title="Eleni Markou +0.05" style={{"position": "absolute", "left": "51.25%", "top": "calc(50% + -16px)", "transform": "translate(-50%, -50%)"}}><span style={{"width": "18px", "height": "18px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "7px", "fontWeight": "600", "flexShrink": "0"}}>E</span></span><span title="Katerina Vlachou +0.05" style={{"position": "absolute", "left": "51.25%", "top": "calc(50% + 16px)", "transform": "translate(-50%, -50%)"}}><span style={{"width": "18px", "height": "18px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "7px", "fontWeight": "600", "flexShrink": "0"}}>K</span></span><span title="Giannis Petrou +0.10" style={{"position": "absolute", "left": "52.50%", "top": "calc(50% + -32px)", "transform": "translate(-50%, -50%)"}}><span style={{"width": "18px", "height": "18px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "7px", "fontWeight": "600", "flexShrink": "0"}}>G</span></span></div></div><div style={{"display": "grid", "gridTemplateColumns": "minmax(0, 1fr)", "gap": "24px", "alignItems": "center", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><div style={{"position": "relative", "height": "92px"}}><span style={{"position": "absolute", "left": "38.75%", "width": "22.50%", "top": "10px", "bottom": "10px", "borderRadius": "10px", "background": "rgba(var(--ink-rgb), 0.045)"}}></span><span style={{"position": "absolute", "left": "0%", "top": "0", "bottom": "0", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "25%", "top": "0", "bottom": "0", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "75%", "top": "0", "bottom": "0", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "100%", "top": "0", "bottom": "0", "width": "1px", "background": "rgba(var(--ink-rgb), 0.07)"}}></span><span style={{"position": "absolute", "left": "50%", "top": "0", "bottom": "0", "width": "1.5px", "marginLeft": "-0.75px", "background": "var(--ink)"}}></span><span title="Maria Papadaki \u22120.15" style={{"position": "absolute", "left": "46.25%", "top": "calc(50% + 0px)", "transform": "translate(-50%, -50%)"}}><span style={{"width": "18px", "height": "18px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "7px", "fontWeight": "600", "flexShrink": "0"}}>M</span></span><span title="Nikos Georgiou \u22120.05" style={{"position": "absolute", "left": "48.75%", "top": "calc(50% + -16px)", "transform": "translate(-50%, -50%)"}}><span style={{"width": "18px", "height": "18px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "7px", "fontWeight": "600", "flexShrink": "0"}}>N</span></span><span title="Eleni Markou +0.05" style={{"position": "absolute", "left": "51.25%", "top": "calc(50% + 16px)", "transform": "translate(-50%, -50%)"}}><span style={{"width": "18px", "height": "18px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "7px", "fontWeight": "600", "flexShrink": "0"}}>E</span></span><span title="Katerina Vlachou +0.05" style={{"position": "absolute", "left": "51.25%", "top": "calc(50% + -32px)", "transform": "translate(-50%, -50%)"}}><span style={{"width": "18px", "height": "18px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "7px", "fontWeight": "600", "flexShrink": "0"}}>K</span></span><span title="Giannis Petrou +0.10" style={{"position": "absolute", "left": "52.50%", "top": "calc(50% + 0px)", "transform": "translate(-50%, -50%)"}}><span style={{"width": "18px", "height": "18px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "7px", "fontWeight": "600", "flexShrink": "0"}}>G</span></span></div></div><div style={{"display": "flex", "justifyContent": "space-between", "fontSize": "11.5px", "marginTop": "6px"}}><span style={{"color": "var(--red-x)"}}>Stricter</span><span style={{"color": "var(--muted)"}}>AI</span><span style={{"color": "var(--blue-x)"}}>Lenient</span></div></div></div></div><div style={{"position": "absolute", "right": "4px", "bottom": "0", "width": "290px", "transform": "rotate(2.5deg)"}}><div className="fg-dark" style={{"background": "rgba(var(--surface-rgb), 0.06)", "boxShadow": "0 0 0 1px rgba(var(--surface-rgb), 0.10)", "borderRadius": "24px", "padding": "6px"}}><div style={{"background": "var(--surface)", "borderRadius": "18px", "padding": "16px 18px", "boxShadow": "inset 0 1px 0 rgba(var(--surface-rgb), 0.08), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)"}}><div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "center"}}><span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "12.5px", "color": "var(--muted)", "letterSpacing": "-0.01em"}}>csd5146</span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--blue-t)", "color": "var(--blue-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--blue)"}}></span>AI graded</span></div><div style={{"display": "flex", "alignItems": "baseline", "gap": "18px", "marginTop": "12px"}}><div><div style={{"fontSize": "12px", "color": "var(--muted)"}}>TA</div><span style={{"fontSize": "30px", "fontWeight": "500", "letterSpacing": "-0.04em", "color": "var(--ink)", "fontVariantNumeric": "tabular-nums", "lineHeight": "1"}}>7</span><span style={{"fontSize": "13px", "color": "var(--muted)"}}> / 10</span></div><div><div style={{"fontSize": "12px", "color": "var(--blue-x)"}}>AI</div><span style={{"fontSize": "30px", "fontWeight": "500", "letterSpacing": "-0.04em", "color": "var(--blue-x)", "fontVariantNumeric": "tabular-nums", "lineHeight": "1"}}>8</span><span style={{"fontSize": "13px", "color": "var(--blue-x)"}}> / 10</span></div><div style={{"marginLeft": "auto"}}><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--red-t)", "color": "var(--red-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--red)"}}></span>Q2 −1</span></div></div></div></div></div></div></section></div></>
+    <>
+      <div
+        style={{
+          minHeight: "100vh",
+          fontFamily: "'Geist', 'Segoe UI', system-ui, sans-serif",
+          color: "var(--text)",
+          background:
+            "radial-gradient(1000px 520px at 10% 0%, var(--surface) 0%, rgba(var(--surface-rgb), 0) 70%), var(--bg)",
+          padding: "20px",
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.08fr)",
+          gap: "20px",
+        }}
+        className="fg-split"
+      >
+        <section
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            padding: "36px 56px 32px",
+          }}
+        >
+          <div className="fg-in" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 32 32"
+              aria-hidden="true"
+              style={{ flexShrink: "0", display: "block" }}
+            >
+              <rect width="32" height="32" rx="10" fill="var(--ink)" />
+              <rect x="8" y="11" width="16" height="2.6" rx="1.3" fill="var(--surface)" />
+              <rect x="8" y="18.4" width="11" height="2.6" rx="1.3" fill="var(--surface)" />
+              <circle cx="23" cy="19.7" r="2.2" fill="var(--red)" />
+            </svg>
+            <span
+              style={{
+                fontSize: "17px",
+                fontWeight: "600",
+                letterSpacing: "-0.02em",
+                color: "var(--ink)",
+                flexGrow: "1",
+              }}
+            >
+              Fair Grade
+            </span>
+            <ThemeSwitch />
+          </div>
+          <form
+            className="fg-in fg-d1"
+            style={{
+              width: "100%",
+              maxWidth: "400px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "18px",
+              padding: "48px 0",
+            }}
+            aria-labelledby="t"
+          >
+            <div>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  height: "24px",
+                  padding: "0 10px",
+                  borderRadius: "999px",
+                  background: "var(--surface)",
+                  boxShadow: "0 0 0 1px rgba(var(--ink-rgb), 0.11)",
+                  color: "var(--muted)",
+                  fontSize: "10.5px",
+                  fontWeight: "500",
+                  letterSpacing: "0.16em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Course staff
+              </span>
+              <h1
+                id="t"
+                style={{
+                  margin: "14px 0 0",
+                  fontSize: "40px",
+                  fontWeight: "600",
+                  letterSpacing: "-0.04em",
+                  lineHeight: "1.05",
+                  color: "var(--ink)",
+                }}
+              >
+                Sign in
+              </h1>
+              <p
+                style={{
+                  margin: "10px 0 0",
+                  fontSize: "15px",
+                  lineHeight: "1.55",
+                  color: "var(--muted)",
+                }}
+              >
+                Use the account your instructor created for you.
+              </p>
+            </div>
+            <div style={{ width: "100%" }}>
+              <label
+                htmlFor="email"
+                style={{
+                  display: "block",
+                  fontSize: "13px",
+                  fontWeight: "500",
+                  color: "var(--text)",
+                  marginBottom: "8px",
+                }}
+              >
+                Email
+              </label>
+              <div style={{ position: "relative" }}>
+                <input
+                  id="email"
+                  type="email"
+                  defaultValue="instructor@demo.com"
+                  aria-label="Email"
+                  style={{
+                    width: "100%",
+                    height: "44px",
+                    padding: "0 14px 0 14px",
+                    border: "0",
+                    borderRadius: "12px",
+                    background: "var(--surface)",
+                    boxShadow:
+                      "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)",
+                    fontFamily: "'Geist', 'Segoe UI', system-ui, sans-serif",
+                    fontSize: "14px",
+                    color: "var(--text)",
+                    outline: "none",
+                  }}
+                />
+              </div>
+            </div>
+            <div style={{ width: "100%" }}>
+              <label
+                htmlFor="password"
+                style={{
+                  display: "block",
+                  fontSize: "13px",
+                  fontWeight: "500",
+                  color: "var(--text)",
+                  marginBottom: "8px",
+                }}
+              >
+                Password
+              </label>
+              <div style={{ position: "relative" }}>
+                <input
+                  id="password"
+                  type="password"
+                  defaultValue="demo1234"
+                  aria-label="Password"
+                  style={{
+                    width: "100%",
+                    height: "44px",
+                    padding: "0 14px 0 14px",
+                    border: "0",
+                    borderRadius: "12px",
+                    background: "var(--surface)",
+                    boxShadow:
+                      "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)",
+                    fontFamily: "'Geist', 'Segoe UI', system-ui, sans-serif",
+                    fontSize: "14px",
+                    color: "var(--text)",
+                    outline: "none",
+                  }}
+                />
+              </div>
+            </div>
+            <Button
+              size="lg"
+              fullWidth
+              href="/courses"
+              icon={
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                  style={{ flexShrink: "0", display: "block" }}
+                >
+                  <path d="M5 12h14" />
+                  <path d="M13 6l6 6-6 6" />
+                </svg>
+              }
+            >
+              Sign in
+            </Button>
+            <div
+              style={{
+                marginTop: "10px",
+                paddingTop: "18px",
+                borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+              }}
+            >
+              <p style={{ margin: "0 0 10px", fontSize: "12.5px", color: "var(--muted)" }}>
+                Demo accounts. Password{" "}
+                <span
+                  style={{ fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace" }}
+                >
+                  demo1234
+                </span>
+              </p>
+              <Link
+                href="/courses"
+                className="fg-press fg-row"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  padding: "8px 10px",
+                  margin: "0 -10px",
+                  borderRadius: "12px",
+                  textDecoration: "none",
+                  color: "var(--text)",
+                }}
+              >
+                <Avatar initial="I" size={26} ink />
+                <span
+                  style={{
+                    fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                    fontSize: "13px",
+                    flexGrow: "1",
+                  }}
+                >
+                  instructor@demo.com
+                </span>
+                <RoleChip role="instructor" />
+              </Link>
+              <Link
+                href="/courses/hy335/exams/midterm/stats"
+                className="fg-press fg-row"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  padding: "8px 10px",
+                  margin: "0 -10px",
+                  borderRadius: "12px",
+                  textDecoration: "none",
+                  color: "var(--text)",
+                }}
+              >
+                <Avatar initial="N" size={26} />
+                <span
+                  style={{
+                    fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                    fontSize: "13px",
+                    flexGrow: "1",
+                  }}
+                >
+                  nikos@demo.com
+                </span>
+                <RoleChip role="ta" />
+              </Link>
+              <Link
+                href="/courses/hy335/exams/midterm/stats"
+                className="fg-press fg-row"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  padding: "8px 10px",
+                  margin: "0 -10px",
+                  borderRadius: "12px",
+                  textDecoration: "none",
+                  color: "var(--text)",
+                }}
+              >
+                <Avatar initial="M" size={26} />
+                <span
+                  style={{
+                    fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                    fontSize: "13px",
+                    flexGrow: "1",
+                  }}
+                >
+                  maria@demo.com
+                </span>
+                <RoleChip role="ta" />
+              </Link>
+            </div>
+          </form>
+          <p style={{ margin: "0", fontSize: "12.5px", color: "var(--faint)" }}>
+            FuturEd AI Hackathon 2026. Team Byte Me.
+          </p>
+        </section>
+        <section
+          className="fg-in fg-d2 fg-dark"
+          style={{
+            position: "relative",
+            overflow: "hidden",
+            borderRadius: "32px",
+            background:
+              "radial-gradient(700px 420px at 80% 10%, #23293A 0%, rgba(35, 41, 58, 0) 70%), var(--ink)",
+            color: "var(--surface)",
+            padding: "56px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            gap: "32px",
+          }}
+        >
+          <div style={{ maxWidth: "520px" }}>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "7px",
+                height: "26px",
+                padding: "0 10px",
+                borderRadius: "999px",
+                background: "rgba(var(--surface-rgb), 0.10)",
+                color: "#E8EAEE",
+                fontSize: "12.5px",
+                fontWeight: "500",
+                whiteSpace: "nowrap",
+              }}
+            >
+              For instructors and TAs
+            </span>
+            <h2
+              style={{
+                margin: "22px 0 0",
+                fontSize: "50px",
+                fontWeight: "600",
+                letterSpacing: "-0.045em",
+                lineHeight: "1.02",
+              }}
+            >
+              Same rubric.
+              <br />
+              Same standard.
+              <br />
+              <span style={{ color: "#8E95A3" }}>Every grader.</span>
+            </h2>
+            <p
+              style={{
+                margin: "18px 0 0",
+                fontSize: "16px",
+                lineHeight: "1.6",
+                color: "#A6ACB8",
+                maxWidth: "440px",
+              }}
+            >
+              TAs scan and grade each paper. The AI grades the same answers. You see where they
+              disagree, before grades go out.
+            </p>
+          </div>
+          <div style={{ position: "relative", height: "480px" }}>
+            <div
+              style={{
+                position: "absolute",
+                left: "0",
+                top: "0",
+                width: "450px",
+                transform: "rotate(-1.5deg)",
+              }}
+            >
+              <div
+                className="fg-dark"
+                style={{
+                  background: "rgba(var(--surface-rgb), 0.06)",
+                  boxShadow: "0 0 0 1px rgba(var(--surface-rgb), 0.10)",
+                  borderRadius: "26px",
+                  padding: "6px",
+                }}
+              >
+                <div
+                  style={{
+                    background: "var(--surface)",
+                    borderRadius: "20px",
+                    padding: "20px 22px",
+                    boxShadow:
+                      "inset 0 1px 0 rgba(var(--surface-rgb), 0.08), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: "6px",
+                    }}
+                  >
+                    <span style={{ fontSize: "13.5px", fontWeight: "600", color: "var(--ink)" }}>
+                      Midterm, gap per question
+                    </span>
+                    <Pill tone="red" dot>
+                      1 flagged
+                    </Pill>
+                  </div>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "minmax(0, 1fr)",
+                      gap: "24px",
+                      alignItems: "center",
+                      borderTop: "0",
+                    }}
+                  >
+                    <div style={{ position: "relative", height: "92px" }}>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "35.00%",
+                          width: "30.00%",
+                          top: "10px",
+                          bottom: "10px",
+                          borderRadius: "10px",
+                          background: "rgba(var(--ink-rgb), 0.045)",
+                        }}
+                      ></span>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "0%",
+                          top: "0",
+                          bottom: "0",
+                          width: "1px",
+                          background: "rgba(var(--ink-rgb), 0.07)",
+                        }}
+                      ></span>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "25%",
+                          top: "0",
+                          bottom: "0",
+                          width: "1px",
+                          background: "rgba(var(--ink-rgb), 0.07)",
+                        }}
+                      ></span>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "75%",
+                          top: "0",
+                          bottom: "0",
+                          width: "1px",
+                          background: "rgba(var(--ink-rgb), 0.07)",
+                        }}
+                      ></span>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "100%",
+                          top: "0",
+                          bottom: "0",
+                          width: "1px",
+                          background: "rgba(var(--ink-rgb), 0.07)",
+                        }}
+                      ></span>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "50%",
+                          top: "0",
+                          bottom: "0",
+                          width: "1.5px",
+                          marginLeft: "-0.75px",
+                          background: "var(--ink)",
+                        }}
+                      ></span>
+                      <span
+                        title="Maria Papadaki \u22120.20"
+                        style={{
+                          position: "absolute",
+                          left: "45.00%",
+                          top: "calc(50% + 0px)",
+                          transform: "translate(-50%, -50%)",
+                        }}
+                      >
+                        <Avatar initial="M" size={18} />
+                      </span>
+                      <span
+                        title="Katerina Vlachou 0.00"
+                        style={{
+                          position: "absolute",
+                          left: "50.00%",
+                          top: "calc(50% + -16px)",
+                          transform: "translate(-50%, -50%)",
+                        }}
+                      >
+                        <Avatar initial="K" size={18} />
+                      </span>
+                      <span
+                        title="Nikos Georgiou +0.05"
+                        style={{
+                          position: "absolute",
+                          left: "51.25%",
+                          top: "calc(50% + 0px)",
+                          transform: "translate(-50%, -50%)",
+                        }}
+                      >
+                        <Avatar initial="N" size={18} />
+                      </span>
+                      <span
+                        title="Eleni Markou +0.10"
+                        style={{
+                          position: "absolute",
+                          left: "52.50%",
+                          top: "calc(50% + 16px)",
+                          transform: "translate(-50%, -50%)",
+                        }}
+                      >
+                        <Avatar initial="E" size={18} />
+                      </span>
+                      <span
+                        title="Giannis Petrou +0.40"
+                        style={{
+                          position: "absolute",
+                          left: "60.00%",
+                          top: "calc(50% + 0px)",
+                          transform: "translate(-50%, -50%)",
+                        }}
+                      >
+                        <Avatar initial="G" size={18} />
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "minmax(0, 1fr)",
+                      gap: "24px",
+                      alignItems: "center",
+                      borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                    }}
+                  >
+                    <div style={{ position: "relative", height: "92px" }}>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "38.75%",
+                          width: "22.50%",
+                          top: "10px",
+                          bottom: "10px",
+                          borderRadius: "10px",
+                          background: "rgba(var(--ink-rgb), 0.045)",
+                        }}
+                      ></span>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "0%",
+                          top: "0",
+                          bottom: "0",
+                          width: "1px",
+                          background: "rgba(var(--ink-rgb), 0.07)",
+                        }}
+                      ></span>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "25%",
+                          top: "0",
+                          bottom: "0",
+                          width: "1px",
+                          background: "rgba(var(--ink-rgb), 0.07)",
+                        }}
+                      ></span>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "75%",
+                          top: "0",
+                          bottom: "0",
+                          width: "1px",
+                          background: "rgba(var(--ink-rgb), 0.07)",
+                        }}
+                      ></span>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "100%",
+                          top: "0",
+                          bottom: "0",
+                          width: "1px",
+                          background: "rgba(var(--ink-rgb), 0.07)",
+                        }}
+                      ></span>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "50%",
+                          top: "0",
+                          bottom: "0",
+                          width: "1.5px",
+                          marginLeft: "-0.75px",
+                          background: "var(--ink)",
+                        }}
+                      ></span>
+                      <span
+                        title="Maria Papadaki \u22121.05"
+                        style={{
+                          position: "absolute",
+                          left: "23.75%",
+                          top: "calc(50% + 0px)",
+                          transform: "translate(-50%, -50%)",
+                        }}
+                      >
+                        <span
+                          style={{
+                            width: "18px",
+                            height: "18px",
+                            borderRadius: "999px",
+                            background: "var(--red)",
+                            color: "var(--surface)",
+                            boxShadow:
+                              "0 0 0 3px var(--surface), 0 0 0 4px rgba(214, 69, 69, 0.35)",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "7px",
+                            fontWeight: "600",
+                            flexShrink: "0",
+                          }}
+                        >
+                          M
+                        </span>
+                      </span>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "calc(23.75% + 17px)",
+                          top: "calc(50% + 0px - 11px)",
+                          height: "22px",
+                          padding: "0 8px",
+                          borderRadius: "999px",
+                          background: "var(--red)",
+                          color: "var(--surface)",
+                          fontSize: "12px",
+                          fontWeight: "600",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          fontVariantNumeric: "tabular-nums",
+                        }}
+                      >
+                        −1.05
+                      </span>
+                      <span
+                        title="Nikos Georgiou \u22120.10"
+                        style={{
+                          position: "absolute",
+                          left: "47.50%",
+                          top: "calc(50% + 0px)",
+                          transform: "translate(-50%, -50%)",
+                        }}
+                      >
+                        <Avatar initial="N" size={18} />
+                      </span>
+                      <span
+                        title="Eleni Markou +0.05"
+                        style={{
+                          position: "absolute",
+                          left: "51.25%",
+                          top: "calc(50% + -16px)",
+                          transform: "translate(-50%, -50%)",
+                        }}
+                      >
+                        <Avatar initial="E" size={18} />
+                      </span>
+                      <span
+                        title="Katerina Vlachou +0.05"
+                        style={{
+                          position: "absolute",
+                          left: "51.25%",
+                          top: "calc(50% + 16px)",
+                          transform: "translate(-50%, -50%)",
+                        }}
+                      >
+                        <Avatar initial="K" size={18} />
+                      </span>
+                      <span
+                        title="Giannis Petrou +0.10"
+                        style={{
+                          position: "absolute",
+                          left: "52.50%",
+                          top: "calc(50% + -32px)",
+                          transform: "translate(-50%, -50%)",
+                        }}
+                      >
+                        <Avatar initial="G" size={18} />
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "minmax(0, 1fr)",
+                      gap: "24px",
+                      alignItems: "center",
+                      borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                    }}
+                  >
+                    <div style={{ position: "relative", height: "92px" }}>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "38.75%",
+                          width: "22.50%",
+                          top: "10px",
+                          bottom: "10px",
+                          borderRadius: "10px",
+                          background: "rgba(var(--ink-rgb), 0.045)",
+                        }}
+                      ></span>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "0%",
+                          top: "0",
+                          bottom: "0",
+                          width: "1px",
+                          background: "rgba(var(--ink-rgb), 0.07)",
+                        }}
+                      ></span>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "25%",
+                          top: "0",
+                          bottom: "0",
+                          width: "1px",
+                          background: "rgba(var(--ink-rgb), 0.07)",
+                        }}
+                      ></span>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "75%",
+                          top: "0",
+                          bottom: "0",
+                          width: "1px",
+                          background: "rgba(var(--ink-rgb), 0.07)",
+                        }}
+                      ></span>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "100%",
+                          top: "0",
+                          bottom: "0",
+                          width: "1px",
+                          background: "rgba(var(--ink-rgb), 0.07)",
+                        }}
+                      ></span>
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: "50%",
+                          top: "0",
+                          bottom: "0",
+                          width: "1.5px",
+                          marginLeft: "-0.75px",
+                          background: "var(--ink)",
+                        }}
+                      ></span>
+                      <span
+                        title="Maria Papadaki \u22120.15"
+                        style={{
+                          position: "absolute",
+                          left: "46.25%",
+                          top: "calc(50% + 0px)",
+                          transform: "translate(-50%, -50%)",
+                        }}
+                      >
+                        <Avatar initial="M" size={18} />
+                      </span>
+                      <span
+                        title="Nikos Georgiou \u22120.05"
+                        style={{
+                          position: "absolute",
+                          left: "48.75%",
+                          top: "calc(50% + -16px)",
+                          transform: "translate(-50%, -50%)",
+                        }}
+                      >
+                        <Avatar initial="N" size={18} />
+                      </span>
+                      <span
+                        title="Eleni Markou +0.05"
+                        style={{
+                          position: "absolute",
+                          left: "51.25%",
+                          top: "calc(50% + 16px)",
+                          transform: "translate(-50%, -50%)",
+                        }}
+                      >
+                        <Avatar initial="E" size={18} />
+                      </span>
+                      <span
+                        title="Katerina Vlachou +0.05"
+                        style={{
+                          position: "absolute",
+                          left: "51.25%",
+                          top: "calc(50% + -32px)",
+                          transform: "translate(-50%, -50%)",
+                        }}
+                      >
+                        <Avatar initial="K" size={18} />
+                      </span>
+                      <span
+                        title="Giannis Petrou +0.10"
+                        style={{
+                          position: "absolute",
+                          left: "52.50%",
+                          top: "calc(50% + 0px)",
+                          transform: "translate(-50%, -50%)",
+                        }}
+                      >
+                        <Avatar initial="G" size={18} />
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      fontSize: "11.5px",
+                      marginTop: "6px",
+                    }}
+                  >
+                    <span style={{ color: "var(--red-x)" }}>Stricter</span>
+                    <span style={{ color: "var(--muted)" }}>AI</span>
+                    <span style={{ color: "var(--blue-x)" }}>Lenient</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                right: "4px",
+                bottom: "0",
+                width: "290px",
+                transform: "rotate(2.5deg)",
+              }}
+            >
+              <div
+                className="fg-dark"
+                style={{
+                  background: "rgba(var(--surface-rgb), 0.06)",
+                  boxShadow: "0 0 0 1px rgba(var(--surface-rgb), 0.10)",
+                  borderRadius: "24px",
+                  padding: "6px",
+                }}
+              >
+                <div
+                  style={{
+                    background: "var(--surface)",
+                    borderRadius: "18px",
+                    padding: "16px 18px",
+                    boxShadow:
+                      "inset 0 1px 0 rgba(var(--surface-rgb), 0.08), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                        fontSize: "12.5px",
+                        color: "var(--muted)",
+                        letterSpacing: "-0.01em",
+                      }}
+                    >
+                      csd5146
+                    </span>
+                    <Pill tone="blue" dot>
+                      AI graded
+                    </Pill>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "baseline",
+                      gap: "18px",
+                      marginTop: "12px",
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontSize: "12px", color: "var(--muted)" }}>TA</div>
+                      <span
+                        style={{
+                          fontSize: "30px",
+                          fontWeight: "500",
+                          letterSpacing: "-0.04em",
+                          color: "var(--ink)",
+                          fontVariantNumeric: "tabular-nums",
+                          lineHeight: "1",
+                        }}
+                      >
+                        7
+                      </span>
+                      <span style={{ fontSize: "13px", color: "var(--muted)" }}> / 10</span>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: "12px", color: "var(--blue-x)" }}>AI</div>
+                      <span
+                        style={{
+                          fontSize: "30px",
+                          fontWeight: "500",
+                          letterSpacing: "-0.04em",
+                          color: "var(--blue-x)",
+                          fontVariantNumeric: "tabular-nums",
+                          lineHeight: "1",
+                        }}
+                      >
+                        8
+                      </span>
+                      <span style={{ fontSize: "13px", color: "var(--blue-x)" }}> / 10</span>
+                    </div>
+                    <div style={{ marginLeft: "auto" }}>
+                      <Pill tone="red" dot>
+                        Q2 −1
+                      </Pill>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </>
   );
 }

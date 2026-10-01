@@ -1,12 +1,654 @@
-// Static design, generated from design-reference/html/Members.html.
-// Demo content only: nothing here talks to the API yet.
-import Link from "next/link";
+// Static design, generated from design-reference/html/Members.html
+// by frontend/scripts/html2jsx.py. Demo content only: nothing here talks
+// to the API yet. When wiring it up, replace the constants with real data.
 import type { Metadata } from "next";
+import {
+  AppShell,
+  Avatar,
+  Button,
+  Card,
+  IconButton,
+  PageHeader,
+  PageTitle,
+  Pill,
+  RoleChip,
+  SectionHeader,
+  YouTag,
+  instructorNav,
+} from "@/components/shell";
 
 export const metadata: Metadata = { title: "Members \u00b7 Fair Grade" };
 
+const user = { name: "Instructor Demo", role: "instructor" } as const;
+const course = { id: "hy335", code: "HY335", name: "Computer Networks" };
+
 export default function MembersPage() {
   return (
-    <><div className="fg-shell" style={{"display": "flex", "minHeight": "100vh", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "color": "var(--text)", "background": "radial-gradient(1200px 520px at 30% -8%, var(--surface) 0%, rgba(var(--surface-rgb), 0) 70%), var(--bg)"}}><aside className="fg-side" style={{"width": "252px", "flexShrink": "0", "padding": "14px 0 14px 14px"}}><div style={{"position": "sticky", "top": "14px", "minHeight": "calc(100vh - 28px)", "background": "rgba(var(--surface-rgb), 0.62)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "borderRadius": "24px", "padding": "18px 12px", "display": "flex", "flexDirection": "column"}}><div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "2px 2px 16px 8px"}}><svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><rect width="32" height="32" rx="10" fill="var(--ink)" /><rect x="8" y="11" width="16" height="2.6" rx="1.3" fill="var(--surface)" /><rect x="8" y="18.4" width="11" height="2.6" rx="1.3" fill="var(--surface)" /><circle cx="23" cy="19.7" r="2.2" fill="var(--red)" /></svg><span style={{"fontSize": "16px", "fontWeight": "600", "letterSpacing": "-0.02em", "color": "var(--ink)", "flexGrow": "1"}}>Fair Grade</span><label className="fg-theme-switch fg-press" title="Light or dark" style={{"position": "relative", "display": "inline-flex", "alignItems": "center", "width": "62px", "height": "32px", "padding": "3px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "boxShadow": "inset 0 0 0 1px rgba(var(--ink-rgb), 0.06)", "cursor": "pointer", "flexShrink": "0"}}><input type="checkbox" className="fg-theme-input" aria-label="Dark mode" /><span className="fg-theme-thumb" style={{"position": "absolute", "left": "3px", "top": "3px", "width": "26px", "height": "26px", "borderRadius": "999px", "background": "var(--raised)", "boxShadow": "0 1px 2px rgba(var(--shadow-rgb), 0.14), 0 0 0 1px rgba(var(--ink-rgb), 0.06)"}}></span><span className="fg-theme-sun" style={{"position": "relative", "width": "26px", "height": "26px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="12" cy="12" r="3.6" /><path d="M12 3.5v1.6M12 18.9v1.6M3.5 12h1.6M18.9 12h1.6M6 6l1.1 1.1M16.9 16.9L18 18M18 6l-1.1 1.1M7.1 16.9L6 18" /></svg></span><span className="fg-theme-moon" style={{"position": "relative", "width": "26px", "height": "26px", "marginLeft": "2px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M19 14.2A7.5 7.5 0 0 1 9.8 5a7.5 7.5 0 1 0 9.2 9.2z" /></svg></span></label></div><div className="fg-dark" style={{"display": "flex", "alignItems": "center", "gap": "11px", "padding": "11px 12px", "margin": "0 0 14px", "borderRadius": "16px", "background": "radial-gradient(180px 90px at 100% 0%, #2A3142 0%, rgba(42, 49, 66, 0) 70%), var(--ink)", "boxShadow": "inset 0 1px 0 rgba(var(--surface-rgb), 0.08), 0 12px 26px -16px rgba(var(--shadow-rgb), 0.75)"}}><span style={{"width": "32px", "height": "32px", "borderRadius": "10px", "background": "rgba(var(--surface-rgb), 0.09)", "boxShadow": "inset 0 0 0 1px rgba(var(--surface-rgb), 0.10)", "color": "var(--gold-icon)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "flexShrink": "0"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="8" cy="15" r="3.5" /><path d="M10.5 12.5L19 4M16 7l2 2" /></svg></span><span style={{"display": "flex", "flexDirection": "column", "minWidth": "0", "flexGrow": "1"}}><span style={{"fontSize": "11.5px", "color": "#8E95A3"}}>You are signed in as</span><span style={{"fontSize": "14.5px", "fontWeight": "600", "letterSpacing": "-0.01em", "color": "var(--surface)", "whiteSpace": "nowrap"}}>Instructor</span></span><span style={{"width": "8px", "height": "8px", "borderRadius": "999px", "background": "var(--gold-icon)", "boxShadow": "0 0 0 3px rgba(var(--surface-rgb), 0.06)", "flexShrink": "0"}} title="Full access"></span></div><button type="button" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "10px", "width": "100%", "padding": "10px 12px", "marginBottom": "20px", "border": "0", "borderRadius": "14px", "background": "var(--surface)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "cursor": "pointer", "textAlign": "left", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif"}}><span style={{"width": "30px", "height": "30px", "borderRadius": "9px", "background": "var(--blue-t)", "color": "var(--blue-x)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "11px", "fontWeight": "600"}}>335</span><span style={{"display": "flex", "flexDirection": "column", "minWidth": "0", "flexGrow": "1"}}><span style={{"fontSize": "13.5px", "fontWeight": "600", "color": "var(--ink)"}}>HY335</span><span style={{"fontSize": "12px", "color": "var(--muted)"}}>Computer Networks</span></span><span style={{"color": "var(--faint)"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M8 9.5l4-4 4 4" /><path d="M8 14.5l4 4 4-4" /></svg></span></button><button type="button" className="fg-press" aria-label="Search, shortcut Command K" style={{"display": "flex", "alignItems": "center", "gap": "10px", "width": "100%", "height": "38px", "padding": "0 8px 0 12px", "marginBottom": "18px", "border": "0", "borderRadius": "12px", "background": "rgba(var(--ink-rgb), 0.04)", "color": "var(--muted)", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "13.5px", "cursor": "pointer"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4 4" /></svg><span style={{"flexGrow": "1", "textAlign": "left"}}>Search</span><kbd style={{"display": "inline-flex", "alignItems": "center", "height": "22px", "padding": "0 7px", "borderRadius": "7px", "background": "var(--surface)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 0 rgba(var(--ink-rgb), 0.11)", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "11.5px", "fontWeight": "500", "color": "var(--muted)"}}>⌘K</kbd></button><nav aria-label="Main" style={{"display": "flex", "flexDirection": "column", "gap": "2px"}}><div style={{"fontSize": "12px", "color": "var(--faint)", "padding": "0 12px 6px"}}>HY335</div><Link href="/courses/hy335" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "11px", "height": "38px", "padding": "0 12px", "borderRadius": "12px", "textDecoration": "none", "fontSize": "14px", "fontWeight": "500", "color": "var(--muted)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M13.5 3.5H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z" /><path d="M13.5 3.5V9H19" /></svg><span>Exams</span></Link><Link href="/courses/hy335/stats" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "11px", "height": "38px", "padding": "0 12px", "borderRadius": "12px", "textDecoration": "none", "fontSize": "14px", "fontWeight": "500", "color": "var(--muted)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 19v-7" /><path d="M10 19V5" /><path d="M15 19v-9" /><path d="M20 19v-4" /></svg><span>Stats</span></Link><Link href="/courses/hy335/members" aria-current="page" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "11px", "height": "38px", "padding": "0 12px", "borderRadius": "12px", "textDecoration": "none", "fontSize": "14px", "fontWeight": "500", "background": "var(--raised)", "color": "var(--ink)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07), 0 1px 2px rgba(var(--shadow-rgb), 0.06)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="9" cy="8.5" r="3.2" /><path d="M3.5 19c.8-3.3 3-5 5.5-5s4.7 1.7 5.5 5" /><circle cx="17" cy="9.5" r="2.4" /><path d="M16 14.2c2.3.1 4 1.6 4.6 4.3" /></svg><span>Members</span></Link><div style={{"fontSize": "12px", "color": "var(--faint)", "padding": "20px 12px 6px"}}>Workspace</div><Link href="/courses" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "11px", "height": "38px", "padding": "0 12px", "borderRadius": "12px", "textDecoration": "none", "fontSize": "14px", "fontWeight": "500", "color": "var(--muted)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M4 5.5h6.5a2 2 0 0 1 2 2V19a1.6 1.6 0 0 0-1.6-1.6H4z" /><path d="M20 5.5h-6.5a2 2 0 0 0-2 2V19a1.6 1.6 0 0 1 1.6-1.6H20z" /></svg><span>All courses</span></Link><Link href="/users" className="fg-press" style={{"display": "flex", "alignItems": "center", "gap": "11px", "height": "38px", "padding": "0 12px", "borderRadius": "12px", "textDecoration": "none", "fontSize": "14px", "fontWeight": "500", "color": "var(--muted)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><rect x="4" y="5" width="16" height="14" rx="3" /><circle cx="10" cy="11" r="2.3" /><path d="M6.8 16.5c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4" /><path d="M15 10h2.5M15 13h2.5" /></svg><span>Users</span></Link></nav><div style={{"flexGrow": "1"}}></div><div style={{"display": "flex", "alignItems": "center", "gap": "10px", "padding": "12px 6px 2px 8px", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><span style={{"width": "32px", "height": "32px", "borderRadius": "999px", "background": "var(--ink)", "color": "var(--surface)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "13px", "fontWeight": "600", "flexShrink": "0"}}>I</span><div style={{"display": "flex", "flexDirection": "column", "minWidth": "0", "flexGrow": "1"}}><span style={{"fontSize": "13.5px", "fontWeight": "600", "color": "var(--ink)"}}>Instructor Demo</span><span style={{"marginTop": "3px"}}><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "22px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "var(--ink)", "color": "var(--surface)", "fontSize": "11.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--gold-icon)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="8" cy="15" r="3.5" /><path d="M10.5 12.5L19 4M16 7l2 2" /></svg>Instructor</span></span></div><Link href="/login" aria-label="Log out" className="fg-press" style={{"width": "40px", "height": "40px", "borderRadius": "999px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "background": "transparent", "color": "var(--muted)", "border": "0", "cursor": "pointer", "textDecoration": "none"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4" /><path d="M10 16l-4-4 4-4" /><path d="M6 12h9" /></svg></Link></div></div></aside><main style={{"flexGrow": "1", "minWidth": "0", "padding": "26px 44px 96px"}}><div style={{"maxWidth": "1120px", "margin": "0 auto", "display": "flex", "flexDirection": "column", "gap": "28px"}}><div style={{"display": "flex", "alignItems": "center", "justifyContent": "space-between", "gap": "16px", "minHeight": "40px", "flexWrap": "wrap"}}><div style={{"display": "flex", "alignItems": "center", "gap": "8px", "fontSize": "13.5px", "fontWeight": "500"}}><span style={{"color": "var(--muted)"}}><Link href="/courses/hy335" style={{"color": "var(--muted)", "textDecoration": "none"}}>HY335 Computer Networks</Link></span><span style={{"color": "var(--faint)", "padding": "0 2px"}}>/</span><span style={{"color": "var(--ink)"}}>Members</span></div><div style={{"display": "flex", "alignItems": "center", "gap": "10px", "flexWrap": "wrap"}}><button type="button" className="fg-press" style={{"display": "inline-flex", "alignItems": "center", "gap": "12px", "height": "40px", "padding": "6px 7px 6px 16px", "borderRadius": "999px", "background": "var(--surface)", "color": "var(--ink)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11)", "border": "0", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "14px", "fontWeight": "500", "letterSpacing": "-0.01em", "textDecoration": "none", "cursor": "pointer", "whiteSpace": "nowrap"}}><span>Invite by email</span><span className="fg-knob" style={{"width": "28px", "height": "28px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.035)", "color": "var(--ink)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M12 5v14M5 12h14" /></svg></span></button></div></div><div className="fg-in"><div><h1 style={{"margin": "0", "fontSize": "34px", "fontWeight": "600", "letterSpacing": "-0.035em", "lineHeight": "1.1", "color": "var(--ink)"}}>Members</h1><p style={{"margin": "10px 0 0", "fontSize": "15px", "lineHeight": "1.55", "color": "var(--muted)", "maxWidth": "620px"}}>Who can open HY335 and grade its exams.</p></div></div><div className="fg-grid" style={{"display": "grid", "gridTemplateColumns": "repeat(12, minmax(0, 1fr))", "gap": "20px", "alignItems": "start"}}><div className="fg-span" style={{"gridColumn": "span 8", "minWidth": "0"}}><div style={{"display": "flex", "flexDirection": "column", "gap": "20px"}}><div className="fg-in fg-d1" style={{"background": "rgba(var(--ink-rgb), 0.028)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.05)", "borderRadius": "26px", "padding": "6px"}}><div style={{"background": "var(--surface)", "borderRadius": "20px", "padding": "26px", "boxShadow": "inset 0 1px 0 rgba(var(--surface-rgb), 0.9), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)"}}><div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "flex-start", "gap": "16px", "marginBottom": "20px"}}><div><h2 style={{"margin": "0", "fontSize": "17px", "fontWeight": "600", "letterSpacing": "-0.02em", "color": "var(--ink)"}}>People in HY335</h2><p style={{"margin": "5px 0 0", "fontSize": "13.5px", "lineHeight": "1.5", "color": "var(--muted)", "maxWidth": "560px"}}>6 people. Only they can open this course.</p></div></div><div className="fg-hide-sm" style={{"display": "grid", "gridTemplateColumns": "minmax(0, 1fr) 112px 64px 124px 40px", "gap": "16px", "padding": "0 20px 10px", "fontSize": "12.5px", "color": "var(--muted)"}}><span>Person</span><span>Role</span><span>Papers</span><span>Access</span><span></span></div><div style={{"borderRadius": "18px", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.07)", "overflow": "hidden"}}><div className="fg-row" style={{"display": "grid", "gridTemplateColumns": "minmax(0, 1fr) 112px 64px 124px 40px", "gap": "16px", "alignItems": "center", "padding": "12px 20px", "borderTop": "0", "background": "linear-gradient(90deg, rgba(51, 88, 212, 0.06) 0%, rgba(51, 88, 212, 0) 60%)", "boxShadow": "inset 3px 0 0 var(--blue)"}}><span style={{"display": "flex", "alignItems": "center", "gap": "12px", "minWidth": "0"}}><span style={{"width": "34px", "height": "34px", "borderRadius": "999px", "background": "var(--ink)", "color": "var(--surface)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "14px", "fontWeight": "600", "flexShrink": "0"}}>I</span><span style={{"display": "flex", "flexDirection": "column", "minWidth": "0"}}><span style={{"fontSize": "14px", "fontWeight": "500", "color": "var(--ink)"}}>Instructor Demo<span style={{"display": "inline-flex", "alignItems": "center", "height": "20px", "padding": "0 7px", "marginLeft": "8px", "borderRadius": "999px", "background": "var(--blue)", "color": "var(--surface)", "fontSize": "11px", "fontWeight": "600", "letterSpacing": "0.01em", "verticalAlign": "1px"}}>You</span></span><span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "12px", "color": "var(--muted)", "letterSpacing": "-0.01em"}}>instructor@demo.com</span></span></span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "26px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "var(--ink)", "color": "var(--surface)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--gold-icon)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="8" cy="15" r="3.5" /><path d="M10.5 12.5L19 4M16 7l2 2" /></svg>Instructor</span><span style={{"fontSize": "13.5px", "fontVariantNumeric": "tabular-nums"}}>—</span><span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.05)", "color": "var(--text-2)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}>Owner</span></span><span></span></div><div className="fg-row" style={{"display": "grid", "gridTemplateColumns": "minmax(0, 1fr) 112px 64px 124px 40px", "gap": "16px", "alignItems": "center", "padding": "12px 20px", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><span style={{"display": "flex", "alignItems": "center", "gap": "12px", "minWidth": "0"}}><span style={{"width": "34px", "height": "34px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "14px", "fontWeight": "600", "flexShrink": "0"}}>M</span><span style={{"display": "flex", "flexDirection": "column", "minWidth": "0"}}><span style={{"fontSize": "14px", "fontWeight": "500", "color": "var(--ink)"}}>Maria Papadaki</span><span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "12px", "color": "var(--muted)", "letterSpacing": "-0.01em"}}>maria@demo.com</span></span></span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "26px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "color": "var(--ink)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 19l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L9 18z" /><path d="M14.5 6.5l3 3" /></svg>TA</span><span style={{"fontSize": "13.5px", "fontVariantNumeric": "tabular-nums"}}>12</span><span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--green-t)", "color": "var(--green-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--green)"}}></span>Has access</span></span><button type="button" aria-label="Actions for Maria Papadaki" className="fg-press" style={{"width": "40px", "height": "40px", "borderRadius": "999px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "background": "transparent", "color": "var(--muted)", "border": "0", "cursor": "pointer", "textDecoration": "none"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="6" cy="12" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="18" cy="12" r="1" /></svg></button></div><div className="fg-row" style={{"display": "grid", "gridTemplateColumns": "minmax(0, 1fr) 112px 64px 124px 40px", "gap": "16px", "alignItems": "center", "padding": "12px 20px", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><span style={{"display": "flex", "alignItems": "center", "gap": "12px", "minWidth": "0"}}><span style={{"width": "34px", "height": "34px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "14px", "fontWeight": "600", "flexShrink": "0"}}>G</span><span style={{"display": "flex", "flexDirection": "column", "minWidth": "0"}}><span style={{"fontSize": "14px", "fontWeight": "500", "color": "var(--ink)"}}>Giannis Petrou</span><span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "12px", "color": "var(--muted)", "letterSpacing": "-0.01em"}}>giannis@demo.com</span></span></span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "26px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "color": "var(--ink)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 19l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L9 18z" /><path d="M14.5 6.5l3 3" /></svg>TA</span><span style={{"fontSize": "13.5px", "fontVariantNumeric": "tabular-nums"}}>11</span><span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--green-t)", "color": "var(--green-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--green)"}}></span>Has access</span></span><button type="button" aria-label="Actions for Giannis Petrou" className="fg-press" style={{"width": "40px", "height": "40px", "borderRadius": "999px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "background": "transparent", "color": "var(--muted)", "border": "0", "cursor": "pointer", "textDecoration": "none"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="6" cy="12" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="18" cy="12" r="1" /></svg></button></div><div className="fg-row" style={{"display": "grid", "gridTemplateColumns": "minmax(0, 1fr) 112px 64px 124px 40px", "gap": "16px", "alignItems": "center", "padding": "12px 20px", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><span style={{"display": "flex", "alignItems": "center", "gap": "12px", "minWidth": "0"}}><span style={{"width": "34px", "height": "34px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "14px", "fontWeight": "600", "flexShrink": "0"}}>E</span><span style={{"display": "flex", "flexDirection": "column", "minWidth": "0"}}><span style={{"fontSize": "14px", "fontWeight": "500", "color": "var(--ink)"}}>Eleni Markou</span><span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "12px", "color": "var(--muted)", "letterSpacing": "-0.01em"}}>eleni@demo.com</span></span></span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "26px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "color": "var(--ink)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 19l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L9 18z" /><path d="M14.5 6.5l3 3" /></svg>TA</span><span style={{"fontSize": "13.5px", "fontVariantNumeric": "tabular-nums"}}>12</span><span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--green-t)", "color": "var(--green-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--green)"}}></span>Has access</span></span><button type="button" aria-label="Actions for Eleni Markou" className="fg-press" style={{"width": "40px", "height": "40px", "borderRadius": "999px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "background": "transparent", "color": "var(--muted)", "border": "0", "cursor": "pointer", "textDecoration": "none"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="6" cy="12" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="18" cy="12" r="1" /></svg></button></div><div className="fg-row" style={{"display": "grid", "gridTemplateColumns": "minmax(0, 1fr) 112px 64px 124px 40px", "gap": "16px", "alignItems": "center", "padding": "12px 20px", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><span style={{"display": "flex", "alignItems": "center", "gap": "12px", "minWidth": "0"}}><span style={{"width": "34px", "height": "34px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "14px", "fontWeight": "600", "flexShrink": "0"}}>N</span><span style={{"display": "flex", "flexDirection": "column", "minWidth": "0"}}><span style={{"fontSize": "14px", "fontWeight": "500", "color": "var(--ink)"}}>Nikos Georgiou</span><span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "12px", "color": "var(--muted)", "letterSpacing": "-0.01em"}}>nikos@demo.com</span></span></span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "26px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "color": "var(--ink)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 19l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L9 18z" /><path d="M14.5 6.5l3 3" /></svg>TA</span><span style={{"fontSize": "13.5px", "fontVariantNumeric": "tabular-nums"}}>11</span><span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--green-t)", "color": "var(--green-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--green)"}}></span>Has access</span></span><button type="button" aria-label="Actions for Nikos Georgiou" className="fg-press" style={{"width": "40px", "height": "40px", "borderRadius": "999px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "background": "transparent", "color": "var(--muted)", "border": "0", "cursor": "pointer", "textDecoration": "none"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="6" cy="12" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="18" cy="12" r="1" /></svg></button></div><div className="fg-row" style={{"display": "grid", "gridTemplateColumns": "minmax(0, 1fr) 112px 64px 124px 40px", "gap": "16px", "alignItems": "center", "padding": "12px 20px", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}><span style={{"display": "flex", "alignItems": "center", "gap": "12px", "minWidth": "0"}}><span style={{"width": "34px", "height": "34px", "borderRadius": "999px", "background": "var(--avatar-bg)", "color": "var(--avatar-fg)", "boxShadow": "0 0 0 2px var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontSize": "14px", "fontWeight": "600", "flexShrink": "0"}}>K</span><span style={{"display": "flex", "flexDirection": "column", "minWidth": "0"}}><span style={{"fontSize": "14px", "fontWeight": "500", "color": "var(--ink)"}}>Katerina Vlachou</span><span style={{"fontFamily": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "fontSize": "12px", "color": "var(--muted)", "letterSpacing": "-0.01em"}}>katerina@demo.com</span></span></span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "6px", "height": "26px", "padding": "0 10px 0 8px", "borderRadius": "999px", "background": "rgba(var(--ink-rgb), 0.06)", "color": "var(--ink)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap", "width": "fit-content"}}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M5 19l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L9 18z" /><path d="M14.5 6.5l3 3" /></svg>TA</span><span style={{"fontSize": "13.5px", "fontVariantNumeric": "tabular-nums"}}>12</span><span><span style={{"display": "inline-flex", "alignItems": "center", "gap": "7px", "height": "26px", "padding": "0 10px", "borderRadius": "999px", "background": "var(--green-t)", "color": "var(--green-x)", "fontSize": "12.5px", "fontWeight": "500", "whiteSpace": "nowrap"}}><span style={{"width": "6px", "height": "6px", "borderRadius": "999px", "background": "var(--green)"}}></span>Has access</span></span><button type="button" aria-label="Actions for Katerina Vlachou" className="fg-press" style={{"width": "40px", "height": "40px", "borderRadius": "999px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "background": "transparent", "color": "var(--muted)", "border": "0", "cursor": "pointer", "textDecoration": "none"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="6" cy="12" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="18" cy="12" r="1" /></svg></button></div></div></div></div><div className="fg-in fg-d3" style={{"background": "rgba(var(--ink-rgb), 0.028)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.05)", "borderRadius": "26px", "padding": "6px"}}><div style={{"background": "var(--surface)", "borderRadius": "20px", "padding": "16px 20px", "boxShadow": "inset 0 1px 0 rgba(var(--surface-rgb), 0.9), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)"}}><div style={{"display": "flex", "gap": "12px", "alignItems": "flex-start"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="12" cy="12" r="8.5" /><path d="M12 11v5" /><path d="M12 7.8v.2" /></svg><p style={{"margin": "0", "fontSize": "13.5px", "lineHeight": "1.55", "color": "var(--text)"}}>A TA can add and grade papers in every exam of this course while they are a member. Removing access keeps their submitted papers in the report.</p></div></div></div></div></div><div className="fg-span" style={{"gridColumn": "span 4", "minWidth": "0"}}><div style={{"position": "sticky", "top": "24px"}}><div className="fg-in fg-d2" style={{"background": "rgba(var(--ink-rgb), 0.028)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.05)", "borderRadius": "26px", "padding": "6px"}}><div style={{"background": "var(--surface)", "borderRadius": "20px", "padding": "24px", "boxShadow": "inset 0 1px 0 rgba(var(--surface-rgb), 0.9), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)"}}><div style={{"display": "flex", "justifyContent": "space-between", "alignItems": "flex-start", "gap": "16px", "marginBottom": "20px"}}><div><h2 style={{"margin": "0", "fontSize": "17px", "fontWeight": "600", "letterSpacing": "-0.02em", "color": "var(--ink)"}}>Add a TA</h2><p style={{"margin": "5px 0 0", "fontSize": "13.5px", "lineHeight": "1.5", "color": "var(--muted)", "maxWidth": "560px"}}>Search accounts by name or email.</p></div></div><div style={{"width": "100%"}}><div style={{"position": "relative"}}><span style={{"position": "absolute", "left": "14px", "top": "12px", "color": "var(--faint)"}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4 4" /></svg></span><input id="find" type="text" placeholder="Name or email" aria-label="Name or email" style={{"width": "100%", "height": "44px", "padding": "0 14px 0 42px", "border": "0", "borderRadius": "12px", "background": "var(--surface)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "14px", "color": "var(--text)", "outline": "none"}} /></div></div><div style={{"margin": "24px 0 16px", "borderTop": "1px solid rgba(var(--ink-rgb), 0.07)"}}></div><h3 style={{"margin": "0", "fontSize": "15px", "fontWeight": "600", "color": "var(--ink)"}}>No account yet?</h3><p style={{"margin": "4px 0 14px", "fontSize": "13px", "color": "var(--muted)", "lineHeight": "1.5"}}>Create it here. They sign in with a temporary password and set their own.</p><div style={{"display": "flex", "flexDirection": "column", "gap": "12px"}}><div style={{"width": "100%"}}><label htmlFor="nn" style={{"display": "block", "fontSize": "13px", "fontWeight": "500", "color": "var(--text)", "marginBottom": "8px"}}>Name</label><div style={{"position": "relative"}}><input id="nn" type="text" placeholder="Full name" aria-label="Name" style={{"width": "100%", "height": "44px", "padding": "0 14px 0 14px", "border": "0", "borderRadius": "12px", "background": "var(--surface)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "14px", "color": "var(--text)", "outline": "none"}} /></div></div><div style={{"width": "100%"}}><label htmlFor="ne" style={{"display": "block", "fontSize": "13px", "fontWeight": "500", "color": "var(--text)", "marginBottom": "8px"}}>Email</label><div style={{"position": "relative"}}><input id="ne" type="email" placeholder="name@csd.uoc.gr" aria-label="Email" style={{"width": "100%", "height": "44px", "padding": "0 14px 0 14px", "border": "0", "borderRadius": "12px", "background": "var(--surface)", "boxShadow": "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "14px", "color": "var(--text)", "outline": "none"}} /></div></div></div><div style={{"marginTop": "14px"}}><button type="button" className="fg-press" style={{"display": "inline-flex", "alignItems": "center", "gap": "12px", "height": "40px", "padding": "6px 7px 6px 16px", "borderRadius": "999px", "background": "var(--ink)", "color": "var(--surface)", "boxShadow": "none", "border": "0", "fontFamily": "'Geist', 'Segoe UI', system-ui, sans-serif", "fontSize": "14px", "fontWeight": "500", "letterSpacing": "-0.01em", "textDecoration": "none", "cursor": "pointer", "whiteSpace": "nowrap"}}><span>Create account and add</span><span className="fg-knob" style={{"width": "28px", "height": "28px", "borderRadius": "999px", "background": "rgba(var(--surface-rgb), 0.12)", "color": "var(--surface)", "display": "inline-flex", "alignItems": "center", "justifyContent": "center"}}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{"flexShrink": "0", "display": "block"}}><path d="M12 5v14M5 12h14" /></svg></span></button></div></div></div></div></div></div></div></main></div></>
+    <>
+      <AppShell user={user} course={course} nav={instructorNav({ course, active: "members" })}>
+        <PageHeader
+          crumbs={[
+            { label: "HY335 Computer Networks", href: "/courses/hy335" },
+            { label: "Members" },
+          ]}
+        >
+          <Button
+            variant="outline"
+            icon={
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                style={{ flexShrink: "0", display: "block" }}
+              >
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            }
+          >
+            Invite by email
+          </Button>
+        </PageHeader>
+        <PageTitle
+          title={<>Members</>}
+          description={<>Who can open HY335 and grade its exams.</>}
+        />
+        <div
+          className="fg-grid"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
+            gap: "20px",
+            alignItems: "start",
+          }}
+        >
+          <div className="fg-span" style={{ gridColumn: "span 8", minWidth: "0" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+              <Card className="fg-in fg-d1" padding="26px">
+                <SectionHeader
+                  title={<>People in HY335</>}
+                  description={<>6 people. Only they can open this course.</>}
+                />
+                <div
+                  className="fg-hide-sm"
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "minmax(0, 1fr) 112px 64px 124px 40px",
+                    gap: "16px",
+                    padding: "0 20px 10px",
+                    fontSize: "12.5px",
+                    color: "var(--muted)",
+                  }}
+                >
+                  <span>Person</span>
+                  <span>Role</span>
+                  <span>Papers</span>
+                  <span>Access</span>
+                  <span></span>
+                </div>
+                <div
+                  style={{
+                    borderRadius: "18px",
+                    boxShadow: "0 0 0 1px rgba(var(--ink-rgb), 0.07)",
+                    overflow: "hidden",
+                  }}
+                >
+                  <div
+                    className="fg-row"
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "minmax(0, 1fr) 112px 64px 124px 40px",
+                      gap: "16px",
+                      alignItems: "center",
+                      padding: "12px 20px",
+                      borderTop: "0",
+                      background:
+                        "linear-gradient(90deg, rgba(51, 88, 212, 0.06) 0%, rgba(51, 88, 212, 0) 60%)",
+                      boxShadow: "inset 3px 0 0 var(--blue)",
+                    }}
+                  >
+                    <span
+                      style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: "0" }}
+                    >
+                      <Avatar initial="I" size={34} ink />
+                      <span style={{ display: "flex", flexDirection: "column", minWidth: "0" }}>
+                        <span style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>
+                          Instructor Demo
+                          <YouTag />
+                        </span>
+                        <span
+                          style={{
+                            fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                            fontSize: "12px",
+                            color: "var(--muted)",
+                            letterSpacing: "-0.01em",
+                          }}
+                        >
+                          instructor@demo.com
+                        </span>
+                      </span>
+                    </span>
+                    <RoleChip role="instructor" size="md" />
+                    <span style={{ fontSize: "13.5px", fontVariantNumeric: "tabular-nums" }}>
+                      —
+                    </span>
+                    <span>
+                      <Pill>Owner</Pill>
+                    </span>
+                    <span></span>
+                  </div>
+                  <div
+                    className="fg-row"
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "minmax(0, 1fr) 112px 64px 124px 40px",
+                      gap: "16px",
+                      alignItems: "center",
+                      padding: "12px 20px",
+                      borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                    }}
+                  >
+                    <span
+                      style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: "0" }}
+                    >
+                      <Avatar initial="M" size={34} />
+                      <span style={{ display: "flex", flexDirection: "column", minWidth: "0" }}>
+                        <span style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>
+                          Maria Papadaki
+                        </span>
+                        <span
+                          style={{
+                            fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                            fontSize: "12px",
+                            color: "var(--muted)",
+                            letterSpacing: "-0.01em",
+                          }}
+                        >
+                          maria@demo.com
+                        </span>
+                      </span>
+                    </span>
+                    <RoleChip role="ta" size="md" />
+                    <span style={{ fontSize: "13.5px", fontVariantNumeric: "tabular-nums" }}>
+                      12
+                    </span>
+                    <span>
+                      <Pill tone="green" dot>
+                        Has access
+                      </Pill>
+                    </span>
+                    <IconButton label="Actions for Maria Papadaki">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        style={{ flexShrink: "0", display: "block" }}
+                      >
+                        <circle cx="6" cy="12" r="1" />
+                        <circle cx="12" cy="12" r="1" />
+                        <circle cx="18" cy="12" r="1" />
+                      </svg>
+                    </IconButton>
+                  </div>
+                  <div
+                    className="fg-row"
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "minmax(0, 1fr) 112px 64px 124px 40px",
+                      gap: "16px",
+                      alignItems: "center",
+                      padding: "12px 20px",
+                      borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                    }}
+                  >
+                    <span
+                      style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: "0" }}
+                    >
+                      <Avatar initial="G" size={34} />
+                      <span style={{ display: "flex", flexDirection: "column", minWidth: "0" }}>
+                        <span style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>
+                          Giannis Petrou
+                        </span>
+                        <span
+                          style={{
+                            fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                            fontSize: "12px",
+                            color: "var(--muted)",
+                            letterSpacing: "-0.01em",
+                          }}
+                        >
+                          giannis@demo.com
+                        </span>
+                      </span>
+                    </span>
+                    <RoleChip role="ta" size="md" />
+                    <span style={{ fontSize: "13.5px", fontVariantNumeric: "tabular-nums" }}>
+                      11
+                    </span>
+                    <span>
+                      <Pill tone="green" dot>
+                        Has access
+                      </Pill>
+                    </span>
+                    <IconButton label="Actions for Giannis Petrou">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        style={{ flexShrink: "0", display: "block" }}
+                      >
+                        <circle cx="6" cy="12" r="1" />
+                        <circle cx="12" cy="12" r="1" />
+                        <circle cx="18" cy="12" r="1" />
+                      </svg>
+                    </IconButton>
+                  </div>
+                  <div
+                    className="fg-row"
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "minmax(0, 1fr) 112px 64px 124px 40px",
+                      gap: "16px",
+                      alignItems: "center",
+                      padding: "12px 20px",
+                      borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                    }}
+                  >
+                    <span
+                      style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: "0" }}
+                    >
+                      <Avatar initial="E" size={34} />
+                      <span style={{ display: "flex", flexDirection: "column", minWidth: "0" }}>
+                        <span style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>
+                          Eleni Markou
+                        </span>
+                        <span
+                          style={{
+                            fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                            fontSize: "12px",
+                            color: "var(--muted)",
+                            letterSpacing: "-0.01em",
+                          }}
+                        >
+                          eleni@demo.com
+                        </span>
+                      </span>
+                    </span>
+                    <RoleChip role="ta" size="md" />
+                    <span style={{ fontSize: "13.5px", fontVariantNumeric: "tabular-nums" }}>
+                      12
+                    </span>
+                    <span>
+                      <Pill tone="green" dot>
+                        Has access
+                      </Pill>
+                    </span>
+                    <IconButton label="Actions for Eleni Markou">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        style={{ flexShrink: "0", display: "block" }}
+                      >
+                        <circle cx="6" cy="12" r="1" />
+                        <circle cx="12" cy="12" r="1" />
+                        <circle cx="18" cy="12" r="1" />
+                      </svg>
+                    </IconButton>
+                  </div>
+                  <div
+                    className="fg-row"
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "minmax(0, 1fr) 112px 64px 124px 40px",
+                      gap: "16px",
+                      alignItems: "center",
+                      padding: "12px 20px",
+                      borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                    }}
+                  >
+                    <span
+                      style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: "0" }}
+                    >
+                      <Avatar initial="N" size={34} />
+                      <span style={{ display: "flex", flexDirection: "column", minWidth: "0" }}>
+                        <span style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>
+                          Nikos Georgiou
+                        </span>
+                        <span
+                          style={{
+                            fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                            fontSize: "12px",
+                            color: "var(--muted)",
+                            letterSpacing: "-0.01em",
+                          }}
+                        >
+                          nikos@demo.com
+                        </span>
+                      </span>
+                    </span>
+                    <RoleChip role="ta" size="md" />
+                    <span style={{ fontSize: "13.5px", fontVariantNumeric: "tabular-nums" }}>
+                      11
+                    </span>
+                    <span>
+                      <Pill tone="green" dot>
+                        Has access
+                      </Pill>
+                    </span>
+                    <IconButton label="Actions for Nikos Georgiou">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        style={{ flexShrink: "0", display: "block" }}
+                      >
+                        <circle cx="6" cy="12" r="1" />
+                        <circle cx="12" cy="12" r="1" />
+                        <circle cx="18" cy="12" r="1" />
+                      </svg>
+                    </IconButton>
+                  </div>
+                  <div
+                    className="fg-row"
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "minmax(0, 1fr) 112px 64px 124px 40px",
+                      gap: "16px",
+                      alignItems: "center",
+                      padding: "12px 20px",
+                      borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                    }}
+                  >
+                    <span
+                      style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: "0" }}
+                    >
+                      <Avatar initial="K" size={34} />
+                      <span style={{ display: "flex", flexDirection: "column", minWidth: "0" }}>
+                        <span style={{ fontSize: "14px", fontWeight: "500", color: "var(--ink)" }}>
+                          Katerina Vlachou
+                        </span>
+                        <span
+                          style={{
+                            fontFamily: "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
+                            fontSize: "12px",
+                            color: "var(--muted)",
+                            letterSpacing: "-0.01em",
+                          }}
+                        >
+                          katerina@demo.com
+                        </span>
+                      </span>
+                    </span>
+                    <RoleChip role="ta" size="md" />
+                    <span style={{ fontSize: "13.5px", fontVariantNumeric: "tabular-nums" }}>
+                      12
+                    </span>
+                    <span>
+                      <Pill tone="green" dot>
+                        Has access
+                      </Pill>
+                    </span>
+                    <IconButton label="Actions for Katerina Vlachou">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        style={{ flexShrink: "0", display: "block" }}
+                      >
+                        <circle cx="6" cy="12" r="1" />
+                        <circle cx="12" cy="12" r="1" />
+                        <circle cx="18" cy="12" r="1" />
+                      </svg>
+                    </IconButton>
+                  </div>
+                </div>
+              </Card>
+              <Card className="fg-in fg-d3" padding="16px 20px">
+                <div style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="var(--blue)"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                    style={{ flexShrink: "0", display: "block" }}
+                  >
+                    <circle cx="12" cy="12" r="8.5" />
+                    <path d="M12 11v5" />
+                    <path d="M12 7.8v.2" />
+                  </svg>
+                  <p
+                    style={{
+                      margin: "0",
+                      fontSize: "13.5px",
+                      lineHeight: "1.55",
+                      color: "var(--text)",
+                    }}
+                  >
+                    A TA can add and grade papers in every exam of this course while they are a
+                    member. Removing access keeps their submitted papers in the report.
+                  </p>
+                </div>
+              </Card>
+            </div>
+          </div>
+          <div className="fg-span" style={{ gridColumn: "span 4", minWidth: "0" }}>
+            <div style={{ position: "sticky", top: "24px" }}>
+              <Card className="fg-in fg-d2">
+                <SectionHeader
+                  title={<>Add a TA</>}
+                  description={<>Search accounts by name or email.</>}
+                />
+                <div style={{ width: "100%" }}>
+                  <div style={{ position: "relative" }}>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: "14px",
+                        top: "12px",
+                        color: "var(--faint)",
+                      }}
+                    >
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        style={{ flexShrink: "0", display: "block" }}
+                      >
+                        <circle cx="11" cy="11" r="6.5" />
+                        <path d="M16 16l4 4" />
+                      </svg>
+                    </span>
+                    <input
+                      id="find"
+                      type="text"
+                      placeholder="Name or email"
+                      aria-label="Name or email"
+                      style={{
+                        width: "100%",
+                        height: "44px",
+                        padding: "0 14px 0 42px",
+                        border: "0",
+                        borderRadius: "12px",
+                        background: "var(--surface)",
+                        boxShadow:
+                          "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)",
+                        fontFamily: "'Geist', 'Segoe UI', system-ui, sans-serif",
+                        fontSize: "14px",
+                        color: "var(--text)",
+                        outline: "none",
+                      }}
+                    />
+                  </div>
+                </div>
+                <div
+                  style={{
+                    margin: "24px 0 16px",
+                    borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+                  }}
+                ></div>
+                <h3
+                  style={{ margin: "0", fontSize: "15px", fontWeight: "600", color: "var(--ink)" }}
+                >
+                  No account yet?
+                </h3>
+                <p
+                  style={{
+                    margin: "4px 0 14px",
+                    fontSize: "13px",
+                    color: "var(--muted)",
+                    lineHeight: "1.5",
+                  }}
+                >
+                  Create it here. They sign in with a temporary password and set their own.
+                </p>
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  <div style={{ width: "100%" }}>
+                    <label
+                      htmlFor="nn"
+                      style={{
+                        display: "block",
+                        fontSize: "13px",
+                        fontWeight: "500",
+                        color: "var(--text)",
+                        marginBottom: "8px",
+                      }}
+                    >
+                      Name
+                    </label>
+                    <div style={{ position: "relative" }}>
+                      <input
+                        id="nn"
+                        type="text"
+                        placeholder="Full name"
+                        aria-label="Name"
+                        style={{
+                          width: "100%",
+                          height: "44px",
+                          padding: "0 14px 0 14px",
+                          border: "0",
+                          borderRadius: "12px",
+                          background: "var(--surface)",
+                          boxShadow:
+                            "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)",
+                          fontFamily: "'Geist', 'Segoe UI', system-ui, sans-serif",
+                          fontSize: "14px",
+                          color: "var(--text)",
+                          outline: "none",
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div style={{ width: "100%" }}>
+                    <label
+                      htmlFor="ne"
+                      style={{
+                        display: "block",
+                        fontSize: "13px",
+                        fontWeight: "500",
+                        color: "var(--text)",
+                        marginBottom: "8px",
+                      }}
+                    >
+                      Email
+                    </label>
+                    <div style={{ position: "relative" }}>
+                      <input
+                        id="ne"
+                        type="email"
+                        placeholder="name@csd.uoc.gr"
+                        aria-label="Email"
+                        style={{
+                          width: "100%",
+                          height: "44px",
+                          padding: "0 14px 0 14px",
+                          border: "0",
+                          borderRadius: "12px",
+                          background: "var(--surface)",
+                          boxShadow:
+                            "0 0 0 1px rgba(var(--ink-rgb), 0.11), 0 1px 1px rgba(var(--shadow-rgb), 0.02), 0 6px 18px -10px rgba(var(--shadow-rgb), 0.08)",
+                          fontFamily: "'Geist', 'Segoe UI', system-ui, sans-serif",
+                          fontSize: "14px",
+                          color: "var(--text)",
+                          outline: "none",
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div style={{ marginTop: "14px" }}>
+                  <Button
+                    icon={
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        style={{ flexShrink: "0", display: "block" }}
+                      >
+                        <path d="M12 5v14M5 12h14" />
+                      </svg>
+                    }
+                  >
+                    Create account and add
+                  </Button>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </AppShell>
+    </>
   );
 }
