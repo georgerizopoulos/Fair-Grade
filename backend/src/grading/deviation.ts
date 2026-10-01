@@ -1,11 +1,12 @@
-// The single definition of how deviation + flags are computed (API_SPEC.md →
-// Deviation Rules). Pure function: no LLM, no AWS, no DB. GET /deviation calls
-// this; nobody reimplements it.
+// TEMPORARY STUB — Κώστας owns this file (Track 2 step 2). When he pushes the
+// real computeDeviation(), this whole file is replaced; the signature below is
+// the agreed contract so nothing else changes.
+//
+// Implements the Deviation Rules from API_SPEC.md so #15 works end to end in
+// the meantime.
 
 export const FLAG_RATIO = 0.15; // gap must exceed 15% of the criterion's maxPoints
 export const MIN_SAMPLES = 3; // at least 3 answers before a gap counts as a pattern
-
-// --- Input shapes (the controller maps Prisma rows into these) ---
 
 export interface DeviationCriterion {
   id: string;
@@ -14,8 +15,9 @@ export interface DeviationCriterion {
   maxPoints: number;
 }
 
-export interface DeviationRubric {
-  criteria: DeviationCriterion[];
+export interface DeviationTa {
+  id: string;
+  name: string;
 }
 
 export interface DeviationAnswer {
@@ -35,17 +37,18 @@ export interface DeviationTaGrade {
   answerId: string;
   criterionId: string;
   taId: string;
-  points: number; // pointsGiven
+  pointsGiven: number;
 }
 
-export interface DeviationTaUser {
-  id: string;
-  name: string;
+export interface DeviationInput {
+  criteria: DeviationCriterion[];
+  tas: DeviationTa[];
+  answers: DeviationAnswer[];
+  aiGrades: DeviationAiGrade[];
+  taGrades: DeviationTaGrade[];
 }
 
-// --- Output shapes (the taSummaries array of GET /deviation #15) ---
-
-export interface DeviationExample {
+export interface CriterionExample {
   answerId: string;
   studentIdAnon: string;
   answerText: string;
@@ -64,7 +67,7 @@ export interface CriterionSummary {
   avgDeviation: number | null;
   direction: 'stricter' | 'lenient' | 'aligned';
   flagged: boolean;
-  examples: DeviationExample[];
+  examples: CriterionExample[];
 }
 
 export interface TaSummary {
@@ -77,91 +80,73 @@ export interface TaSummary {
   criteria: CriterionSummary[];
 }
 
-const round2 = (x: number): number => Math.round(x * 100) / 100;
+const round2 = (n: number) => Math.round(n * 100) / 100;
 
-const key = (answerId: string, criterionId: string): string =>
-  `${answerId}:${criterionId}`;
-
-/**
- * Compute the deviation report, grouped by TA, exactly per the Deviation Rules.
- * Returns the taSummaries array.
- */
-export function computeDeviation(
-  rubric: DeviationRubric,
-  answers: DeviationAnswer[],
-  aiGrades: DeviationAiGrade[],
-  taGrades: DeviationTaGrade[],
-  taUsers: DeviationTaUser[],
-): TaSummary[] {
-  // Lookups
-  const criteria = [...rubric.criteria].sort((a, b) => a.position - b.position);
-  const answersById = new Map(answers.map((a) => [a.id, a]));
-  const aiByKey = new Map(aiGrades.map((g) => [key(g.answerId, g.criterionId), g]));
-  const nameById = new Map(taUsers.map((u) => [u.id, u.name]));
-
-  // Only answers that actually belong to this rubric count.
-  const knownAnswer = (id: string): boolean => answersById.has(id);
-
-  // Group this rubric's TA grades by TA id.
-  const taGradesByTa = new Map<string, DeviationTaGrade[]>();
-  for (const g of taGrades) {
-    if (!knownAnswer(g.answerId)) continue;
-    const list = taGradesByTa.get(g.taId) ?? [];
-    list.push(g);
-    taGradesByTa.set(g.taId, list);
-  }
+export function computeDeviation(input: DeviationInput): TaSummary[] {
+  const answerById = new Map(input.answers.map((a) => [a.id, a]));
+  const aiByKey = new Map(
+    input.aiGrades.map((g) => [`${g.answerId}:${g.criterionId}`, g]),
+  );
 
   const summaries: TaSummary[] = [];
 
-  for (const [taId, grades] of taGradesByTa) {
-    // Fast lookup of this TA's points for a given answer+criterion.
-    const taByKey = new Map(grades.map((g) => [key(g.answerId, g.criterionId), g]));
+  for (const ta of input.tas) {
+    const ownGrades = input.taGrades.filter((g) => g.taId === ta.id);
+    if (ownGrades.length === 0) continue; // only TAs with at least one grade
 
-    const criterionSummaries: CriterionSummary[] = criteria.map((c) => {
-      // Answers where THIS TA and the AI both graded THIS criterion.
-      const rows: DeviationExample[] = [];
-      for (const answer of answers) {
-        const ta = taByKey.get(key(answer.id, c.id));
-        const ai = aiByKey.get(key(answer.id, c.id));
-        if (!ta || !ai) continue;
-        rows.push({
-          answerId: answer.id,
-          studentIdAnon: answer.studentIdAnon,
-          answerText: answer.answerText,
-          taPoints: ta.points,
-          aiPoints: ai.points,
-          deviation: ta.points - ai.points,
-          aiReasoning: ai.reasoning,
+    const criteria: CriterionSummary[] = input.criteria.map((criterion) => {
+      // Answers where both this TA and the AI graded this criterion.
+      const pairs = ownGrades
+        .filter((g) => g.criterionId === criterion.id)
+        .flatMap((g) => {
+          const ai = aiByKey.get(`${g.answerId}:${criterion.id}`);
+          const answer = answerById.get(g.answerId);
+          return ai && answer ? [{ ta: g, ai, answer }] : [];
         });
-      }
 
-      const sampleSize = rows.length;
+      const sampleSize = pairs.length;
       const avgDeviation =
         sampleSize === 0
           ? null
-          : round2(rows.reduce((sum, r) => sum + r.deviation, 0) / sampleSize);
+          : round2(
+              pairs.reduce(
+                (sum, p) => sum + (p.ta.pointsGiven - p.ai.points),
+                0,
+              ) / sampleSize,
+            );
 
-      let direction: CriterionSummary['direction'] = 'aligned';
-      if (avgDeviation !== null && avgDeviation < 0) direction = 'stricter';
-      else if (avgDeviation !== null && avgDeviation > 0) direction = 'lenient';
+      const direction =
+        avgDeviation === null || avgDeviation === 0
+          ? 'aligned'
+          : avgDeviation < 0
+            ? 'stricter'
+            : 'lenient';
 
       const flagged =
         sampleSize >= MIN_SAMPLES &&
         avgDeviation !== null &&
-        Math.abs(avgDeviation) > FLAG_RATIO * c.maxPoints;
+        Math.abs(avgDeviation) > FLAG_RATIO * criterion.maxPoints;
 
-      // Up to 3 biggest-gap answers, largest first — only for a flagged criterion.
-      const examples = flagged
-        ? [...rows]
+      const examples: CriterionExample[] = flagged
+        ? pairs
+            .map((p) => ({
+              answerId: p.answer.id,
+              studentIdAnon: p.answer.studentIdAnon,
+              answerText: p.answer.answerText,
+              taPoints: p.ta.pointsGiven,
+              aiPoints: p.ai.points,
+              deviation: round2(p.ta.pointsGiven - p.ai.points),
+              aiReasoning: p.ai.reasoning,
+            }))
             .sort((a, b) => Math.abs(b.deviation) - Math.abs(a.deviation))
             .slice(0, 3)
         : [];
 
       return {
-        criterionId: c.id,
-        position: c.position,
-        description: c.description,
-        maxPoints: c.maxPoints,
+        criterionId: criterion.id,
+        position: criterion.position,
+        description: criterion.description,
+        maxPoints: criterion.maxPoints,
         sampleSize,
         avgDeviation,
         direction,
@@ -170,36 +155,33 @@ export function computeDeviation(
       };
     });
 
-    // TA-level aggregates.
-    const answersGraded = new Set(grades.map((g) => g.answerId)).size;
-
-    const graded = criterionSummaries.filter((cs) => cs.sampleSize >= 1);
+    const withSamples = criteria.filter((c) => c.sampleSize >= 1);
     const overallDeviation =
-      graded.length === 0
+      withSamples.length === 0
         ? 0
         : round2(
-            graded.reduce((sum, cs) => sum + Math.abs(cs.avgDeviation ?? 0), 0) /
-              graded.length,
+            withSamples.reduce(
+              (sum, c) => sum + Math.abs(c.avgDeviation ?? 0),
+              0,
+            ) / withSamples.length,
           );
 
-    const flaggedCriteriaCount = criterionSummaries.filter((cs) => cs.flagged).length;
+    const flaggedCriteriaCount = criteria.filter((c) => c.flagged).length;
 
     summaries.push({
-      taId,
-      taName: nameById.get(taId) ?? taId,
-      answersGraded,
+      taId: ta.id,
+      taName: ta.name,
+      answersGraded: new Set(ownGrades.map((g) => g.answerId)).size,
       overallDeviation,
       flagged: flaggedCriteriaCount > 0,
       flaggedCriteriaCount,
-      criteria: criterionSummaries,
+      criteria,
     });
   }
 
-  // Flagged TAs first, then by overallDeviation descending.
-  summaries.sort((a, b) => {
+  // Flagged first, then by overallDeviation, highest first.
+  return summaries.sort((a, b) => {
     if (a.flagged !== b.flagged) return a.flagged ? -1 : 1;
     return b.overallDeviation - a.overallDeviation;
   });
-
-  return summaries;
 }
