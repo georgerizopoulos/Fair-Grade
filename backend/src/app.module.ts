@@ -8,6 +8,7 @@ import { AllExceptionsFilter } from './common/all-exceptions.filter.js';
 import { AuthGuard } from './common/auth.guard.js';
 import { UserRoleInterceptor } from './common/user-role.interceptor.js';
 import { CoursesModule } from './courses/courses.module.js';
+import { ExamsModule } from './exams/exams.module.js';
 import { PapersModule } from './papers/papers.module.js';
 import { validationPipe } from './common/validation.pipe.js';
 import { DeviationModule } from './deviation/deviation.module.js';
@@ -36,6 +37,7 @@ import { UsersModule } from './users/users.module.js';
     ResultsModule,
     DeviationModule,
     CoursesModule,
+    ExamsModule,
     PapersModule,
   ],
   providers: [
