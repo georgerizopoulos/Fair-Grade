@@ -83,28 +83,10 @@ export function LoginForm() {
       aria-labelledby="t"
     >
       <div>
-        <span
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            height: "24px",
-            padding: "0 10px",
-            borderRadius: "999px",
-            background: "var(--surface)",
-            boxShadow: "0 0 0 1px rgba(var(--ink-rgb), 0.11)",
-            color: "var(--muted)",
-            fontSize: "10.5px",
-            fontWeight: 500,
-            letterSpacing: "0.16em",
-            textTransform: "uppercase",
-          }}
-        >
-          Course staff
-        </span>
         <h1
           id="t"
           style={{
-            margin: "14px 0 0",
+            margin: "14px -1 0",
             fontSize: "40px",
             fontWeight: 600,
             letterSpacing: "-0.04em",

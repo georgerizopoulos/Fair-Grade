@@ -21,7 +21,7 @@ export default function LoginPage() {
           gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.08fr)",
           gap: "20px",
         }}
-        className="fg-split"
+        className="fg-split fg-login-layout"
       >
         <section
           style={{
@@ -63,13 +63,12 @@ export default function LoginPage() {
           </p>
         </section>
         <section
-          className="fg-in fg-d2 fg-dark"
+          className="fg-in fg-d2 fg-dark fg-login-visual"
           style={{
             position: "relative",
             overflow: "hidden",
             borderRadius: "32px",
-            background:
-              "radial-gradient(700px 420px at 80% 10%, #23293A 0%, rgba(35, 41, 58, 0) 70%), var(--ink)",
+            background: "var(--ink)",
             color: "var(--surface)",
             padding: "56px",
             display: "flex",
@@ -105,11 +104,11 @@ export default function LoginPage() {
                 lineHeight: "1.02",
               }}
             >
-              Same rubric.
+              Clear grading.
               <br />
-              Same standard.
+              Fair results.
               <br />
-              <span style={{ color: "#8E95A3" }}>Every grader.</span>
+              <span style={{ color: "#8E95A3" }}>For everyone.</span>
             </h2>
             <p
               style={{
@@ -120,8 +119,8 @@ export default function LoginPage() {
                 maxWidth: "440px",
               }}
             >
-              TAs scan and grade each paper. The AI grades the same answers. You see where they
-              disagree, before grades go out.
+              TAs and AI grade the same answers. You can quickly see where their scores differ
+              before final grades are released.
             </p>
           </div>
           <div style={{ position: "relative", height: "480px" }}>

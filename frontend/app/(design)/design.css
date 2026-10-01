@@ -47,6 +47,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .fg-press,.fg-knob,.fg-row{transition:none}
 }
 
+@media (max-width: 1050px) and (min-width: 901px){
+.fg-login-layout{grid-template-columns:minmax(340px,0.85fr) minmax(0,1fr) !important}
+.fg-login-layout > section{padding-left:32px !important;padding-right:32px !important}
+.fg-login-visual{padding:36px !important;overflow:hidden}
+.fg-login-visual h2{font-size:38px !important}
+.fg-login-visual > div:last-child{transform:scale(0.88);transform-origin:top left}
+}
+
 @media (max-width: 900px){.fg-shell{flex-direction:column}
 .fg-side{width:auto !important;padding:12px 12px 0 !important}
 .fg-side > div{position:static !important;min-height:0 !important}
@@ -55,6 +63,19 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .fg-split{grid-template-columns:1fr !important}
 main{padding:20px 16px 64px !important}
 .fg-hide-sm{display:none !important}
+}
+
+@media (max-width: 900px){
+.fg-login-visual{display:none !important}
+}
+
+@media (max-width: 800px){
+.fg-login-layout{display:block !important;padding:12px !important}
+.fg-login-layout > section:first-child{align-items:center;padding:28px 20px 24px !important;text-align:center}
+.fg-login-layout > section:first-child > .fg-in:first-child{width:100%;justify-content:center}
+.fg-login-layout > section:first-child > .fg-in:first-child > span{flex-grow:0}
+.fg-login-layout > section:first-child > .fg-in:first-child > label{margin-left:auto}
+.fg-login-layout > section:first-child > p{width:100%;text-align:center}
 }
 
 @keyframes fgPulse{0%{box-shadow:0 0 0 0 rgba(46,139,87,0.45)}
