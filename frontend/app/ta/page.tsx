@@ -57,10 +57,12 @@ export default function TaGradingPage() {
   // Load rubrics
   useEffect(() => {
     if (!user) return;
-    apiFetch<{ rubrics: Rubric[] }>("/rubrics").then(({ rubrics: r }) => {
-      setRubrics(r);
-      if (r.length > 0) setSelectedRubricId(r[0].id);
-    });
+    apiFetch<{ rubrics: Rubric[] }>("/rubrics")
+      .then(({ rubrics: r }) => {
+        setRubrics(r);
+        if (r.length > 0) setSelectedRubricId(r[0].id);
+      })
+      .catch((e) => setError(e instanceof Error ? e.message : "Failed to load rubrics"));
   }, [user]);
 
   // Load rubric detail + answers + existing grades
@@ -73,17 +75,19 @@ export default function TaGradingPage() {
       apiFetch<{ grades: ExistingGrade[] }>(
         `/ta-grades?rubricId=${selectedRubricId}`,
       ),
-    ]).then(([detail, ans, existing]) => {
-      setRubricDetail(detail);
-      setAnswers(ans.answers);
-      // Pre-fill existing grades
-      const map: Record<string, number> = {};
-      for (const g of existing.grades) {
-        map[`${g.answerId}:${g.criterionId}`] = g.pointsGiven;
-      }
-      setGrades(map);
-      setCurrentIdx(0);
-    });
+    ])
+      .then(([detail, ans, existing]) => {
+        setRubricDetail(detail);
+        setAnswers(ans.answers);
+        // Pre-fill existing grades
+        const map: Record<string, number> = {};
+        for (const g of existing.grades) {
+          map[`${g.answerId}:${g.criterionId}`] = g.pointsGiven;
+        }
+        setGrades(map);
+        setCurrentIdx(0);
+      })
+      .catch((e) => setError(e instanceof Error ? e.message : "Failed to load grading data"));
   }, [selectedRubricId]);
 
   function getGrade(answerId: string, criterionId: string): string {
