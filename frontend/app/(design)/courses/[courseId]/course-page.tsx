@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowRight, FileUp, Plus, Settings } from "lucide-react";
 import {
@@ -77,6 +77,7 @@ function formatHeld(heldAt: string | null) {
 
 export function CourseLivePage() {
   const user = useSession();
+  const router = useRouter();
   const { courseId } = useParams<{ courseId: string }>();
   const [course, setCourse] = useState<CourseDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -94,7 +95,24 @@ export function CourseLivePage() {
         }
       })
       .catch((cause) => {
-        if (!cancelled) setError(cause instanceof Error ? cause.message : "Could not load course");
+        if (cancelled) return;
+        const message = cause instanceof Error ? cause.message : "Could not load course";
+        if (message.includes("not found") || message.includes("Cannot GET")) {
+          apiFetch<{ courses: { id: string; code: string | null }[] }>("/courses")
+            .then(({ courses }) => {
+              const match = courses.find(
+                (candidate) => candidate.code?.toLowerCase() === courseId.toLowerCase(),
+              );
+              if (match) {
+                router.replace(`/courses/${match.id}`);
+                return;
+              }
+              setError(message);
+            })
+            .catch(() => setError(message));
+        } else {
+          setError(message);
+        }
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -102,7 +120,7 @@ export function CourseLivePage() {
     return () => {
       cancelled = true;
     };
-  }, [courseId, user]);
+  }, [courseId, router, user]);
 
   const shellCourse = course
     ? { id: course.id, code: course.code ?? course.name, name: course.name }

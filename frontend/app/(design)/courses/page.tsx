@@ -16,8 +16,6 @@ interface CourseSummary {
   latestExam: { id: string; name: string; status: string } | null;
 }
 
-const CURRENT_SEMESTER = "Winter 2026–27";
-
 const PILL_TONE: Record<string, "red" | "green" | "blue" | undefined> = {
   OPEN: "blue",
   PUBLISHED: "green",
@@ -43,8 +41,13 @@ export default function CoursesPage() {
 
   if (!user) return null;
 
-  const currentCourses = courses.filter((c) => c.semester === CURRENT_SEMESTER);
-  const pastCourses = courses.filter((c) => c.semester !== CURRENT_SEMESTER);
+  const semesterCounts = courses.reduce<Record<string, number>>((counts, course) => {
+    if (course.semester) counts[course.semester] = (counts[course.semester] ?? 0) + 1;
+    return counts;
+  }, {});
+  const currentSemester = Object.entries(semesterCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+  const currentCourses = courses.filter((c) => c.semester === currentSemester);
+  const pastCourses = courses.filter((c) => c.semester !== currentSemester);
   const q = search.trim().toLowerCase();
   const visible = (showAll ? courses : currentCourses).filter(
     (c) => !q || c.name.toLowerCase().includes(q) || (c.code?.toLowerCase().includes(q) ?? false),
@@ -52,20 +55,6 @@ export default function CoursesPage() {
 
   return (
     <AppShell active="courses">
-      <PageHeader crumbs={[{ label: "All courses" }]}>
-        {user.role === "instructor" && (
-          <Button
-            size="lg"
-            icon={
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0, display: "block" }}>
-                <path d="M12 5v14M5 12h14" />
-              </svg>
-            }
-          >
-            New course
-          </Button>
-        )}
-      </PageHeader>
       <PageTitle
         title={<>Courses</>}
         description={<>Every course you teach or assist in. TAs only see the courses they have been added to.</>}
@@ -124,7 +113,7 @@ export default function CoursesPage() {
             >
               {/* Course name + code */}
               <span style={{ display: "flex", alignItems: "center", gap: "14px", minWidth: 0 }}>
-                <span style={{ width: "40px", height: "40px", borderRadius: "12px", background: course.semester === CURRENT_SEMESTER ? "var(--blue-t)" : "rgba(var(--ink-rgb), 0.06)", color: course.semester === CURRENT_SEMESTER ? "var(--blue-x)" : "var(--text-2)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "13px", fontWeight: 600, flexShrink: 0 }}>
+                <span style={{ width: "40px", height: "40px", borderRadius: "12px", background: course.semester === currentSemester ? "var(--blue-t)" : "rgba(var(--ink-rgb), 0.06)", color: course.semester === currentSemester ? "var(--blue-x)" : "var(--text-2)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "13px", fontWeight: 600, flexShrink: 0 }}>
                   {course.code?.replace(/\D/g, "") || "—"}
                 </span>
                 <span style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
