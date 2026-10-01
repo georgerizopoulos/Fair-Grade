@@ -63,8 +63,9 @@ Every error, from every endpoint, has this shape:
 | 11 | `POST /ta-grades/bulk` | instructor, ta | Σταύρος | `/upload` step 3, `/ta` |
 | 12 | `GET /ta-grades?rubricId=` | instructor, ta | Σταύρος | `/upload`, `/ta` |
 | 13 | `POST /grade/run` | instructor | Γιώργος (controller) + Κώστας (grading logic) | `/upload` ("Run AI Grading") |
-| 14 | `GET /grade/results/:rubricId` | instructor | Δημήτρης | `/dashboard/[taId]` |
-| 15 | `GET /deviation/:rubricId` | instructor | Δημήτρης (controller) + Κώστας (deviation logic) | `/dashboard`, `/dashboard/[taId]` |
+| 14 | `GET /grade/results/:rubricId` | instructor | Δημ��τρης | `/dashboard/[taId]` |
+| 15 | `GET /deviation/:rubricId` | instructor | Δημ��τρης (controller) + Κώστας (deviation logic) | `/dashboard`, `/dashboard/[taId]` |
+| 16 | `GET /exams/:id/my-stats` | TA member of the course | Δημ��τρης | `/courses/[courseId]/exams/[examId]/stats` |
 
 ---
 
@@ -671,7 +672,7 @@ If some answers failed, the rest are still saved and the call still returns 200:
 ## 14. GET /grade/results/:rubricId
 
 **Who can call:** instructor.
-**Built by:** Δημήτρης.
+**Built by:** Δημ��τρης.
 
 Every answer with the AI's grade and each TA's grade side by side, per criterion. The drill-down page uses this (with `?taId=`) for the full table of answers that TA graded.
 
@@ -732,7 +733,7 @@ Answers sorted by `studentIdAnon`; criteria by `position`.
 ## 15. GET /deviation/:rubricId
 
 **Who can call:** instructor.
-**Built by:** Δημήτρης (controller, `deviation.controller.ts`), using Κώστας's `computeDeviation()`.
+**Built by:** Δημ��τρης (controller, `deviation.controller.ts`), using Κώστας's `computeDeviation()`.
 
 The deviation report, grouped by TA, computed exactly per the Deviation Rules section. The main dashboard and the drill-down page are built on this.
 
@@ -884,3 +885,78 @@ How to read this example: Maria's gap on criterion 4 is −1.42 against a thresh
 | `overallDeviation` | number | average of the TA's absolute `avgDeviation` values |
 | `answersGraded` | integer | distinct answers the TA graded (in #15) or the AI graded (in #13) |
 | `failedAnswers` | array | answers the AI couldn't grade after retries |
+
+---
+
+## 16. GET /exams/:id/my-stats
+
+**Who can call:** a TA who is a member of the exam's course.
+
+Returns the signed-in TA's own exam progress and comparison view. Paper and question identities are limited to the caller's papers; no student names or other TA names are returned. Only `AI_GRADED` papers participate in comparisons. Papers still in `AI_GRADING` are counted as pending and do not contribute to averages, matches, gaps, or flags.
+
+**Response - 200 OK**
+```json
+{
+  "exam": { "id": "exam-uuid", "name": "Midterm", "passMark": 5 },
+  "course": {
+    "id": "course-uuid",
+    "code": "HY335",
+    "name": "Computer Networks",
+    "leaderboardVisibility": "ANONYMOUS"
+  },
+  "counts": {
+    "total": 12,
+    "submitted": 11,
+    "aiGraded": 10,
+    "pending": 1,
+    "drafts": 1
+  },
+  "summary": {
+    "taAverage": null,
+    "aiAverage": null,
+    "averageGap": null,
+    "exactMatches": null,
+    "withinHalfPoint": null,
+    "comparedPapers": 10,
+    "medianTimePerPaperMs": null,
+    "largestGap": null,
+    "flaggedQuestionCount": null
+  },
+  "paperComparisons": [
+    {
+      "paperId": "paper-uuid",
+      "studentId": "csd5146",
+      "status": "AI_GRADED",
+      "submittedAt": "2026-09-30T12:31:00Z",
+      "taTotal": null,
+      "aiTotal": null,
+      "gap": null
+    }
+  ],
+  "questions": [
+    {
+      "questionId": "question-uuid",
+      "code": "Q2",
+      "title": "TCP and UDP",
+      "maxPoints": 3,
+      "sampleSize": null,
+      "taAverage": null,
+      "aiAverage": null,
+      "averageGap": null,
+      "flagged": null
+    }
+  ],
+  "worthASecondLook": [],
+  "leaderboard": [],
+  "badges": []
+}
+```
+
+The nullable comparison fields and empty `leaderboard`/`badges` are temporary stubs until `backend/src/stats/` is available. Counts and paper identities are read from the database. The current static TA stats page does not display median-time or badge fields, although they are included here per the endpoint request.
+
+`leaderboard` and `badges` are omitted when the course has `leaderboardVisibility: "OFF"`. For `ANONYMOUS` and `NAMED`, the fields are present; the stats implementation must honor the visibility setting when populating peer entries.
+
+**Errors**
+- 401 `UNAUTHORIZED` - no token or invalid token
+- 403 `FORBIDDEN` - caller is not a TA or is not a member of the course
+- 404 `NOT_FOUND` - exam does not exist
