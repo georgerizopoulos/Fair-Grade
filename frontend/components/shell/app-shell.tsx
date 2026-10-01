@@ -161,7 +161,7 @@ export function Sidebar({
 
         <nav aria-label="Main" style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
           {nav.map((section, i) => (
-            <Fragment key={section.title}>
+            <Fragment key={i}>
               <div
                 style={{
                   fontSize: "12px",

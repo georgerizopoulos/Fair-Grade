@@ -22,22 +22,15 @@ export const HOME_BY_ROLE: Record<Role, string> = {
 interface CourseSummary {
   id: string;
 }
-interface CourseDetail {
-  id: string;
-  exams: { id: string; status: string }[];
-}
 
-// Where to go after signing in: instructors to their courses, TAs to the
-// stats page of the exam they're grading (the first OPEN exam they can see).
+// Where to go after signing in: instructors to their courses, TAs to the course
+// they grade in (where they see each exam of the session and their papers). If a
+// TA is in exactly one course, go straight into it.
 export async function homeFor(user: User): Promise<string> {
   if (user.role === "instructor") return HOME_BY_ROLE.instructor;
   try {
     const { courses } = await apiFetch<{ courses: CourseSummary[] }>("/courses");
-    for (const c of courses) {
-      const course = await apiFetch<CourseDetail>(`/courses/${c.id}`);
-      const open = course.exams.find((e) => e.status === "OPEN");
-      if (open) return `/courses/${course.id}/exams/${open.id}/stats`;
-    }
+    if (courses.length === 1) return `/courses/${courses[0].id}`;
   } catch {
     // fall through to the course list
   }
