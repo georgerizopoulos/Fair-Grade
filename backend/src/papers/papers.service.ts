@@ -3,14 +3,26 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
+import { randomUUID } from 'node:crypto';
+import { mkdir, unlink, writeFile } from 'node:fs/promises';
+import { resolve, sep } from 'node:path';
+import { PDFDocument } from 'pdf-lib';
 import { AccessService } from '../access/access.service.js';
 import { ActivityService } from '../activity/activity.service.js';
 import type { AuthUser } from '../common/auth.decorators.js';
 import type { PaperStatus, Prisma } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { isHalfStep, paperTotals } from './paper-totals.js';
-import { MyPapersQuery, UpdatePaperDto } from './papers.dto.js';
+import {
+  CreatePaperDto,
+  MyPapersQuery,
+  PaperPdfUpload,
+  UpdatePaperDto,
+} from './papers.dto.js';
+
+const MAX_PDF_BYTES = 20 * 1024 * 1024;
 
 // Paper lifecycle (change request §1.4–§1.6):
 //
@@ -33,6 +45,127 @@ export class PapersService {
     private readonly access: AccessService,
     private readonly activity: ActivityService,
   ) {}
+
+  async upload(
+    user: AuthUser,
+    examId: string,
+    dto: CreatePaperDto,
+    file: PaperPdfUpload,
+  ) {
+    if (user.role === 'instructor') {
+      await this.access.ownedExam(user, examId);
+    } else {
+      await this.access.exam(user, examId);
+    }
+
+    const taId = user.role === 'ta' ? user.id : dto.taId;
+    if (!taId) {
+      throw new BadRequestException(
+        'taId is required when an instructor uploads a paper',
+      );
+    }
+
+    if (file.size > MAX_PDF_BYTES) {
+      throw new BadRequestException('PDF must be 20 MiB or smaller');
+    }
+    if (
+      file.mimetype !== 'application/pdf' ||
+      !file.originalname.toLowerCase().endsWith('.pdf') ||
+      file.buffer.subarray(0, 5).toString() !== '%PDF-'
+    ) {
+      throw new BadRequestException('file must be a valid PDF');
+    }
+
+    const ta = await this.prisma.user.findUnique({ where: { id: taId } });
+    if (!ta || ta.role !== 'ta') {
+      throw new NotFoundException(`taId ${taId} does not exist or is not a TA`);
+    }
+    await this.access.exam(ta, examId);
+
+    let pageCount: number;
+    try {
+      pageCount = (await PDFDocument.load(file.buffer)).getPageCount();
+    } catch {
+      throw new BadRequestException('PDF could not be read');
+    }
+    if (pageCount < 1) throw new BadRequestException('PDF must contain a page');
+
+    const uploadsDir = resolve(process.cwd(), 'uploads');
+    await mkdir(uploadsDir, { recursive: true });
+    const filename = `${randomUUID()}.pdf`;
+    const diskPath = resolve(uploadsDir, filename);
+    const relativePath = `uploads${sep}${filename}`;
+    await writeFile(diskPath, file.buffer, { flag: 'wx' });
+
+    try {
+      const paper = await this.prisma.$transaction(async (tx) => {
+        const created = await tx.paper.create({
+          data: {
+            examId,
+            taId,
+            studentId: dto.studentId,
+            pdfPath: relativePath,
+            pageCount,
+            status: 'DRAFT',
+          },
+        });
+
+        for (let index = 0; index < pageCount; index++) {
+          await tx.paperPage.create({
+            data: { paperId: created.id, index, status: 'WAITING' },
+          });
+        }
+
+        const questions = await tx.question.findMany({
+          where: { examId },
+          orderBy: { order: 'asc' },
+          select: { id: true },
+        });
+        for (const question of questions) {
+          await tx.paperAnswer.create({
+            data: {
+              paperId: created.id,
+              questionId: question.id,
+              transcription: '',
+              uncertainWords: [],
+              pages: [],
+            },
+          });
+        }
+
+        return created;
+      });
+
+      // Future transcription hook: enqueue this stored PDF with the exam questions.
+      return this.get(user, paper.id);
+    } catch (error) {
+      await unlink(diskPath).catch(() => undefined);
+      throw error;
+    }
+  }
+
+  async rescanPage(user: AuthUser, paperId: string, index: number) {
+    const paper = await this.access.paper(user, paperId);
+    if (index < 0) throw new BadRequestException('page index must be 0 or greater');
+    if (paper.status !== 'DRAFT') {
+      throw new ConflictException('Only draft paper pages can be rescanned');
+    }
+
+    const page = await this.prisma.paperPage.findUnique({
+      where: { paperId_index: { paperId, index } },
+    });
+    if (!page) {
+      throw new NotFoundException(`Page ${index} not found for paper ${paperId}`);
+    }
+
+    const updated = await this.prisma.paperPage.update({
+      where: { paperId_index: { paperId, index } },
+      data: { status: 'WAITING' },
+    });
+
+    // Future transcription hook: enqueue this page when a vision model is available.
+    return { paperId, index, status: updated.status };
+  }
 
   // ---------------------------------------------------------------- read
 

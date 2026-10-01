@@ -4,16 +4,26 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
+  UploadedFile,
+  UseInterceptors,
+  BadRequestException,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   type AuthUser,
   CurrentUser,
   Roles,
 } from '../common/auth.decorators.js';
-import { MyPapersQuery, UpdatePaperDto } from './papers.dto.js';
+import {
+  CreatePaperDto,
+  MyPapersQuery,
+  type PaperPdfUpload,
+  UpdatePaperDto,
+} from './papers.dto.js';
 import { PapersService } from './papers.service.js';
 
 // Who may do what is checked in PapersService through AccessService
@@ -21,6 +31,34 @@ import { PapersService } from './papers.service.js';
 @Controller()
 export class PapersController {
   constructor(private readonly papers: PapersService) {}
+
+  @Roles('instructor', 'ta')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: { fileSize: 20 * 1024 * 1024, files: 1 },
+    }),
+  )
+  @Post('exams/:id/papers')
+  upload(
+    @CurrentUser() user: AuthUser,
+    @Param('id') examId: string,
+    @Body() dto: CreatePaperDto,
+    @UploadedFile() file?: PaperPdfUpload,
+  ) {
+    if (!file) throw new BadRequestException('PDF file is required');
+    return this.papers.upload(user, examId, dto, file);
+  }
+
+  @Roles('instructor', 'ta')
+  @Post('papers/:id/pages/:index/rescan')
+  @HttpCode(200)
+  rescanPage(
+    @CurrentUser() user: AuthUser,
+    @Param('id') paperId: string,
+    @Param('index', ParseIntPipe) index: number,
+  ) {
+    return this.papers.rescanPage(user, paperId, index);
+  }
 
   @Get('papers/:id')
   get(@CurrentUser() user: AuthUser, @Param('id') id: string) {

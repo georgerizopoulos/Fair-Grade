@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   ArrayMinSize,
   IsArray,
@@ -11,6 +11,13 @@ import {
   ValidateIf,
   ValidateNested,
 } from 'class-validator';
+
+export interface PaperPdfUpload {
+  buffer: Buffer;
+  originalname: string;
+  mimetype: string;
+  size: number;
+}
 
 export class AnswerEdit {
   @IsString()
@@ -49,4 +56,18 @@ export class MyPapersQuery {
   @IsOptional()
   @IsString()
   q?: string;
+}
+
+export class CreatePaperDto {
+  @Transform(({ value }: { value: unknown }) =>
+    typeof value === 'string' ? value.trim() : value,
+  )
+  @IsString()
+  @IsNotEmpty()
+  studentId: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  taId?: string;
 }
