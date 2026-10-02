@@ -5,6 +5,9 @@ import { type CSSProperties, type FormEvent, useEffect, useState } from "react";
 import { Avatar, Button, MONO, RoleChip } from "@/components/shell";
 import { getCurrentUser, homeFor, login, registerInstructor } from "@/lib/auth";
 
+// The seeded demo accounts. Build with NEXT_PUBLIC_DEMO_LOGINS=off to hide them
+// on a real deployment, where they don't exist.
+const SHOW_DEMO_LOGINS = process.env.NEXT_PUBLIC_DEMO_LOGINS !== "off";
 const DEMO_PASSWORD = "demo1234";
 const DEMO_ACCOUNTS = [
   { email: "instructor@demo.com", initial: "I", role: "instructor" as const },
@@ -232,7 +235,7 @@ export function LoginForm() {
         </button>
       </p>
 
-      {mode === "signin" && (
+      {mode === "signin" && SHOW_DEMO_LOGINS && (
       <div
         style={{
           marginTop: "10px",
