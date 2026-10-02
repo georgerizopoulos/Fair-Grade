@@ -24,7 +24,7 @@ const client = new BedrockRuntimeClient({ region: REGION });
 export async function complete(
   systemPrompt: string,
   userPrompt: string,
-  jsonSchema?: object,
+  _jsonSchema?: object,
 ): Promise<string> {
   const command = new ConverseCommand({
     modelId: MODEL_ID,

@@ -103,6 +103,7 @@ function UploadInner() {
 
   useEffect(() => {
     if (!user) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- legacy page, frozen, deleted in the final pass (DOCS/TASKS.md)
     loadRubrics();
     apiFetch<{ users: TaUser[] }>("/users?role=ta")
       .then(({ users }) => setTas(users))

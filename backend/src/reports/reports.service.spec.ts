@@ -248,12 +248,6 @@ describe('ReportsService.examReport', () => {
 });
 
 describe('ReportsService.taDetailReport', () => {
-  const instructor: AuthUser = {
-    id: 'inst-1',
-    name: 'Instructor',
-    email: 'instructor@example.test',
-    role: 'instructor',
-  };
   const ta: AuthUser = {
     id: 'ta-1',
     name: 'TA',
