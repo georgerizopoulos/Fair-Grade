@@ -140,10 +140,10 @@ Set these in `backend/.env` (or the process environment). `backend/.env.example`
 | `TRUST_PROXY` | `1` behind one reverse proxy (so the sign-in limits and HSTS see the real client); leave unset without one |
 | `AWS_*`, `LLM_MODEL` | Bedrock credentials for AI grading (or an instance role) |
 
-**Frontend** (from `frontend/`): `NEXT_PUBLIC_API_URL` is baked in at build time, so set it first.
+**Frontend** (from `frontend/`): `NEXT_PUBLIC_*` variables are baked in at build time, so set them first. `NEXT_PUBLIC_DEMO_LOGINS=off` hides the one-click demo accounts on the login page.
 
 ```bash
-NEXT_PUBLIC_API_URL=https://api.fairgrade.example.edu npm run build
+NEXT_PUBLIC_API_URL=https://api.fairgrade.example.edu NEXT_PUBLIC_DEMO_LOGINS=off npm run build
 npm run start
 ```
 
