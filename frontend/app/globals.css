@@ -49,6 +49,7 @@
 }
 
 :root {
+  --page-background: #EEF0F3;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -115,6 +116,24 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+/* Keep the browser canvas themed and prevent rubber-band scrolling from
+   exposing a light strip outside the page on trackpads and touchscreens. */
+html {
+  background-color: var(--page-background);
+  color-scheme: light;
+  overscroll-behavior: none;
+}
+
+html[data-theme="dark"] {
+  --page-background: #0B0D11;
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--page-background);
+  overscroll-behavior: none;
 }
 
 @layer base {
