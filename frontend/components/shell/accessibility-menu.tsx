@@ -1,6 +1,6 @@
 "use client";
 
-import { Accessibility, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useId, useRef, useState } from "react";
 import {
   ACCESSIBILITY_KEY,
@@ -28,6 +28,44 @@ const OPTIONS = [
     "Limit animations and transitions. Your device preference is also respected.",
   ],
 ] as const;
+
+function RoundAccessibilityIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 512 512"
+      width="22"
+      height="22"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <circle
+        cx="256"
+        cy="256"
+        r="190"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="28"
+      />
+      <circle cx="256" cy="145" r="31" fill="currentColor" />
+      <path
+        d="M145 199 C180 205 218 207 256 207 C294 207 332 205 367 199"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="32"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M224 218 Q224 205 238 205 L274 205 Q288 205 288 218 L288 303 Q288 320 294 344 L318 429 Q323 448 305 454 Q286 459 280 440 L263 369 Q261 359 256 359 Q251 359 249 369 L232 440 Q226 459 207 454 Q189 448 194 429 L218 344 Q224 320 224 303 Z"
+        fill="currentColor"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 export function AccessibilityMenu() {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -74,7 +112,7 @@ export function AccessibilityMenu() {
         title="Accessibility settings"
         onClick={open}
       >
-        <Accessibility size={19} aria-hidden="true" />
+        <RoundAccessibilityIcon />
       </button>
       <dialog
         ref={dialog}
