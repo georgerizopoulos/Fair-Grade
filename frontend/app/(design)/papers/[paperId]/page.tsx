@@ -23,6 +23,8 @@ export default function PaperResultPage() {
   return <PaperResultLivePage />;
 }
 
+// Static design kept as the reference for the live page above; not rendered.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function StaticPaperResultPage() {
   return (
     <>

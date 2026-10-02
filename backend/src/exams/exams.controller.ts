@@ -16,11 +16,7 @@ import {
   CurrentUser,
   Roles,
 } from '../common/auth.decorators.js';
-import {
-  BulkQuestionsDto,
-  CreateExamDto,
-  PatchExamDto,
-} from './exams.dto.js';
+import { BulkQuestionsDto, CreateExamDto, PatchExamDto } from './exams.dto.js';
 import { ExamsService } from './exams.service.js';
 import type { SolutionsPdfUpload } from './questions-importer.js';
 
@@ -30,10 +26,7 @@ export class ExamsController {
 
   @Roles('instructor')
   @Get('courses/:courseId/exams')
-  list(
-    @CurrentUser() user: AuthUser,
-    @Param('courseId') courseId: string,
-  ) {
+  list(@CurrentUser() user: AuthUser, @Param('courseId') courseId: string) {
     return this.exams.listByCourse(user, courseId);
   }
 

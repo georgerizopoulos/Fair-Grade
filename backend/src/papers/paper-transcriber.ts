@@ -118,7 +118,10 @@ export class FakePaperTranscriber implements PaperTranscriber {
     const template = TEMPLATES[Math.floor(Math.random() * TEMPLATES.length)];
     const result: Record<string, TranscribedAnswer> = {};
     for (const code of questionCodes) {
-      result[code] = template[code] ?? { transcription: '', uncertainWords: [] };
+      result[code] = template[code] ?? {
+        transcription: '',
+        uncertainWords: [],
+      };
     }
     return result;
   }

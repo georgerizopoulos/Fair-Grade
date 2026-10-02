@@ -53,6 +53,8 @@ export async function login(email: string, password: string): Promise<User> {
 export function logout() {
   localStorage.removeItem(TOKEN_KEY);
   sessionPromise = null;
+  // Hard redirect on purpose: also resets in-memory state, and this is not a component.
+  // eslint-disable-next-line @next/next/no-location-assign-relative-destination
   window.location.href = "/login";
 }
 

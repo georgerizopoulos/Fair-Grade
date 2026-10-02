@@ -62,6 +62,8 @@ export async function apiFetch<T = unknown>(
     // form, not bounce back to /login.
     if (res.status === 401 && path !== "/auth/login") {
       localStorage.removeItem(TOKEN_KEY);
+      // Hard redirect on purpose: also resets in-memory state, and this is not a component.
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
       window.location.href = "/login";
     }
     throw new ApiError(res.status, code, message);

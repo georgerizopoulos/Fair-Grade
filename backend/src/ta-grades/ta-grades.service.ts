@@ -22,9 +22,7 @@ export class TaGradesService {
   private async findTa(taId: string) {
     const user = await this.prisma.user.findUnique({ where: { id: taId } });
     if (!user || user.role !== 'ta') {
-      throw new NotFoundException(
-        `taId ${taId} does not exist or is not a TA`,
-      );
+      throw new NotFoundException(`taId ${taId} does not exist or is not a TA`);
     }
     return user;
   }

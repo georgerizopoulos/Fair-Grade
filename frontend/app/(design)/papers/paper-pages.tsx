@@ -1,9 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
-import { ArrowRight, Check, ChevronLeft, ChevronRight, FileUp, RotateCcw } from "lucide-react";
+import { ArrowRight, Check, ChevronLeft, FileUp, RotateCcw } from "lucide-react";
 import {
   AppShell,
   NoAccess,

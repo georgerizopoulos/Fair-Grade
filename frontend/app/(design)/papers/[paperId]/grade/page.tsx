@@ -23,6 +23,8 @@ export default function GradePaperPage() {
   return <GradePaperLivePage />;
 }
 
+// Static design kept as the reference for the live page above; not rendered.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function StaticGradePaperPage() {
   return (
     <>

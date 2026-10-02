@@ -15,6 +15,8 @@ export default function TaPapersPage() {
   return <TaPapersLivePage />;
 }
 
+// Static design kept as the reference for the live page above; not rendered.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function StaticTaPapersPage() {
   return (
     <>

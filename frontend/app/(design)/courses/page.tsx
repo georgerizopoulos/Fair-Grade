@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { AppShell, Button, Card, PageHeader, PageTitle, Pill } from "@/components/shell";
+import { AppShell, Card, PageTitle, Pill } from "@/components/shell";
 import { apiFetch } from "@/lib/api";
 import { useSession } from "@/lib/auth";
 

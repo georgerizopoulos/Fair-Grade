@@ -67,7 +67,9 @@ describe('ReportsService.myStats', () => {
   });
 
   it('propagates 403 when the TA is not a member of the course', async () => {
-    access.exam.mockRejectedValue(new ForbiddenException('not a course member'));
+    access.exam.mockRejectedValue(
+      new ForbiddenException('not a course member'),
+    );
 
     await expect(service.myStats(ta, 'exam-1')).rejects.toThrow(
       ForbiddenException,
@@ -109,9 +111,7 @@ describe('ReportsService.myStats', () => {
       ReportsController.prototype,
       'myStats',
     )?.value;
-    expect(
-      Reflect.getMetadata(ROLES_KEY, handler),
-    ).toEqual(['ta']);
+    expect(Reflect.getMetadata(ROLES_KEY, handler)).toEqual(['ta']);
   });
 });
 
@@ -149,8 +149,20 @@ describe('ReportsService.examReport', () => {
     prisma = {
       question: {
         findMany: vi.fn().mockResolvedValue([
-          { id: 'q-1', code: 'Q1', title: 'Question 1', maxPoints: 3, order: 1 },
-          { id: 'q-2', code: 'Q2', title: 'Question 2', maxPoints: 2, order: 2 },
+          {
+            id: 'q-1',
+            code: 'Q1',
+            title: 'Question 1',
+            maxPoints: 3,
+            order: 1,
+          },
+          {
+            id: 'q-2',
+            code: 'Q2',
+            title: 'Question 2',
+            maxPoints: 2,
+            order: 2,
+          },
         ]),
       },
       paper: {
@@ -185,7 +197,11 @@ describe('ReportsService.examReport', () => {
     const result = await service.examReport(instructor, 'exam-1');
 
     expect(access.ownedExam).toHaveBeenCalledWith(instructor, 'exam-1');
-    expect(result.exam).toMatchObject({ id: 'exam-1', name: 'Midterm', maxTotal: 5 });
+    expect(result.exam).toMatchObject({
+      id: 'exam-1',
+      name: 'Midterm',
+      maxTotal: 5,
+    });
     expect(result.tas).toHaveLength(1);
     expect(result.tas[0]).toMatchObject({
       taId: 'ta-1',
@@ -199,9 +215,7 @@ describe('ReportsService.examReport', () => {
       ReportsController.prototype,
       'examReport',
     )?.value;
-    expect(
-      Reflect.getMetadata(ROLES_KEY, handler),
-    ).toEqual(['instructor']);
+    expect(Reflect.getMetadata(ROLES_KEY, handler)).toEqual(['instructor']);
   });
 });
 
@@ -251,7 +265,13 @@ describe('ReportsService.taDetailReport', () => {
       },
       question: {
         findMany: vi.fn().mockResolvedValue([
-          { id: 'q-1', code: 'Q1', title: 'Question 1', maxPoints: 3, order: 1 },
+          {
+            id: 'q-1',
+            code: 'Q1',
+            title: 'Question 1',
+            maxPoints: 3,
+            order: 1,
+          },
         ]),
       },
       paper: {
@@ -259,7 +279,14 @@ describe('ReportsService.taDetailReport', () => {
           {
             id: 'paper-1',
             studentId: 'csd5146',
-            answers: [{ questionId: 'q-1', taPoints: 2, aiPoints: 2, aiReasoning: 'Good' }],
+            answers: [
+              {
+                questionId: 'q-1',
+                taPoints: 2,
+                aiPoints: 2,
+                aiReasoning: 'Good',
+              },
+            ],
           },
         ]),
       },
@@ -275,13 +302,13 @@ describe('ReportsService.taDetailReport', () => {
       ReportsController.prototype,
       'taDetailReport',
     )?.value;
-    expect(
-      Reflect.getMetadata(ROLES_KEY, handler),
-    ).toEqual(['instructor']);
+    expect(Reflect.getMetadata(ROLES_KEY, handler)).toEqual(['instructor']);
   });
 
   it('returns 403 when a TA tries to access the report endpoint', async () => {
-    access.ownedExam.mockRejectedValue(new ForbiddenException('not authorized'));
+    access.ownedExam.mockRejectedValue(
+      new ForbiddenException('not authorized'),
+    );
 
     await expect(service.taDetailReport(ta, 'exam-1', 'ta-2')).rejects.toThrow(
       ForbiddenException,
@@ -345,9 +372,27 @@ describe('Flagging logic', () => {
       { id: 'q-1', code: 'Q1', title: 'Question 1', maxPoints: 3, order: 1 },
     ]);
     prisma.paper.findMany.mockResolvedValue([
-      { id: 'p-1', studentId: 'csd001', answers: [{ questionId: 'q-1', taPoints: 2, aiPoints: 1, aiReasoning: 'R1' }] },
-      { id: 'p-2', studentId: 'csd002', answers: [{ questionId: 'q-1', taPoints: 2.5, aiPoints: 1, aiReasoning: 'R2' }] },
-      { id: 'p-3', studentId: 'csd003', answers: [{ questionId: 'q-1', taPoints: 2.5, aiPoints: 1, aiReasoning: 'R3' }] },
+      {
+        id: 'p-1',
+        studentId: 'csd001',
+        answers: [
+          { questionId: 'q-1', taPoints: 2, aiPoints: 1, aiReasoning: 'R1' },
+        ],
+      },
+      {
+        id: 'p-2',
+        studentId: 'csd002',
+        answers: [
+          { questionId: 'q-1', taPoints: 2.5, aiPoints: 1, aiReasoning: 'R2' },
+        ],
+      },
+      {
+        id: 'p-3',
+        studentId: 'csd003',
+        answers: [
+          { questionId: 'q-1', taPoints: 2.5, aiPoints: 1, aiReasoning: 'R3' },
+        ],
+      },
     ]);
 
     const result = await service.taDetailReport(instructor, 'exam-1', 'ta-1');
@@ -368,9 +413,27 @@ describe('Flagging logic', () => {
       { id: 'q-1', code: 'Q1', title: 'Question 1', maxPoints: 3, order: 1 },
     ]);
     prisma.paper.findMany.mockResolvedValue([
-      { id: 'p-1', studentId: 'csd001', answers: [{ questionId: 'q-1', taPoints: 2, aiPoints: 1.9, aiReasoning: 'R1' }] },
-      { id: 'p-2', studentId: 'csd002', answers: [{ questionId: 'q-1', taPoints: 2, aiPoints: 1.9, aiReasoning: 'R2' }] },
-      { id: 'p-3', studentId: 'csd003', answers: [{ questionId: 'q-1', taPoints: 2, aiPoints: 1.9, aiReasoning: 'R3' }] },
+      {
+        id: 'p-1',
+        studentId: 'csd001',
+        answers: [
+          { questionId: 'q-1', taPoints: 2, aiPoints: 1.9, aiReasoning: 'R1' },
+        ],
+      },
+      {
+        id: 'p-2',
+        studentId: 'csd002',
+        answers: [
+          { questionId: 'q-1', taPoints: 2, aiPoints: 1.9, aiReasoning: 'R2' },
+        ],
+      },
+      {
+        id: 'p-3',
+        studentId: 'csd003',
+        answers: [
+          { questionId: 'q-1', taPoints: 2, aiPoints: 1.9, aiReasoning: 'R3' },
+        ],
+      },
     ]);
 
     const result = await service.taDetailReport(instructor, 'exam-1', 'ta-1');
@@ -390,8 +453,20 @@ describe('Flagging logic', () => {
       { id: 'q-1', code: 'Q1', title: 'Question 1', maxPoints: 3, order: 1 },
     ]);
     prisma.paper.findMany.mockResolvedValue([
-      { id: 'p-1', studentId: 'csd001', answers: [{ questionId: 'q-1', taPoints: 3, aiPoints: 1, aiReasoning: 'R1' }] },
-      { id: 'p-2', studentId: 'csd002', answers: [{ questionId: 'q-1', taPoints: 3, aiPoints: 1, aiReasoning: 'R2' }] },
+      {
+        id: 'p-1',
+        studentId: 'csd001',
+        answers: [
+          { questionId: 'q-1', taPoints: 3, aiPoints: 1, aiReasoning: 'R1' },
+        ],
+      },
+      {
+        id: 'p-2',
+        studentId: 'csd002',
+        answers: [
+          { questionId: 'q-1', taPoints: 3, aiPoints: 1, aiReasoning: 'R2' },
+        ],
+      },
     ]);
 
     const result = await service.taDetailReport(instructor, 'exam-1', 'ta-1');
@@ -409,15 +484,33 @@ describe('Flagging logic', () => {
       { id: 'q-1', code: 'Q1', title: 'Question 1', maxPoints: 2, order: 1 },
     ]);
     prisma.paper.findMany.mockResolvedValue([
-      { id: 'p-1', studentId: 'csd001', answers: [{ questionId: 'q-1', taPoints: 2, aiPoints: 0.95, aiReasoning: 'R1' }] },
-      { id: 'p-2', studentId: 'csd002', answers: [{ questionId: 'q-1', taPoints: 2, aiPoints: 0.95, aiReasoning: 'R2' }] },
-      { id: 'p-3', studentId: 'csd003', answers: [{ questionId: 'q-1', taPoints: 2, aiPoints: 0.95, aiReasoning: 'R3' }] },
+      {
+        id: 'p-1',
+        studentId: 'csd001',
+        answers: [
+          { questionId: 'q-1', taPoints: 2, aiPoints: 0.95, aiReasoning: 'R1' },
+        ],
+      },
+      {
+        id: 'p-2',
+        studentId: 'csd002',
+        answers: [
+          { questionId: 'q-1', taPoints: 2, aiPoints: 0.95, aiReasoning: 'R2' },
+        ],
+      },
+      {
+        id: 'p-3',
+        studentId: 'csd003',
+        answers: [
+          { questionId: 'q-1', taPoints: 2, aiPoints: 0.95, aiReasoning: 'R3' },
+        ],
+      },
     ]);
 
     const result = await service.taDetailReport(instructor, 'exam-1', 'ta-1');
 
     expect(result.questions[0].flagged).toBe(true);
-    expect(result.questions[0].threshold).toBe(0.30);
+    expect(result.questions[0].threshold).toBe(0.3);
     expect(result.questions[0].averageGap).toBe(1.05);
     expect(result.flaggedQuestionCodes).toContain('Q1');
   });

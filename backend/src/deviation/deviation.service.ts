@@ -49,9 +49,7 @@ export class DeviationService {
     const aiGraded = aiGrades.length > 0;
 
     // Unique TAs with at least one grade on this rubric.
-    const tas = [
-      ...new Map(taGrades.map((g) => [g.ta.id, g.ta])).values(),
-    ];
+    const tas = [...new Map(taGrades.map((g) => [g.ta.id, g.ta])).values()];
 
     return {
       rubricId,

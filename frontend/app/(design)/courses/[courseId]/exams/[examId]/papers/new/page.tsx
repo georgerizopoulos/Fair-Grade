@@ -23,6 +23,8 @@ export default function AddPaperPage() {
   return <AddPaperLivePage />;
 }
 
+// Static design kept as the reference for the live page above; not rendered.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function StaticAddPaperPage() {
   return (
     <>

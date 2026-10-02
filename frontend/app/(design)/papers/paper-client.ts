@@ -119,6 +119,8 @@ export async function uploadPaper(
   if (!response.ok) {
     if (response.status === 401) {
       localStorage.removeItem(TOKEN_KEY);
+      // Hard redirect on purpose: also resets in-memory state, and this is not a component.
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
       window.location.assign("/login");
     }
     throw new Error(result?.error?.message ?? `Upload failed (${response.status})`);
