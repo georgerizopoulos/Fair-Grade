@@ -13,6 +13,7 @@ import { ExamsModule } from './exams/exams.module.js';
 import { PapersModule } from './papers/papers.module.js';
 import { validationPipe } from './common/validation.pipe.js';
 import { DeviationModule } from './deviation/deviation.module.js';
+import { GradingModule } from './grading/grading.module.js';
 import { HealthModule } from './health/health.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { ResultsModule } from './results/results.module.js';
@@ -34,6 +35,7 @@ import { ReportsModule } from './reports/reports.module.js';
     RubricsModule,
     AnswersModule,
     TaGradesModule,
+    GradingModule,
     ResultsModule,
     DeviationModule,
     CoursesModule,
