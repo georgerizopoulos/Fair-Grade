@@ -60,10 +60,10 @@ export default function CoursesPage() {
         title={<>Courses</>}
         description={<>Every course you teach or assist in. TAs only see the courses they have been added to.</>}
       />
-      <Card className="fg-in fg-d1">
+      <Card className="fg-in fg-d1 fg-courses-panel">
         {/* Filter tabs */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "16px", flexWrap: "wrap", marginBottom: "18px" }}>
-          <div role="radiogroup" aria-label="Filter courses" style={{ display: "inline-flex", padding: "4px", borderRadius: "999px", background: "rgba(var(--ink-rgb), 0.05)", gap: "2px" }}>
+          <div role="radiogroup" aria-label="Filter courses" style={{ display: "inline-flex", flexWrap: "wrap", maxWidth: "100%", padding: "4px", borderRadius: "999px", background: "rgba(var(--ink-rgb), 0.05)", gap: "2px" }}>
             <FilterTab active={!showAll} onClick={() => setShowAll(false)}>
               This semester
             </FilterTab>
@@ -73,7 +73,7 @@ export default function CoursesPage() {
               </FilterTab>
             )}
           </div>
-          <div style={{ width: "280px" }}>
+          <div style={{ width: "280px", maxWidth: "100%" }}>
             <div style={{ position: "relative" }}>
               <span style={{ position: "absolute", left: "14px", top: "12px", color: "var(--faint)" }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0, display: "block" }}>
@@ -86,7 +86,7 @@ export default function CoursesPage() {
         </div>
 
         {/* Column headers */}
-        <div className="fg-hide-sm" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.5fr) 150px 70px 150px minmax(0, 1.4fr) 24px", gap: "16px", padding: "0 20px 10px", fontSize: "12.5px", color: "var(--muted)" }}>
+        <div className="fg-hide-sm fg-course-columns" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.5fr) 150px 70px 150px minmax(0, 1.4fr) 24px", gap: "16px", padding: "0 20px 10px", fontSize: "12.5px", color: "var(--muted)" }}>
           <span>Course</span><span>Semester</span><span>Exams</span><span>TAs</span><span>Latest exam</span><span />
         </div>
 
@@ -100,7 +100,7 @@ export default function CoursesPage() {
             <Link
               key={course.id}
               href={`/courses/${course.id}`}
-              className="fg-row"
+              className="fg-row fg-course-row"
               style={{
                 display: "grid",
                 gridTemplateColumns: "minmax(0, 1.5fr) 150px 70px 150px minmax(0, 1.4fr) 24px",
@@ -119,7 +119,7 @@ export default function CoursesPage() {
                 </span>
                 <span style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
                   <span style={{ fontSize: "15px", fontWeight: 500, color: "var(--ink)" }}>{course.name}</span>
-                  <span style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12.5px", color: "var(--muted)" }}>
+                  <span style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px", fontSize: "12.5px", color: "var(--muted)" }}>
                     {course.code}
                     {!!course.reopenRequests && (
                       <Pill tone="amber">
@@ -130,27 +130,38 @@ export default function CoursesPage() {
                 </span>
               </span>
 
-              <span style={{ fontSize: "13.5px", color: "var(--muted)" }}>{course.semester ?? "—"}</span>
-              <span style={{ fontSize: "13.5px", fontVariantNumeric: "tabular-nums" }}>{course.examCount}</span>
-              <span style={{ fontSize: "13px", color: "var(--muted)" }}>
-                {course.taCount === 0 ? "No TAs yet" : `${course.taCount} TAs`}
+              <span className="fg-course-detail" style={{ fontSize: "13.5px", color: "var(--muted)" }}>
+                <span className="fg-course-label">Semester</span>
+                <span>{course.semester ?? "Not set"}</span>
+              </span>
+              <span className="fg-course-detail" style={{ fontSize: "13.5px", fontVariantNumeric: "tabular-nums" }}>
+                <span className="fg-course-label">Exams</span>
+                <span>{course.examCount}</span>
+              </span>
+              <span className="fg-course-detail" style={{ fontSize: "13px", color: "var(--muted)" }}>
+                <span className="fg-course-label">TAs</span>
+                <span>{course.taCount === 0 ? "No TAs yet" : `${course.taCount} TAs`}</span>
               </span>
 
               {/* Latest exam */}
-              <span style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0 }}>
-                {course.latestExam ? (
-                  <>
-                    <span style={{ fontSize: "13.5px", color: "var(--ink)" }}>{course.latestExam.name}</span>
-                    <Pill tone={PILL_TONE[course.latestExam.status]} dot>
-                      {course.latestExam.status.replaceAll("_", " ")}
-                    </Pill>
-                  </>
-                ) : (
-                  <span style={{ fontSize: "13px", color: "var(--faint)" }}>No exams</span>
-                )}
+              <span className="fg-course-detail">
+                <span className="fg-course-label">Latest exam</span>
+                <span style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "10px", minWidth: 0 }}>
+                  {course.latestExam ? (
+                    <>
+                      <span style={{ fontSize: "13.5px", color: "var(--ink)" }}>{course.latestExam.name}</span>
+                      <Pill tone={PILL_TONE[course.latestExam.status]} dot>
+                        {course.latestExam.status.replaceAll("_", " ")}
+                      </Pill>
+                    </>
+                  ) : (
+                    <span style={{ fontSize: "13px", color: "var(--faint)" }}>No exams</span>
+                  )}
+                </span>
               </span>
 
-              <span style={{ color: "var(--faint)" }}>
+              <span style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--faint)" }}>
+                <span className="fg-course-label">Open course</span>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0, display: "block" }}>
                   <path d="M9.5 6l6 6-6 6" />
                 </svg>

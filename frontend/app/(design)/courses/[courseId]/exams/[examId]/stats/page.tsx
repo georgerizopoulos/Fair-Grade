@@ -789,6 +789,7 @@ function QuestionRuler({ q }: { q: MyStats["questions"][number] }) {
   const color = gap == null || gap === 0 ? "var(--ink)" : gap < 0 ? "var(--red)" : "var(--blue)";
   return (
     <div
+      className="fg-reflow-grid"
       style={{
         display: "grid",
         gridTemplateColumns: "170px minmax(0, 1fr) 120px",

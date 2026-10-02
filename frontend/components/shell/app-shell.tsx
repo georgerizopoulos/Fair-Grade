@@ -540,6 +540,7 @@ export function PageHeader({ crumbs, children }: { crumbs: Crumb[]; children?: R
       }}
     >
       <div
+        className="fg-breadcrumbs"
         style={{
           display: "flex",
           alignItems: "center",

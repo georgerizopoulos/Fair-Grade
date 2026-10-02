@@ -766,6 +766,7 @@ function GapPerQuestion({ report }: { report: Report }) {
         return (
           <div
             key={q.questionId}
+            className="fg-reflow-grid"
             style={{
               display: "grid",
               gridTemplateColumns: COLS,

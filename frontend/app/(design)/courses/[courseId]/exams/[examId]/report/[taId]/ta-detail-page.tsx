@@ -269,6 +269,7 @@ export function TaDetailLivePage() {
           return (
             <div
               key={q.questionId}
+              className="fg-reflow-grid"
               style={{
                 display: "grid",
                 gridTemplateColumns: "minmax(0, 0.9fr) minmax(260px, 1.7fr) 150px 100px",
@@ -561,7 +562,7 @@ function GapCard({ gap: g, first, big = false }: { gap: AnswerGap; first: string
       >
         {g.transcription || <span style={{ color: "var(--muted)" }}>No transcription.</span>}
       </p>
-      <div style={{ marginTop: "18px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+      <div className="fg-reflow-grid" style={{ marginTop: "18px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
         <div style={{ padding: "12px 14px", borderRadius: "14px", background: "rgba(var(--ink-rgb), 0.04)" }}>
           <div style={{ fontSize: "12.5px", color: "var(--muted)" }}>{first}</div>
           <div style={{ marginTop: "6px" }}>

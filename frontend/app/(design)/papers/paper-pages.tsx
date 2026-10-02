@@ -134,7 +134,7 @@ export function TaPapersLivePage() {
         <SectionHeader title="Your papers" description="Search by student ID and filter by grading status.">
           <SecondaryButton href={`/courses/${courseId}/exams/${examId}/papers/new`} icon={<FileUp size={16} />}>Add paper</SecondaryButton>
         </SectionHeader>
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(200px, 1fr) auto", gap: "12px", marginBottom: "18px" }}>
+        <div className="fg-reflow-grid" style={{ display: "grid", gridTemplateColumns: "minmax(200px, 1fr) auto", gap: "12px", marginBottom: "18px" }}>
           <input aria-label="Search student ID" placeholder="Search student ID" value={search} onChange={(event) => setSearch(event.target.value)} style={fieldStyle} />
           <div role="group" aria-label="Filter papers" style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
             {(["all", "drafts", "submitted"] as const).map((option) => (

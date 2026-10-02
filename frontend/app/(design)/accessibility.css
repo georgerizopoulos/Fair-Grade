@@ -15,6 +15,48 @@ html[data-a11y-size="200"] {
   zoom: var(--fg-reading-scale);
   container-type: inline-size;
 }
+.fg-courses-panel {
+  container: courses / inline-size;
+  min-width: 0;
+}
+.fg-course-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.fg-course-label {
+  display: none;
+}
+/* Use the panel's available width, including zoom and the sidebar, rather
+   than the viewport width to switch course columns into labelled cards. */
+@container courses (max-width: 1000px) {
+  .fg-course-columns {
+    display: none !important;
+  }
+  .fg-course-row {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 18px !important;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+  .fg-course-row > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .fg-course-detail {
+    padding-top: 12px;
+    border-top: 1px solid rgba(var(--ink-rgb), 0.1);
+  }
+  .fg-course-label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+}
 .fg-display-controls {
   display: inline-flex;
   align-items: center;
@@ -236,6 +278,48 @@ html[data-a11y-motion="true"] .fg-root *::after {
   }
 }
 @container (max-width: 900px) {
+  /* Container width reflects accessibility zoom; viewport media queries don't. */
+  .fg-hide-sm {
+    display: none !important;
+  }
+  .fg-reflow-grid,
+  .fg-row[style*="grid-template-columns"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .fg-reflow-grid > *,
+  .fg-row[style*="grid-template-columns"] > * {
+    min-width: 0 !important;
+    max-width: 100%;
+    grid-column: auto !important;
+    overflow-wrap: anywhere;
+  }
+  .fg-section-header,
+  .fg-breadcrumbs {
+    flex-wrap: wrap;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .fg-section-header > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .fg-shell main {
+    overflow-wrap: anywhere;
+  }
+  .fg-grid > *,
+  .fg-split > * {
+    min-width: 0 !important;
+    max-width: 100%;
+  }
+  .fg-shell main :is(button.fg-press, a.fg-press) {
+    max-width: 100%;
+    white-space: normal !important;
+    height: auto !important;
+    min-height: 40px;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    overflow-wrap: anywhere;
+  }
   .fg-shell {
     flex-direction: column;
   }

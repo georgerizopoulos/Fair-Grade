@@ -78,6 +78,7 @@ export function SectionHeader({
 }) {
   return (
     <div
+      className="fg-section-header"
       style={{
         display: "flex",
         justifyContent: "space-between",
