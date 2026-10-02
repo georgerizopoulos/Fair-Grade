@@ -41,6 +41,16 @@ export class CoursesService {
       },
       orderBy: { code: 'asc' },
     });
+    // Open reopen requests per course, for the instructor's course cards.
+    const requested = isTa
+      ? []
+      : await this.prisma.paper.findMany({
+          where: {
+            reopenRequested: true,
+            exam: { courseId: { in: courses.map((c) => c.id) } },
+          },
+          select: { exam: { select: { courseId: true } } },
+        });
 
     return {
       viewerRole: user.role,
@@ -54,6 +64,13 @@ export class CoursesService {
           semester: c.semester,
           examCount: exams.length,
           taCount: c._count.members,
+          ...(isTa
+            ? {}
+            : {
+                reopenRequests: requested.filter(
+                  (p) => p.exam.courseId === c.id,
+                ).length,
+              }),
           latestExam: latest
             ? {
                 id: latest.id,
@@ -106,7 +123,7 @@ export class CoursesService {
             papers: {
               // A TA only ever counts their own papers.
               where: isTa ? { taId: user.id } : undefined,
-              select: { status: true },
+              select: { status: true, reopenRequested: true },
             },
           },
         },
@@ -145,6 +162,12 @@ export class CoursesService {
           ...(isTa ? { canAddPapers: e.status === 'OPEN' } : {}),
           // For a TA, progress counts only their own papers (see the query above).
           progress,
+          ...(isTa
+            ? {}
+            : {
+                reopenRequests: e.papers.filter((p) => p.reopenRequested)
+                  .length,
+              }),
         };
       });
 
@@ -155,7 +178,15 @@ export class CoursesService {
       name: course.name,
       semester: course.semester,
       // Leaderboard visibility is an instructor setting; TAs don't see it.
-      ...(isTa ? {} : { leaderboardVisibility: course.leaderboardVisibility }),
+      ...(isTa
+        ? {}
+        : {
+            leaderboardVisibility: course.leaderboardVisibility,
+            reopenRequests: course.exams.reduce(
+              (n, e) => n + e.papers.filter((p) => p.reopenRequested).length,
+              0,
+            ),
+          }),
       owner: course.owner
         ? { ...course.owner, isYou: course.owner.id === user.id }
         : null,
@@ -184,6 +215,68 @@ export class CoursesService {
     return {
       id: course.id,
       leaderboardVisibility: course.leaderboardVisibility,
+    };
+  }
+
+  // GET /courses/:id/reopen-requests: submitted papers a TA asked to reopen,
+  // oldest first, with the TA's note and both totals.
+  async reopenRequests(user: AuthUser, courseId: string) {
+    await this.access.ownedCourse(user, courseId);
+    const papers = await this.prisma.paper.findMany({
+      where: { reopenRequested: true, exam: { courseId } },
+      select: {
+        id: true,
+        studentId: true,
+        status: true,
+        submittedAt: true,
+        ta: { select: { id: true, name: true } },
+        exam: {
+          select: {
+            id: true,
+            name: true,
+            questions: {
+              select: { id: true, code: true, title: true, maxPoints: true },
+            },
+          },
+        },
+        answers: {
+          select: { questionId: true, taPoints: true, aiPoints: true },
+        },
+        activities: {
+          where: { type: 'REOPEN_REQUESTED' },
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          select: { createdAt: true, payload: true },
+        },
+      },
+    });
+
+    return {
+      requests: papers
+        .map((p) => {
+          const totals = paperGap(p, p.exam.questions);
+          const entry = p.activities[0];
+          const reason = (entry?.payload as { reason?: unknown } | undefined)
+            ?.reason;
+          return {
+            paperId: p.id,
+            studentId: p.studentId,
+            status: p.status,
+            ta: p.ta,
+            exam: { id: p.exam.id, name: p.exam.name },
+            requestedAt: entry?.createdAt ?? p.submittedAt,
+            reason: typeof reason === 'string' ? reason : null,
+            taTotal: totals.taTotal,
+            aiTotal: totals.aiTotal,
+            gap: totals.gap,
+            maxTotal: p.exam.questions.reduce((sum, q) => sum + q.maxPoints, 0),
+          };
+        })
+        .sort(
+          (a, b) =>
+            new Date(a.requestedAt ?? 0).getTime() -
+            new Date(b.requestedAt ?? 0).getTime(),
+        ),
     };
   }
 

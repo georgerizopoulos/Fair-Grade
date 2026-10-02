@@ -163,7 +163,8 @@ export class PapersService {
 
   async rescanPage(user: AuthUser, paperId: string, index: number) {
     const paper = await this.access.paper(user, paperId);
-    if (index < 0) throw new BadRequestException('page index must be 0 or greater');
+    if (index < 0)
+      throw new BadRequestException('page index must be 0 or greater');
     if (paper.status !== 'DRAFT') {
       throw new ConflictException('Only draft paper pages can be rescanned');
     }
@@ -172,7 +173,9 @@ export class PapersService {
       where: { paperId_index: { paperId, index } },
     });
     if (!page) {
-      throw new NotFoundException(`Page ${index} not found for paper ${paperId}`);
+      throw new NotFoundException(
+        `Page ${index} not found for paper ${paperId}`,
+      );
     }
 
     const updated = await this.prisma.paperPage.update({
@@ -249,6 +252,9 @@ export class PapersService {
       studentId: paper.studentId,
       status: paper.status,
       reopenRequested: paper.reopenRequested,
+      reopenRequest: paper.reopenRequested
+        ? await this.latestReopenRequest(paperId)
+        : null,
       locked: paper.status !== 'DRAFT',
       createdAt: paper.createdAt,
       submittedAt: paper.submittedAt,
@@ -450,7 +456,7 @@ export class PapersService {
   // ---------------------------------------------------------------- after submit
 
   // POST /papers/:id/request-reopen. The TA asks; only the instructor can reopen.
-  async requestReopen(user: AuthUser, paperId: string) {
+  async requestReopen(user: AuthUser, paperId: string, reason?: string) {
     const paper = await this.access.paper(user, paperId);
     if (user.role !== 'ta') {
       throw new ForbiddenException('Instructors reopen papers directly');
@@ -468,9 +474,31 @@ export class PapersService {
         type: 'REOPEN_REQUESTED',
         actorId: user.id,
         paperId,
-        payload: { studentId: paper.studentId },
+        payload: {
+          studentId: paper.studentId,
+          ...(reason ? { reason } : {}),
+        },
       });
     }
+    return this.get(user, paperId);
+  }
+
+  // POST /papers/:id/decline-reopen. The instructor keeps the paper as it is;
+  // the TA sees the request is gone and can ask again.
+  async declineReopen(user: AuthUser, paperId: string) {
+    const paper = await this.access.paper(user, paperId);
+    if (user.role !== 'instructor') {
+      throw new ForbiddenException(
+        'Only the course instructor can decline a reopen request',
+      );
+    }
+    if (!paper.reopenRequested) {
+      throw new ConflictException('Nobody asked to reopen this paper');
+    }
+    await this.prisma.paper.update({
+      where: { id: paperId },
+      data: { reopenRequested: false },
+    });
     return this.get(user, paperId);
   }
 
@@ -537,6 +565,22 @@ export class PapersService {
   }
 
   // ---------------------------------------------------------------- helpers
+
+  // Who asked to reopen a paper, when, and why (from the activity log).
+  private async latestReopenRequest(paperId: string) {
+    const entry = await this.prisma.activityLog.findFirst({
+      where: { paperId, type: 'REOPEN_REQUESTED' },
+      orderBy: { createdAt: 'desc' },
+      include: { actor: { select: { id: true, name: true } } },
+    });
+    if (!entry) return null;
+    const payload = (entry.payload ?? {}) as { reason?: unknown };
+    return {
+      requestedAt: entry.createdAt,
+      by: entry.actor,
+      reason: typeof payload.reason === 'string' ? payload.reason : null,
+    };
+  }
 
   private async ownDraft(user: AuthUser, paperId: string) {
     const paper = await this.access.paper(user, paperId);

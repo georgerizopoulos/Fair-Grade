@@ -22,6 +22,7 @@ import {
   CreatePaperDto,
   MyPapersQuery,
   type PaperPdfUpload,
+  RequestReopenDto,
   UpdatePaperDto,
 } from './papers.dto.js';
 import { PapersService } from './papers.service.js';
@@ -84,8 +85,19 @@ export class PapersController {
 
   @Post('papers/:id/request-reopen')
   @HttpCode(200)
-  requestReopen(@CurrentUser() user: AuthUser, @Param('id') id: string) {
-    return this.papers.requestReopen(user, id);
+  requestReopen(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+    @Body() dto: RequestReopenDto,
+  ) {
+    return this.papers.requestReopen(user, id, dto.reason);
+  }
+
+  @Roles('instructor')
+  @Post('papers/:id/decline-reopen')
+  @HttpCode(200)
+  declineReopen(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    return this.papers.declineReopen(user, id);
   }
 
   @Post('papers/:id/reopen')

@@ -20,6 +20,7 @@ import {
   type PillTone,
 } from "@/components/shell";
 import { apiFetch } from "@/lib/api";
+import { ReopenRequestsCard } from "./reopen-requests";
 import { useSession } from "@/lib/auth";
 
 interface CourseExam {
@@ -30,6 +31,7 @@ interface CourseExam {
   passMark: number;
   questionCount: number;
   canAddPapers?: boolean;
+  reopenRequests?: number;
   progress: {
     papers: number;
     drafts: number;
@@ -56,6 +58,7 @@ interface CourseDetail {
   name: string;
   semester: string | null;
   leaderboardVisibility?: "OFF" | "ANONYMOUS" | "NAMED";
+  reopenRequests?: number;
   owner: { id: string; name: string; isYou: boolean } | null;
   exams: CourseExam[];
   members: CourseMember[];
@@ -84,6 +87,7 @@ export function CourseLivePage() {
   const [course, setCourse] = useState<CourseDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [reloadKey, setReloadKey] = useState(0);
   const [newExam, setNewExam] = useState<{ open: boolean; name: string; heldAt: string; busy: boolean; error: string }>({
     open: false,
     name: "",
@@ -112,7 +116,6 @@ export function CourseLivePage() {
   useEffect(() => {
     if (!user) return;
     let cancelled = false;
-    setLoading(true);
     apiFetch<CourseDetail>(`/courses/${courseId}`)
       .then((data) => {
         if (!cancelled) {
@@ -146,10 +149,15 @@ export function CourseLivePage() {
     return () => {
       cancelled = true;
     };
-  }, [courseId, router, user]);
+  }, [courseId, router, user, reloadKey]);
 
   const shellCourse = course
-    ? { id: course.id, code: course.code ?? course.name, name: course.name }
+    ? {
+        id: course.id,
+        code: course.code ?? course.name,
+        name: course.name,
+        reopenRequests: course.reopenRequests,
+      }
     : { id: courseId, code: "", name: "" };
   const isTa = course?.viewerRole === "ta";
 
@@ -236,6 +244,14 @@ export function CourseLivePage() {
         </Card>
       )}
 
+      {!isTa && (
+        <ReopenRequestsCard
+          courseId={course.id}
+          count={course.reopenRequests ?? 0}
+          onChange={() => setReloadKey((k) => k + 1)}
+        />
+      )}
+
       {error && (
         <div role="alert" style={{ padding: "12px 14px", borderRadius: "12px", color: "var(--red-x)", background: "var(--red-t)", fontSize: "13px" }}>
           {error}
@@ -286,6 +302,11 @@ export function CourseLivePage() {
                         <Pill tone={status.tone} dot>
                           {status.label}
                         </Pill>
+                        {!isTa && !!exam.reopenRequests && (
+                          <Pill tone="amber">
+                            {exam.reopenRequests} reopen request{exam.reopenRequests === 1 ? "" : "s"}
+                          </Pill>
+                        )}
                       </div>
                       <p style={{ margin: "5px 0 0", fontSize: "13px", color: "var(--muted)" }}>
                         {formatHeld(exam.heldAt)} · {exam.questionCount} question

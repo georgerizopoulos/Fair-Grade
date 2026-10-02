@@ -14,6 +14,7 @@ interface CourseSummary {
   examCount: number;
   taCount: number;
   latestExam: { id: string; name: string; status: string } | null;
+  reopenRequests?: number;
 }
 
 const PILL_TONE: Record<string, "red" | "green" | "blue" | undefined> = {
@@ -118,7 +119,14 @@ export default function CoursesPage() {
                 </span>
                 <span style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
                   <span style={{ fontSize: "15px", fontWeight: 500, color: "var(--ink)" }}>{course.name}</span>
-                  <span style={{ fontSize: "12.5px", color: "var(--muted)" }}>{course.code}</span>
+                  <span style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12.5px", color: "var(--muted)" }}>
+                    {course.code}
+                    {!!course.reopenRequests && (
+                      <Pill tone="amber">
+                        {course.reopenRequests} reopen request{course.reopenRequests === 1 ? "" : "s"}
+                      </Pill>
+                    )}
+                  </span>
                 </span>
               </span>
 

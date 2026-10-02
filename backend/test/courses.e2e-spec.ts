@@ -438,4 +438,89 @@ describe('Courses and membership (e2e)', () => {
       canAddPapers: true,
     });
   });
+  it('reopen requests: the TA asks with a note, the instructor sees it, declines or reopens', async () => {
+    const paper = await prisma.paper.findFirstOrThrow({
+      where: { studentId: 'csd9001' },
+    });
+    await http
+      .post(`/papers/${paper.id}/request-reopen`)
+      .set(auth('maria'))
+      .send({ reason: 'I misread Q1, the answer deserves more.' })
+      .expect(200);
+
+    await http
+      .get(`/courses/${ids.hy335}/reopen-requests`)
+      .set(auth('maria'))
+      .expect(403);
+    const list = await http
+      .get(`/courses/${ids.hy335}/reopen-requests`)
+      .set(auth('instructor'))
+      .expect(200);
+    expect(list.body.requests).toEqual([
+      expect.objectContaining({
+        paperId: paper.id,
+        studentId: 'csd9001',
+        ta: { id: ids.maria, name: 'maria' },
+        reason: 'I misread Q1, the answer deserves more.',
+        taTotal: 4,
+        aiTotal: 6,
+      }),
+    ]);
+    const course = await http
+      .get(`/courses/${ids.hy335}`)
+      .set(auth('instructor'))
+      .expect(200);
+    expect(course.body.reopenRequests).toBe(1);
+    const asTa = await http
+      .get(`/courses/${ids.hy335}`)
+      .set(auth('maria'))
+      .expect(200);
+    expect(asTa.body).not.toHaveProperty('reopenRequests');
+    const one = await http
+      .get(`/papers/${paper.id}`)
+      .set(auth('instructor'))
+      .expect(200);
+    expect(one.body.reopenRequest).toMatchObject({
+      by: { name: 'maria' },
+      reason: 'I misread Q1, the answer deserves more.',
+    });
+
+    await http
+      .post(`/papers/${paper.id}/decline-reopen`)
+      .set(auth('maria'))
+      .expect(403);
+    await http
+      .post(`/papers/${paper.id}/decline-reopen`)
+      .set(auth('instructor'))
+      .expect(200);
+    await http
+      .post(`/papers/${paper.id}/decline-reopen`)
+      .set(auth('instructor'))
+      .expect(409);
+    expect(
+      (
+        await http
+          .get(`/courses/${ids.hy335}/reopen-requests`)
+          .set(auth('instructor'))
+      ).body.requests,
+    ).toEqual([]);
+
+    await http
+      .post(`/papers/${paper.id}/request-reopen`)
+      .set(auth('maria'))
+      .send({ reason: 'x'.repeat(501) })
+      .expect(400);
+    await http
+      .post(`/papers/${paper.id}/request-reopen`)
+      .set(auth('maria'))
+      .expect(200);
+    const reopened = await http
+      .post(`/papers/${paper.id}/reopen`)
+      .set(auth('instructor'))
+      .expect(200);
+    expect(reopened.body).toMatchObject({
+      status: 'DRAFT',
+      reopenRequested: false,
+    });
+  });
 });

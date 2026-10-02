@@ -2,18 +2,20 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Fragment, type ReactNode, useEffect } from "react";
+import { Fragment, type ReactNode, useEffect, useRef, useState } from "react";
 import { HOME_BY_ROLE, logout, useSession } from "@/lib/auth";
 import { Icon, Logo } from "./icons";
 import {
   instructorNav,
   taNav,
+  type NavItem,
   type NavSection,
   type Role,
   type ShellCourse,
   type ShellExam,
 } from "./nav";
-import { Avatar, Kbd, RoleChip } from "./primitives";
+import { Avatar } from "./primitives";
+import { type ExamStatus, useCourseExams, useMyCourses } from "./shell-data";
 import { ThemeSwitch } from "./theme-switch";
 
 const FONT = "'Geist', 'Segoe UI', system-ui, sans-serif";
@@ -60,16 +62,19 @@ export function AppShell({
   }, [user, allowed, router]);
 
   const role: Role = user?.role ?? (access === "ta" ? "ta" : "instructor");
+  const exams = useCourseExams(course?.id || undefined);
   const nav =
     role === "ta"
       ? taNav({
           course,
           exam,
+          exams,
           active: TA_KEYS.includes(active ?? "") ? (active as never) : undefined,
         })
       : instructorNav({
           course,
           exam,
+          exams,
           active: INSTRUCTOR_KEYS.includes(active ?? "") ? (active as never) : undefined,
         });
 
@@ -156,70 +161,43 @@ export function Sidebar({
           <ThemeSwitch />
         </div>
 
-        <RoleCard role={user.role} />
         {course && <CourseSwitcher course={course} />}
 
         <nav aria-label="Main" style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
           {nav.map((section, i) => (
-            <Fragment key={i}>
+            <Fragment key={section.title}>
               <div
                 style={{
-                  fontSize: "12px",
+                  fontSize: "11.5px",
+                  fontWeight: 500,
+                  letterSpacing: "0.02em",
+                  textTransform: "uppercase",
                   color: "var(--faint)",
-                  padding: i === 0 ? "0 12px 6px" : "20px 12px 6px",
+                  padding: i === 0 ? "0 12px 6px" : "18px 12px 6px",
                 }}
               >
                 {section.title}
               </div>
               {section.items.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  aria-current={item.active ? "page" : undefined}
-                  className="fg-press"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "11px",
-                    height: "38px",
-                    padding: "0 12px",
-                    borderRadius: "12px",
-                    textDecoration: "none",
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    ...(item.active
-                      ? {
-                          background: "var(--raised)",
-                          color: "var(--ink)",
-                          boxShadow:
-                            "0 0 0 1px rgba(var(--ink-rgb), 0.07), 0 1px 2px rgba(var(--shadow-rgb), 0.06)",
-                        }
-                      : { color: "var(--muted)" }),
-                  }}
-                >
-                  <Icon name={item.icon} />
-                  <span>{item.label}</span>
-                  {item.badge != null && (
-                    <span
+                <Fragment key={item.href + item.label}>
+                  <NavLink item={item} />
+                  {item.children && (
+                    <div
                       style={{
-                        marginLeft: "auto",
-                        minWidth: "20px",
-                        height: "20px",
-                        padding: "0 6px",
-                        borderRadius: "999px",
-                        background: "var(--red-t)",
-                        color: "var(--red-x)",
-                        fontSize: "11.5px",
-                        fontWeight: 600,
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "2px",
+                        margin: "2px 0 6px 23px",
+                        paddingLeft: "10px",
+                        borderLeft: "1px solid rgba(var(--ink-rgb), 0.09)",
                       }}
                     >
-                      {item.badge}
-                    </span>
+                      {item.children.map((child) => (
+                        <NavLink key={child.href} item={child} small />
+                      ))}
+                    </div>
                   )}
-                </Link>
+                </Fragment>
               ))}
             </Fragment>
           ))}
@@ -238,11 +216,20 @@ export function Sidebar({
         >
           <Avatar initial={user.name.charAt(0) || " "} size={32} ink={instructor} />
           <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flexGrow: 1 }}>
-            <span style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--ink)" }}>
+            <span
+              style={{
+                fontSize: "13.5px",
+                fontWeight: 600,
+                color: "var(--ink)",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
               {user.name}
             </span>
-            <span style={{ marginTop: "3px" }}>
-              <RoleChip role={user.role} />
+            <span style={{ fontSize: "12px", color: "var(--muted)" }}>
+              {instructor ? "Instructor" : "Teaching assistant"}
             </span>
           </div>
           <button
@@ -272,118 +259,259 @@ export function Sidebar({
   );
 }
 
-// "You are signed in as …" card at the top of the sidebar.
-function RoleCard({ role }: { role: Role }) {
-  const instructor = role === "instructor";
-  const accent = instructor ? "var(--gold-icon)" : "#9EE0D0";
-  return (
-    <div
-      className="fg-dark"
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "11px",
-        padding: "11px 12px",
-        margin: "0 0 14px",
-        borderRadius: "16px",
-        background:
-          "radial-gradient(180px 90px at 100% 0%, #2A3142 0%, rgba(42, 49, 66, 0) 70%), var(--ink)",
-        boxShadow:
-          "inset 0 1px 0 rgba(var(--surface-rgb), 0.08), 0 12px 26px -16px rgba(var(--shadow-rgb), 0.75)",
-      }}
-    >
-      <span
-        style={{
-          width: "32px",
-          height: "32px",
-          borderRadius: "10px",
-          background: "rgba(var(--surface-rgb), 0.09)",
-          boxShadow: "inset 0 0 0 1px rgba(var(--surface-rgb), 0.10)",
-          color: accent,
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
-        }}
-      >
-        <Icon name={instructor ? "key" : "pencil"} size={16} />
-      </span>
-      <span style={{ display: "flex", flexDirection: "column", minWidth: 0, flexGrow: 1 }}>
-        <span style={{ fontSize: "11.5px", color: "#8E95A3" }}>You are signed in as</span>
-        <span
-          style={{
-            fontSize: "14.5px",
-            fontWeight: 600,
-            letterSpacing: "-0.01em",
-            color: "var(--surface)",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {instructor ? "Instructor" : "Teaching assistant"}
-        </span>
-      </span>
-      <span
-        style={{
-          width: "8px",
-          height: "8px",
-          borderRadius: "999px",
-          background: accent,
-          boxShadow: "0 0 0 3px rgba(var(--surface-rgb), 0.06)",
-          flexShrink: 0,
-        }}
-        title={instructor ? "Full access" : "Grader"}
-      />
-    </div>
-  );
-}
+const STATUS_DOT: Record<ExamStatus, { color: string; label: string }> = {
+  DRAFT: { color: "var(--dot)", label: "Draft" },
+  QUESTIONS_READY: { color: "var(--blue)", label: "Questions ready" },
+  OPEN: { color: "var(--amber)", label: "Open for grading" },
+  PUBLISHED: { color: "var(--green)", label: "Grades published" },
+};
 
-function CourseSwitcher({ course }: { course: ShellCourse }) {
+function NavLink({ item, small = false }: { item: NavItem; small?: boolean }) {
+  const highlighted = item.active || (item.current && !item.children?.some((c) => c.active));
   return (
-    <button
-      type="button"
+    <Link
+      href={item.href}
+      aria-current={item.active ? "page" : undefined}
       className="fg-press"
       style={{
         display: "flex",
         alignItems: "center",
-        gap: "10px",
-        width: "100%",
-        padding: "10px 12px",
-        marginBottom: "20px",
-        border: 0,
-        borderRadius: "14px",
-        background: "var(--surface)",
-        boxShadow: PANEL_SHADOW,
-        cursor: "pointer",
-        textAlign: "left",
-        fontFamily: FONT,
+        gap: "11px",
+        height: small ? "34px" : "38px",
+        padding: small ? "0 10px" : "0 12px",
+        borderRadius: "12px",
+        textDecoration: "none",
+        fontSize: small ? "13.5px" : "14px",
+        fontWeight: 500,
+        ...(highlighted
+          ? {
+              background: "var(--raised)",
+              color: "var(--ink)",
+              boxShadow:
+                "0 0 0 1px rgba(var(--ink-rgb), 0.07), 0 1px 2px rgba(var(--shadow-rgb), 0.06)",
+            }
+          : { color: item.current ? "var(--ink)" : "var(--muted)" }),
       }}
     >
-      <span
+      {item.status ? (
+        <span
+          title={STATUS_DOT[item.status].label}
+          style={{ width: "18px", display: "inline-flex", justifyContent: "center", flexShrink: 0 }}
+        >
+          <span
+            style={{
+              width: "7px",
+              height: "7px",
+              borderRadius: "999px",
+              background: STATUS_DOT[item.status].color,
+            }}
+          />
+        </span>
+      ) : (
+        !small && <Icon name={item.icon} />
+      )}
+      <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        {item.label}
+      </span>
+      {item.badge != null && (
+        <span
+          style={{
+            marginLeft: "auto",
+            minWidth: "20px",
+            height: "20px",
+            padding: "0 6px",
+            borderRadius: "999px",
+            background: "var(--red-t)",
+            color: "var(--red-x)",
+            fontSize: "11.5px",
+            fontWeight: 600,
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {item.badge}
+        </span>
+      )}
+    </Link>
+  );
+}
+
+// The current course; opens a list of the user's courses to switch.
+function CourseSwitcher({ course }: { course: ShellCourse }) {
+  const [open, setOpen] = useState(false);
+  const courses = useMyCourses(open);
+  const router = useRouter();
+  const box = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: MouseEvent | KeyboardEvent) => {
+      if (e instanceof KeyboardEvent ? e.key === "Escape" : !box.current?.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", close);
+    document.addEventListener("keydown", close);
+    return () => {
+      document.removeEventListener("mousedown", close);
+      document.removeEventListener("keydown", close);
+    };
+  }, [open]);
+
+  const tile = (code: string | null, on: boolean) => (
+    <span
+      style={{
+        width: "30px",
+        height: "30px",
+        borderRadius: "9px",
+        background: on ? "var(--blue-t)" : "rgba(var(--ink-rgb), 0.06)",
+        color: on ? "var(--blue-x)" : "var(--text-2)",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "11px",
+        fontWeight: 600,
+        flexShrink: 0,
+      }}
+    >
+      {(code ?? "").replace(/^\D+/, "") || "—"}
+    </span>
+  );
+
+  return (
+    <div ref={box} style={{ position: "relative", marginBottom: "18px" }}>
+      <button
+        type="button"
+        className="fg-press"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
         style={{
-          width: "30px",
-          height: "30px",
-          borderRadius: "9px",
-          background: "var(--blue-t)",
-          color: "var(--blue-x)",
-          display: "inline-flex",
+          display: "flex",
           alignItems: "center",
-          justifyContent: "center",
-          fontSize: "11px",
-          fontWeight: 600,
+          gap: "10px",
+          width: "100%",
+          padding: "10px 12px",
+          border: 0,
+          borderRadius: "14px",
+          background: "var(--surface)",
+          boxShadow: PANEL_SHADOW,
+          cursor: "pointer",
+          textAlign: "left",
+          fontFamily: FONT,
         }}
       >
-        {course.code.replace(/^\D+/, "")}
-      </span>
-      <span style={{ display: "flex", flexDirection: "column", minWidth: 0, flexGrow: 1 }}>
-        <span style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--ink)" }}>
-          {course.code}
+        {tile(course.code, true)}
+        <span style={{ display: "flex", flexDirection: "column", minWidth: 0, flexGrow: 1 }}>
+          <span style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--ink)" }}>{course.code}</span>
+          <span
+            style={{
+              fontSize: "12px",
+              color: "var(--muted)",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {course.name}
+          </span>
         </span>
-        <span style={{ fontSize: "12px", color: "var(--muted)" }}>{course.name}</span>
-      </span>
-      <span style={{ color: "var(--faint)" }}>
-        <Icon name="chevrons" size={16} />
-      </span>
-    </button>
+        <span style={{ color: "var(--faint)" }}>
+          <Icon name="chevrons" size={16} />
+        </span>
+      </button>
+      {open && (
+        <div
+          role="listbox"
+          aria-label="Switch course"
+          style={{
+            position: "absolute",
+            top: "calc(100% + 6px)",
+            left: 0,
+            right: 0,
+            zIndex: 50,
+            padding: "6px",
+            borderRadius: "16px",
+            background: "var(--raised)",
+            boxShadow:
+              "0 0 0 1px rgba(var(--ink-rgb), 0.08), 0 16px 40px -12px rgba(var(--shadow-rgb), 0.35)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "2px",
+          }}
+        >
+          {courses == null && (
+            <span style={{ padding: "10px", fontSize: "13px", color: "var(--muted)" }}>Loading…</span>
+          )}
+          {courses?.map((c) => {
+            const on = c.id === course.id;
+            return (
+              <button
+                key={c.id}
+                type="button"
+                role="option"
+                aria-selected={on}
+                className="fg-row"
+                onClick={() => {
+                  setOpen(false);
+                  if (!on) router.push(`/courses/${c.id}`);
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  padding: "8px",
+                  border: 0,
+                  borderRadius: "11px",
+                  background: on ? "rgba(var(--ink-rgb), 0.05)" : "transparent",
+                  cursor: "pointer",
+                  textAlign: "left",
+                  fontFamily: FONT,
+                }}
+              >
+                {tile(c.code, on)}
+                <span style={{ display: "flex", flexDirection: "column", minWidth: 0, flexGrow: 1 }}>
+                  <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--ink)" }}>{c.code ?? c.name}</span>
+                  <span
+                    style={{
+                      fontSize: "12px",
+                      color: "var(--muted)",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {c.name}
+                  </span>
+                </span>
+                {on && (
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M5 12.5l4.5 4.5L19 7.5" />
+                  </svg>
+                )}
+              </button>
+            );
+          })}
+          <Link
+            href="/courses"
+            onClick={() => setOpen(false)}
+            className="fg-row"
+            style={{
+              marginTop: "4px",
+              padding: "9px 10px",
+              borderTop: "1px solid rgba(var(--ink-rgb), 0.07)",
+              borderRadius: "0 0 11px 11px",
+              fontSize: "13px",
+              color: "var(--muted)",
+              textDecoration: "none",
+            }}
+          >
+            All courses
+          </Link>
+        </div>
+      )}
+    </div>
   );
 }
 

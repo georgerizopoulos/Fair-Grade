@@ -152,12 +152,14 @@ The same rule is used everywhere:
 | `POST /papers/:id/pages/:index/rescan` | owner, or the paper's TA | ✅ | papers |
 | `POST /papers/:id/request-reopen` | the paper's TA | ✅ | papers |
 | `POST /papers/:id/reopen` | owner | ✅ | papers |
+| `POST /papers/:id/decline-reopen` | owner | ✅ tested | papers |
 | `POST /papers/:id/retry-ai` | owner, or the paper's TA | ✅ | papers |
 | `GET /exams/:id/my-stats` | TA member | ✅ | reports |
 | `GET /exams/:id/report` | owner | ✅ | reports |
 | `GET /exams/:id/report/tas/:taId` | owner | ✅ | reports |
 | `GET /courses/:id/stats` | owner | ✅ tested | courses + reports |
 | `GET /courses/:id/activity` | owner | ✅ tested | courses |
+| `GET /courses/:id/reopen-requests` | owner | ✅ tested | courses |
 | `GET /search?q=` | signed in | ⏳ | search |
 
 ---
@@ -501,6 +503,18 @@ Returns 404 for an unknown page and 409 if the paper is not `DRAFT`. **Replacing
 Sets `reopenRequested: true`. Calling it again does nothing new. Writes a `REOPEN_REQUESTED` activity entry. Response: same shape as `GET /papers/:id`.
 
 Returns 403 for an instructor (they reopen directly) and 409 if the paper isn't submitted.
+
+### `POST /papers/:id/request-reopen` body ✅
+
+Optional `{ "reason": "…" }` (max 500 characters), stored in the activity entry. `GET /papers/:id` returns `reopenRequest: { requestedAt, by: { id, name }, reason }` while a request is open.
+
+### `POST /papers/:id/decline-reopen` ✅ (owner)
+
+Clears the request and keeps the TA's grade. 409 if nobody asked. The TA can ask again.
+
+### `GET /courses/:id/reopen-requests` ✅ (owner)
+
+`{ requests: [{ paperId, studentId, status, ta, exam, requestedAt, reason, taTotal, aiTotal, gap, maxTotal }] }`, oldest first. `GET /courses` and `GET /courses/:id` (and each exam in it) also return a `reopenRequests` count for the instructor.
 
 ### `POST /papers/:id/reopen` ✅ (owner)
 

@@ -6,6 +6,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { ArrowRight, Check, ChevronLeft, ChevronRight, FileUp, RotateCcw } from "lucide-react";
 import {
   AppShell,
+  NoAccess,
   Button,
   Card,
   PageHeader,
@@ -53,6 +54,19 @@ function Alert({ children }: { children: string }) {
   );
 }
 
+// While loading: a quiet line. If loading failed (no access, unknown exam or
+// paper), the reason inside the normal layout instead of "Loading" forever.
+function Pending({ error, text }: { error?: string; text: string }) {
+  if (!error) {
+    return <div className="px-8 py-10 text-sm" style={{ color: "var(--muted)" }}>{text}</div>;
+  }
+  return (
+    <AppShell access="any">
+      <NoAccess title="This page isn't available" message={error} />
+    </AppShell>
+  );
+}
+
 function ShellFrame({
   context,
   active,
@@ -82,7 +96,6 @@ export function TaPapersLivePage() {
   useEffect(() => {
     if (user?.role !== "ta") return;
     let cancelled = false;
-    setLoading(true);
     Promise.all([
       loadShellContext(courseId, examId),
       apiFetch<MyPapersResponse>(
@@ -107,7 +120,7 @@ export function TaPapersLivePage() {
   }, [courseId, examId, filter, search, user]);
 
   if (authLoading || !user || !context) {
-    return <div className="px-8 py-10 text-sm" style={{ color: "var(--muted)" }}>Loading papers...</div>;
+    return <Pending error={error} text="Loading papers..." />;
   }
 
   const counts = data?.counts;
@@ -235,7 +248,7 @@ export function AddPaperLivePage() {
   }
 
   if (authLoading || !user || !context) {
-    return <div className="px-8 py-10 text-sm" style={{ color: "var(--muted)" }}>Loading exam...</div>;
+    return <Pending error={error} text="Loading exam..." />;
   }
 
   return (
@@ -368,7 +381,7 @@ export function GradePaperLivePage() {
   }
 
   if (authLoading || !user || loading || !context || !paper) {
-    return <div className="px-8 py-10 text-sm" style={{ color: "var(--muted)" }}>{error ? <Alert>{error}</Alert> : "Loading paper..."}</div>;
+    return <Pending error={loading ? undefined : error} text="Loading paper..." />;
   }
 
   const editable = paper.status === "DRAFT";
@@ -438,13 +451,13 @@ export function PaperResultLivePage() {
     return () => window.clearTimeout(timer);
   }, [paper]);
 
-  async function action(path: string, confirmation?: string) {
+  async function action(path: string, confirmation?: string, body?: unknown) {
     if (!paper || working) return;
     if (confirmation && !window.confirm(confirmation)) return;
     setWorking(true);
     setActionError("");
     try {
-      setPaper(await apiFetch<PaperRecord>(path, { method: "POST" }));
+      setPaper(await apiFetch<PaperRecord>(path, { method: "POST", body }));
     } catch (cause) {
       setActionError(cause instanceof Error ? cause.message : "Action failed");
     } finally {
@@ -453,7 +466,7 @@ export function PaperResultLivePage() {
   }
 
   if (loading || !paper || !context) {
-    return <div className="px-8 py-10 text-sm" style={{ color: "var(--muted)" }}>{actionError ? <Alert>{actionError}</Alert> : "Loading paper..."}</div>;
+    return <Pending error={loading ? undefined : actionError} text="Loading paper..." />;
   }
 
   const submitted = ["AI_GRADING", "AI_GRADED", "AI_FAILED"].includes(paper.status);
@@ -463,6 +476,23 @@ export function PaperResultLivePage() {
       <PageTitle title={`Paper ${paper.studentId}`} description="Question-by-question comparison of the TA's scores and the independent AI assessment." />
       {actionError && <Alert>{actionError}</Alert>}
       <Card padding="20px"><div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}><Pill tone={statusTone(paper.status)} dot>{statusLabel(paper.status)}</Pill><span style={{ color: "var(--muted)", fontSize: "13px" }}>{paper.ta.name} - {paper.exam.name}</span>{paper.reopenRequested && <Pill tone="amber">Reopen requested</Pill>}{paper.aiError && <span style={{ color: "var(--red-x)", fontSize: "13px" }}>{paper.aiError}</span>}</div></Card>
+      {user?.role === "instructor" && paper.reopenRequested && (
+        <div role="status" style={{ padding: "18px 20px", borderRadius: "18px", background: "var(--amber-t)", boxShadow: "0 0 0 1px rgba(var(--ink-rgb), 0.05)", display: "flex", gap: "16px", alignItems: "center", flexWrap: "wrap" }}>
+          <div style={{ flex: "1 1 320px", minWidth: 0 }}>
+            <div style={{ fontSize: "14.5px", color: "var(--ink)", fontWeight: 600 }}>
+              {paper.reopenRequest?.by?.name ?? paper.ta.name} asked you to reopen this paper
+            </div>
+            <p style={{ margin: "6px 0 0", fontSize: "13.5px", lineHeight: 1.5, color: paper.reopenRequest?.reason ? "var(--text)" : "var(--muted)" }}>
+              {paper.reopenRequest?.reason ? `“${paper.reopenRequest.reason}”` : "No note."}
+            </p>
+            {paper.status === "AI_GRADING" && <p style={{ margin: "6px 0 0", fontSize: "12.5px", color: "var(--muted)" }}>The AI is still grading it; you can reopen it once it finishes.</p>}
+          </div>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <SecondaryButton onClick={() => action(`/papers/${paper.id}/decline-reopen`)} disabled={working}>Decline</SecondaryButton>
+            <SecondaryButton onClick={() => action(`/papers/${paper.id}/reopen`)} disabled={working || paper.status === "AI_GRADING"} icon={<RotateCcw size={15} />}>Reopen</SecondaryButton>
+          </div>
+        </div>
+      )}
       {paper.answers.map((answer) => (
         <Card key={answer.questionId} padding="22px">
           <SectionHeader title={`${answer.code}: ${answer.title}`} description={`${answer.maxPoints} points maximum`} />
@@ -476,8 +506,24 @@ export function PaperResultLivePage() {
       ))}
       {!submitted && paper.status === "DRAFT" && user?.role === "ta" && <SecondaryButton href={`/papers/${paper.id}/grade`} icon={<ChevronLeft size={15} />}>Continue grading</SecondaryButton>}
       <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-        {user?.role === "ta" && submitted && <SecondaryButton onClick={() => action(`/papers/${paper.id}/request-reopen`, "Ask the instructor to reopen this paper?")} disabled={working} icon={<RotateCcw size={15} />}>Request reopen</SecondaryButton>}
-        {user?.role === "instructor" && paper.reopenRequested && ["AI_GRADED", "AI_FAILED"].includes(paper.status) && <SecondaryButton onClick={() => action(`/papers/${paper.id}/reopen`, "Reopen this paper for TA edits?")} disabled={working} icon={<RotateCcw size={15} />}>Reopen paper</SecondaryButton>}
+        {user?.role === "ta" && submitted && !paper.reopenRequested && (
+          <SecondaryButton
+            onClick={() => {
+              const reason = window.prompt("Ask the instructor to reopen this paper. What do you want to change? (optional)");
+              if (reason !== null) void action(`/papers/${paper.id}/request-reopen`, undefined, reason.trim() ? { reason: reason.trim() } : {});
+            }}
+            disabled={working}
+            icon={<RotateCcw size={15} />}
+          >
+            Request reopen
+          </SecondaryButton>
+        )}
+        {user?.role === "ta" && paper.reopenRequested && (
+          <span style={{ fontSize: "13px", color: "var(--muted)", alignSelf: "center" }}>
+            You asked the instructor to reopen this paper. It becomes a draft again if they agree.
+          </span>
+        )}
+        {user?.role === "instructor" && !paper.reopenRequested && ["AI_GRADED", "AI_FAILED"].includes(paper.status) && <SecondaryButton onClick={() => action(`/papers/${paper.id}/reopen`, `Reopen this paper so ${paper.ta.name} can regrade it?`)} disabled={working} icon={<RotateCcw size={15} />}>Reopen for the TA</SecondaryButton>}
         {paper.status === "AI_FAILED" && <Button onClick={() => action(`/papers/${paper.id}/retry-ai`)} disabled={working} icon={<ArrowRight size={16} />}>Retry AI grading</Button>}
       </div>
     </AppShell>

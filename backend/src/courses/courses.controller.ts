@@ -63,6 +63,12 @@ export class CoursesController {
   }
 
   @Roles('instructor')
+  @Get(':id/reopen-requests')
+  reopenRequests(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    return this.courses.reopenRequests(user, id);
+  }
+
+  @Roles('instructor')
   @Get(':id/activity')
   activity(
     @CurrentUser() user: AuthUser,

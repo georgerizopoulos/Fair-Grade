@@ -7,6 +7,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  MaxLength,
   Min,
   ValidateIf,
   ValidateNested,
@@ -70,4 +71,15 @@ export class CreatePaperDto {
   @IsString()
   @IsNotEmpty()
   taId?: string;
+}
+
+// POST /papers/:id/request-reopen: an optional note for the instructor.
+export class RequestReopenDto {
+  @IsOptional()
+  @Transform(({ value }: { value: unknown }) =>
+    typeof value === 'string' ? value.trim() : value,
+  )
+  @IsString()
+  @MaxLength(500)
+  reason?: string;
 }

@@ -38,6 +38,8 @@ export interface PaperRecord {
   studentId: string;
   status: "TRANSCRIBING" | "DRAFT" | "AI_GRADING" | "AI_GRADED" | "AI_FAILED";
   reopenRequested: boolean;
+  // Who asked to reopen it, when and why (only while a request is open).
+  reopenRequest?: { requestedAt: string; by: { id: string; name: string } | null; reason: string | null } | null;
   pageCount: number;
   pages: PaperPageRecord[];
   answers: PaperAnswerRecord[];

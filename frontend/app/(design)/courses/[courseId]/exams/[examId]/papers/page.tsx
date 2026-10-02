@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 import { AppShell, Card, PageHeader, PageTitle, Pill, SecondaryButton } from "@/components/shell";
 import { TaPapersLivePage } from "../../../../../papers/paper-pages";
 
-export const metadata: Metadata = { title: "My midterm papers \u00b7 Fair Grade" };
+export const metadata: Metadata = { title: "My papers \u00b7 Fair Grade" };
 
 const course = { id: "hy335", code: "HY335", name: "Computer Networks" };
 const exam = { id: "midterm", name: "Midterm" };
@@ -27,7 +27,7 @@ export function StaticTaPapersPage() {
           ]}
         />
         <PageTitle
-          title={<>My midterm papers</>}
+          title={<>My papers</>}
           description={
             <>
               Every paper you scanned and graded. After you submit, the AI grades the same answers
