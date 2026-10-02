@@ -37,6 +37,8 @@ The `message` always names the field, id or question that is wrong.
 | `FORBIDDEN` | 403 | wrong role, not a member or owner of the course, not your paper |
 | `NOT_FOUND` | 404 | an id that doesn't exist |
 | `CONFLICT` | 409 | duplicate (email, course code, member, question code) or wrong state (grades locked, paper not submitted, AI still grading) |
+| `PAYLOAD_TOO_LARGE` | 413 | an uploaded PDF is over 20 MiB |
+| `RATE_LIMITED` | 429 | too many failed sign-ins or sign-up attempts from one address; the `Retry-After` header and the message say how long to wait |
 | `LLM_FAILURE` | 502 | the AI call failed |
 | `INTERNAL_ERROR` | 500 | anything unexpected |
 
@@ -193,7 +195,8 @@ Response (200):
 - The email is matched case-insensitively.
 - The JWT payload is `{ sub, role, name }` and it is valid for 24 h.
 - Signing in sets `lastSignInAt` and turns an `INVITED` user into `ACTIVE`.
-- A wrong email, a wrong password and a `DEACTIVATED` user all get the same 401.
+- A wrong email, a wrong password and a `DEACTIVATED` user all get the same 401, and take about as long to answer.
+- **Rate limit:** per client address, 10 failed sign-ins for one email and 100 failed sign-ins in all, within 15 minutes, lock further attempts (even with the right password) with **429** until the window ends. Only failures count; a good sign-in clears that email's count. `email` is at most 254 characters and `password` at most 200.
 
 ### `GET /auth/me` ✅
 
@@ -201,7 +204,7 @@ Response: `{ id, name, email, role }`. Returns 401 if the user was deleted (e.g.
 
 ### `POST /auth/register` ✅ (instructors only)
 
-Request: `{ name, email, password (min 6), role }` → 201 with the user. Returns 409 if the email exists.
+Request: `{ name (max 100), email (max 254), password (6 to 200), role }` → 201 with the user. Returns 409 if the email exists, **429** after 10 attempts from one address within an hour.
 
 Public sign-up is for **instructors only** (`role: "instructor"`): the department secretariat vouches for them outside the app. Any other role gets **403**: a TA never signs themselves up, the course instructor creates the account (`POST /users` or `POST /courses/:id/members`). The login page has a "Create an account" form for instructors.
 
@@ -227,6 +230,7 @@ Public sign-up is for **instructors only** (`role: "instructor"`): the departmen
 
 - Sorted by name.
 - `courses` lists the courses an instructor owns or a TA is a member of.
+- **Who is listed:** every TA (the TA pool is shared between instructors) and **you**. Other instructors never appear, because anyone can sign up as an instructor.
 
 ### `POST /users` ✅
 
@@ -256,6 +260,7 @@ Request: any of `{ name, email, role, status: "ACTIVE" | "DEACTIVATED" }`. Respo
 
 Errors:
 - 400 if you deactivate yourself or drop your own instructor role;
+- 403 if the user is **another instructor**: you can edit TAs and yourself, never someone else's instructor account;
 - 404 for an unknown user;
 - 409 if the new email is already used.
 
@@ -416,7 +421,7 @@ Errors:
 
 Multipart with `file` = a solutions PDF.
 
-Response: `{ examId, questions: [ … draft questions in the PUT shape … ] }`. **Nothing is saved**: the instructor reviews the drafts and then calls `PUT`. Returns 400 if the file isn't a PDF.
+Response: `{ examId, questions: [ … draft questions in the PUT shape … ] }`. **Nothing is saved**: the instructor reviews the drafts and then calls `PUT`. Returns 400 if the file isn't a PDF, 413 if it is over 20 MiB.
 
 ---
 
@@ -597,18 +602,18 @@ Type `ExamReportResponse`:
   "headline": {
     "taId": "…", "taName": "Maria Papadaki", "paperGap": -1.4, "papersGraded": 12,
     "questionCode": "Q2", "questionTitle": "TCP and UDP", "maxPoints": 3,
-    "questionGap": -1.05, "threshold": 0.45
+    "questionGap": -1.04, "threshold": 0.45
   },
   "questions": [
     { "questionId": "…", "code": "Q2", "title": "TCP and UDP", "maxPoints": 3, "threshold": 0.45,
-      "tas": [{ "taId": "…", "taName": "Maria Papadaki", "averageGap": -1.05, "sampleSize": 12, "flagged": true }] }
+      "tas": [{ "taId": "…", "taName": "Maria Papadaki", "averageGap": -1.04, "sampleSize": 12, "flagged": true }] }
   ],
   "tas": [
     {
       "taId": "…", "taName": "Maria Papadaki", "email": "maria@demo.com", "papersGraded": 12,
       "taAverage": 5.9, "aiAverage": 7.3, "paperGap": -1.4, "averageGap": 0.47,
       "flagged": true, "flaggedQuestionCodes": ["Q2"],
-      "questions": [{ "code": "Q2", "averageGap": -1.05, "sampleSize": 12, "flagged": true }]
+      "questions": [{ "code": "Q2", "averageGap": -1.04, "sampleSize": 12, "flagged": true }]
     }
   ],
   "papers": [

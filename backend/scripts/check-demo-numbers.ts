@@ -120,7 +120,8 @@ async function main() {
             }),
           ),
         ),
-        -1.05,
+        -1.04,
+        0.005,
       );
       const nikos = byTa.get('Nikos Georgiou')!;
       const totals = nikos.map((p) =>

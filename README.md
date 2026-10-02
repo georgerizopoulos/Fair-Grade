@@ -114,6 +114,49 @@ cd backend && npm test && npm run test:e2e && npx tsc --noEmit
 cd frontend && npx tsc --noEmit && npx eslint app components lib
 ```
 
+The same checks run in CI on every push and pull request (`.github/workflows/ci.yml`). Both apps commit a `package-lock.json`; install with `npm ci` for a reproducible tree.
+
+## Production
+
+The demo runs from `npm run start:dev` and `npm run dev`. To run it for real, build both apps and run them as one backend process plus one frontend process.
+
+**Backend** (from `backend/`):
+
+```bash
+npm ci
+npm run build
+npm run migrate:deploy     # applies the committed migrations; never `npm run migrate` here
+npm run start:prod         # node dist/main
+```
+
+Set these in `backend/.env` (or the process environment). `backend/.env.example` lists them all.
+
+| Variable | Production value |
+|---|---|
+| `NODE_ENV` | `production`. The backend then refuses to start with the example `JWT_SECRET`. |
+| `JWT_SECRET` | 16+ random characters: `node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"` |
+| `DATABASE_URL` | an absolute SQLite path on a persistent disk, e.g. `file:/var/lib/fairgrade/prod.db` |
+| `CORS_ORIGIN` | the frontend's URL, e.g. `https://fairgrade.example.edu` |
+| `TRUST_PROXY` | `1` behind one reverse proxy (so the sign-in limits and HSTS see the real client); leave unset without one |
+| `AWS_*`, `LLM_MODEL` | Bedrock credentials for AI grading (or an instance role) |
+
+**Frontend** (from `frontend/`): `NEXT_PUBLIC_API_URL` is baked in at build time, so set it first.
+
+```bash
+NEXT_PUBLIC_API_URL=https://api.fairgrade.example.edu npm run build
+npm run start
+```
+
+Things to know before going live:
+
+- **Run it from `backend/`, with a persistent disk.** Uploaded PDFs go to `uploads/` relative to the working directory. Back up the SQLite file and `uploads/` together.
+- **One backend process.** SQLite, the AI worker's polling and the sign-in limits all live in that one process; don't scale it out.
+- **Put it behind HTTPS.** Tokens travel in the `Authorization` header and live in the browser's `localStorage`.
+- **Never seed a real database.** `npm run seed` wipes every user, course and paper; with `NODE_ENV=production` it refuses unless you pass `ALLOW_SEED=1`.
+- **Health check:** `GET /health` always answers 200 (so the frontend can tell "backend down" from "database down"); alert on `"database": "error"`.
+- **Sign-up is open to instructors.** Anyone who can reach the login page can create an instructor account (limited to 10 attempts an hour per address). Instructors can't see or edit each other, but the TA pool is shared. For a real deployment, keep the app on the university network or behind SSO.
+- **Not done:** a Content-Security-Policy on the frontend, real handwriting transcription (the scan step is a demo fake), and deleting the legacy API and pages (`DOCS/TASKS.md`, Final Pass).
+
 ## Documents
 
 - `CLAUDE.md`: how the code is organised and the rules for changing it.

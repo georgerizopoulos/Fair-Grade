@@ -18,7 +18,7 @@ What is done, what is left, and who owns it. Keep this file short and **true**: 
 1. **Instructor:** sign in → **HY335** → **Midterm setup** (questions, model answers, rubric points).
 2. **Nikos (TA):** sign in → lands on Midterm **My stats** → **Add paper** csd5150 → grade → **Submit**.
 3. **The AI grades it** within seconds. The **paper result** shows TA vs AI per question, with the AI's reasoning.
-4. **Instructor:** **Midterm report** → **Maria flagged on Q2 (−1.05)** → her page → the papers behind the flag.
+4. **Instructor:** **Midterm report** → **Maria flagged on Q2 (−1.04)** → her page → the papers behind the flag.
 
 Step 4 works from the seeded papers (`npm run seed`, checked by `scripts/check-demo-numbers.ts`).
 
@@ -44,12 +44,14 @@ Step 4 works from the seeded papers (`npm run seed`, checked by `scripts/check-d
 | Real numbers in `my-stats`, exam report and TA report (`reports/report-math.ts`, unit-tested) | Γιώργος |
 | Course stats and activity feed endpoints (`reports/course-stats.ts`), exam status flow (draft → ready → open → published), e2e tests | Γιώργος |
 | Pages wired: TA My stats, Report, TA page, Course stats (with live activity and leaderboard visibility), Members, Users, New exam, open/publish an exam | Γιώργος |
+| Production pass: sign-in and sign-up rate limits, instructors can't see or edit each other, security headers (API and frontend), upload size caps, startup env checks, `migrate:deploy`, seed guard, committed lockfiles, CI (`.github/workflows/ci.yml`), README "Production" | Γιώργος |
+| e2e tests for papers (every lifecycle rule and permission), reports and the abuse limits | Γιώργος |
 
 ## Left, in priority order
 
 | # | What | Who | Notes |
 |---|---|---|---|
-| 3 | **Tests for papers and reports**: `backend/test/papers.e2e-spec.ts` (every lifecycle rule and permission), reports e2e | Γιώργος, Δημήτρης | Pattern: `test/members.e2e-spec.ts`. |
+| 3 | **e2e tests for exams and questions**: `backend/test/exams.e2e-spec.ts` (create, status flow, questions PUT, import) | Σταύρος | Pattern: `test/papers.e2e-spec.ts`. |
 | 7 | **⌘K search** (`GET /search`) | Δημήτρης | Lowest priority. |
 | 8 | **Real handwriting transcription** with a vision model | Κώστας | Only if a vision model is available on Bedrock. The demo fake works without it. |
 | 9 | **Deck** | Γιώργος | Problem → solution → live demo → how it works → why it matters → team. |
