@@ -255,7 +255,7 @@ function Stats({ data, base }: { data: MyStats; base: string }) {
                       {Math.abs(summary.averageGap!).toFixed(2)} points{" "}
                       {summary.averageGap! < 0 ? "less" : "more"}
                     </span>{" "}
-                    than the AI per paper.
+                    than the AI per paper, on this exam.
                   </>
                 )}
               </p>
