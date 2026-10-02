@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -25,10 +26,15 @@ const publicUser = {
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // GET /users: everyone who can sign in, with the courses they're in.
+  // GET /users: the shared TA pool plus the viewer, with the courses they're
+  // in. Other instructors' accounts are not listed: anyone can sign up as an
+  // instructor, so they are separate tenants.
   async list(viewer: AuthUser, role?: Role) {
     const users = await this.prisma.user.findMany({
-      where: role ? { role } : {},
+      where: {
+        ...(role ? { role } : {}),
+        NOT: { role: 'instructor', id: { not: viewer.id } },
+      },
       select: {
         ...publicUser,
         memberships: {
@@ -76,6 +82,11 @@ export class UsersService {
   async update(viewer: AuthUser, id: string, dto: UpdateUserDto) {
     const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) throw new NotFoundException(`User ${id} not found`);
+    if (user.role === 'instructor' && id !== viewer.id) {
+      throw new ForbiddenException(
+        "You can only edit your own instructor account, not another instructor's",
+      );
+    }
     if (
       id === viewer.id &&
       (dto.status === 'DEACTIVATED' || dto.role === 'ta')

@@ -304,4 +304,69 @@ describe('Users and members (e2e)', () => {
       .send({ name: 'x' })
       .expect(403);
   });
+
+  // Anyone can sign up as an instructor, so instructors must not reach each
+  // other's accounts.
+  it('instructors can neither see nor edit another instructor', async () => {
+    const other = await prisma.user.create({
+      data: {
+        name: 'Other Instructor',
+        email: 'other@test.com',
+        passwordHash: await bcrypt.hash('demo1234', 4),
+        role: 'instructor',
+      },
+    });
+    const otherAuth = {
+      Authorization: `Bearer ${(await login('other@test.com')).body.token}`,
+    };
+
+    const seenByOther = await http.get('/users').set(otherAuth).expect(200);
+    const idsSeen = seenByOther.body.users.map((u: { id: string }) => u.id);
+    expect(idsSeen).toContain(other.id);
+    expect(idsSeen).not.toContain(ids.instructor);
+    expect(idsSeen).toContain(ids.maria); // the TA pool is shared
+
+    const instructorsOnly = await http
+      .get('/users?role=instructor')
+      .set(otherAuth)
+      .expect(200);
+    expect(instructorsOnly.body.users.map((u: { id: string }) => u.id)).toEqual(
+      [other.id],
+    );
+
+    for (const body of [
+      { status: 'DEACTIVATED' },
+      { role: 'ta' },
+      { email: 'hijack@test.com' },
+      { name: 'Hijacked' },
+    ]) {
+      const res = await http
+        .patch(`/users/${ids.instructor}`)
+        .set(otherAuth)
+        .send(body)
+        .expect(403);
+      expect(res.body.error.code).toBe('FORBIDDEN');
+    }
+    // ...and nothing changed.
+    expect(
+      await prisma.user.findUnique({ where: { id: ids.instructor } }),
+    ).toMatchObject({
+      name: 'instructor',
+      email: 'instructor@test.com',
+      role: 'instructor',
+      status: 'ACTIVE',
+    });
+
+    // Editing yourself and the TA pool still works.
+    await http
+      .patch(`/users/${other.id}`)
+      .set(otherAuth)
+      .send({ name: 'Other Renamed' })
+      .expect(200);
+    await http
+      .patch(`/users/${ids.maria}`)
+      .set(otherAuth)
+      .send({ name: 'maria' })
+      .expect(200);
+  });
 });
