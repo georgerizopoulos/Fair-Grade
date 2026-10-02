@@ -438,7 +438,9 @@ export class CoursesService {
             typeof p.userId === 'string'
               ? {
                   id: p.userId,
-                  name: userName.get(p.userId) ?? String(p.name ?? 'A TA'),
+                  name:
+                    userName.get(p.userId) ??
+                    (typeof p.name === 'string' ? p.name : 'A TA'),
                 }
               : null,
           paper: e.paper

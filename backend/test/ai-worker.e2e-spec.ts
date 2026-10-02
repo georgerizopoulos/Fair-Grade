@@ -172,7 +172,9 @@ describe('AI worker (e2e)', () => {
     });
     expect(paper.status).toBe('AI_GRADED');
     expect(paper.aiGradedAt).toBeInstanceOf(Date);
-    expect(paper.answers.map((a) => a.aiPoints).sort()).toEqual([2, 3]);
+    expect(
+      paper.answers.map((a) => a.aiPoints ?? 0).sort((a, b) => a - b),
+    ).toEqual([2, 3]);
 
     const res = await http
       .get(`/papers/${paperId}`)

@@ -18,7 +18,7 @@ TAs grade handwritten exam papers. The AI grades **the same transcribed answers*
 - the instructor opens HY335 → Midterm setup;
 - Nikos (TA) adds and grades csd5150 and submits it;
 - the AI grades it and the paper result shows the gaps;
-- the Midterm report shows Maria flagged on Q2 (−1.05).
+- the Midterm report shows Maria flagged on Q2 (−1.04).
 
 **Docs:**
 - `DOCS/TASKS.md`: what's done, what's left, who owns it, and the cut list.

@@ -73,7 +73,12 @@ export class ExamsController {
   }
 
   @Roles('instructor')
-  @UseInterceptors(FileInterceptor('file'))
+  // Same 20 MiB cap as paper uploads; without it multer buffers any size.
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: { fileSize: 20 * 1024 * 1024, files: 1 },
+    }),
+  )
   @Post('exams/:id/questions/import')
   importQuestions(
     @CurrentUser() user: AuthUser,

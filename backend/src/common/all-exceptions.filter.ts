@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { Prisma } from '../generated/prisma/client.js';
+import { TooManyRequestsException } from './too-many-requests.exception.js';
 
 // Turns every error from every module into the API_SPEC error shape:
 //   { "error": { "code": "NOT_FOUND", "message": "..." } }
@@ -19,6 +20,8 @@ import { Prisma } from '../generated/prisma/client.js';
 //   ForbiddenException       403 FORBIDDEN
 //   NotFoundException        404 NOT_FOUND
 //   ConflictException        409 CONFLICT
+//   PayloadTooLargeException 413 PAYLOAD_TOO_LARGE
+//   TooManyRequestsException 429 RATE_LIMITED (with a Retry-After header)
 //   BadGatewayException      502 LLM_FAILURE
 //   anything else            500 INTERNAL_ERROR
 // Always pass a message that says exactly what was wrong (which field, which ID).
@@ -29,6 +32,8 @@ const CODES: Record<number, string> = {
   [HttpStatus.FORBIDDEN]: 'FORBIDDEN',
   [HttpStatus.NOT_FOUND]: 'NOT_FOUND',
   [HttpStatus.CONFLICT]: 'CONFLICT',
+  [HttpStatus.PAYLOAD_TOO_LARGE]: 'PAYLOAD_TOO_LARGE',
+  [HttpStatus.TOO_MANY_REQUESTS]: 'RATE_LIMITED',
   [HttpStatus.BAD_GATEWAY]: 'LLM_FAILURE',
 };
 
@@ -44,6 +49,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
     if (code === 'INTERNAL_ERROR') {
       this.logger.error(exception);
     }
+    if (exception instanceof TooManyRequestsException) {
+      res.setHeader('Retry-After', String(exception.retryAfterSeconds));
+    }
     res.status(status).json({ error: { code, message } });
   }
 
@@ -56,7 +64,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
           : (body as { message?: unknown }).message;
       const message = Array.isArray(raw)
         ? raw.join('; ')
-        : String(raw ?? exception.message);
+        : typeof raw === 'string'
+          ? raw
+          : exception.message;
       return { status: exception.getStatus(), message };
     }
 

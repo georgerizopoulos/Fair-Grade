@@ -79,7 +79,9 @@ async function gradeOneAnswer(
 async function gradeWithRetries(
   rubric: GradingRubric,
   answer: GradingAnswer,
-): Promise<{ ok: true; grades: AiGradeResult[] } | { ok: false; error: string }> {
+): Promise<
+  { ok: true; grades: AiGradeResult[] } | { ok: false; error: string }
+> {
   let lastError = 'unknown error';
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     try {
@@ -89,7 +91,10 @@ async function gradeWithRetries(
       lastError = (e as Error).message;
     }
   }
-  return { ok: false, error: `failed after ${MAX_ATTEMPTS} attempts: ${lastError}` };
+  return {
+    ok: false,
+    error: `failed after ${MAX_ATTEMPTS} attempts: ${lastError}`,
+  };
 }
 
 /**

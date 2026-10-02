@@ -75,6 +75,7 @@ function DashboardInner() {
   // Load deviation report
   useEffect(() => {
     if (!selectedRubricId) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- legacy page, frozen, deleted in the final pass (DOCS/TASKS.md)
     setLoadingReport(true);
     apiFetch<DeviationReport>(`/deviation/${selectedRubricId}`)
       .then(setReport)

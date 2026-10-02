@@ -95,6 +95,16 @@ export class PapersService {
     }
     await this.access.exam(ta, examId);
 
+    const duplicate = await this.prisma.paper.findUnique({
+      where: { examId_studentId: { examId, studentId: dto.studentId } },
+      select: { id: true },
+    });
+    if (duplicate) {
+      throw new ConflictException(
+        `Student ${dto.studentId} already has a paper in this exam`,
+      );
+    }
+
     let pageCount: number;
     try {
       pageCount = (await PDFDocument.load(file.buffer)).getPageCount();

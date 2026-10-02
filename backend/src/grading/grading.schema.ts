@@ -16,8 +16,7 @@ export interface SchemaCriterion {
 }
 
 export type ParseResult =
-  | { ok: true; scores: ValidatedScore[] }
-  | { ok: false; error: string };
+  { ok: true; scores: ValidatedScore[] } | { ok: false; error: string };
 
 /**
  * Pull a JSON object out of raw model text. Models sometimes wrap JSON in
@@ -65,10 +64,16 @@ export function parseAndValidate(
   for (const [i, entry] of scoresRaw.entries()) {
     const e = entry as Record<string, unknown>;
     if (typeof e?.criterionId !== 'string') {
-      return { ok: false, error: `scores[${i}].criterionId missing or not a string` };
+      return {
+        ok: false,
+        error: `scores[${i}].criterionId missing or not a string`,
+      };
     }
     if (typeof e?.points !== 'number' || Number.isNaN(e.points)) {
-      return { ok: false, error: `scores[${i}].points missing or not a number` };
+      return {
+        ok: false,
+        error: `scores[${i}].points missing or not a number`,
+      };
     }
     if (typeof e?.reasoning !== 'string' || e.reasoning.trim() === '') {
       return { ok: false, error: `scores[${i}].reasoning missing or empty` };
@@ -89,7 +94,10 @@ export function parseAndValidate(
       return { ok: false, error: `unknown criterionId "${s.criterionId}"` };
     }
     if (seen.has(s.criterionId)) {
-      return { ok: false, error: `criterionId "${s.criterionId}" graded twice` };
+      return {
+        ok: false,
+        error: `criterionId "${s.criterionId}" graded twice`,
+      };
     }
     seen.add(s.criterionId);
     if (s.points < 0 || s.points > criterion.maxPoints) {
