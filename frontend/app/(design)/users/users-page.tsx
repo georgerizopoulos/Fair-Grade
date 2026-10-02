@@ -6,14 +6,12 @@ import {
   Avatar,
   Button,
   Card,
-  IconButton,
   MONO,
   Notice,
   PageHeader,
   PageTitle,
   Pill,
   RoleChip,
-  SecondaryButton,
   SectionHeader,
   TextField,
   YouTag,
@@ -22,7 +20,7 @@ import { apiFetch } from "@/lib/api";
 
 // Everyone who can sign in (design: Users.html). Course access is managed on
 // each course's Members page.
-//   GET /users, POST /users, PATCH /users/:id { status }
+//   GET /users, POST /users. Account status is display-only here.
 
 type Role = "instructor" | "ta";
 type Status = "ACTIVE" | "INVITED" | "DEACTIVATED";
@@ -40,7 +38,7 @@ interface UserRow {
 }
 
 const FONT = "'Geist', 'Segoe UI', system-ui, sans-serif";
-const COLUMNS = "minmax(0, 1.6fr) 110px minmax(0, 1fr) 130px 110px 120px";
+const COLUMNS = "minmax(0, 1.6fr) 110px minmax(0, 1fr) 130px 110px";
 
 const STATUS: Record<Status, { tone: "green" | "blue" | "red"; label: string }> = {
   ACTIVE: { tone: "green", label: "Active" },
@@ -134,7 +132,6 @@ export function UsersLivePage() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState<{ tone: "ok" | "error"; text: string } | null>(null);
   const [busy, setBusy] = useState("");
-  const [confirm, setConfirm] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", role: "ta" as Role, mode: "invite" as "invite" | "password", password: "" });
 
@@ -160,15 +157,6 @@ export function UsersLivePage() {
       setBusy("");
     }
   }
-
-  const setStatus = (u: UserRow, status: "ACTIVE" | "DEACTIVATED") =>
-    run(`status-${u.id}`, async () => {
-      await apiFetch(`/users/${u.id}`, { method: "PATCH", body: { status } });
-      setConfirm(null);
-      return status === "DEACTIVATED"
-        ? `${u.name} can no longer sign in. Their papers still count in the reports.`
-        : `${u.name} can sign in again.`;
-    });
 
   const create = () =>
     run("create", async () => {
@@ -331,7 +319,6 @@ export function UsersLivePage() {
               <span>Courses</span>
               <span>Last sign-in</span>
               <span>Status</span>
-              <span />
             </div>
             <div style={{ borderRadius: "18px", boxShadow: "0 0 0 1px rgba(var(--ink-rgb), 0.07)", overflow: "hidden" }}>
               {visible.map((u, i) => {
@@ -394,50 +381,6 @@ export function UsersLivePage() {
                       <Pill tone={pill.tone} dot>
                         {pill.label}
                       </Pill>
-                    </span>
-                    <span style={{ display: "flex", justifyContent: "flex-end", gap: "4px" }}>
-                      {u.isYou ? null : confirm === u.id ? (
-                        <>
-                          <button
-                            type="button"
-                            className="fg-press"
-                            onClick={() => setStatus(u, "DEACTIVATED")}
-                            disabled={busy !== ""}
-                            style={{
-                              height: "32px",
-                              padding: "0 12px",
-                              border: 0,
-                              borderRadius: "999px",
-                              background: "var(--red)",
-                              color: "var(--surface)",
-                              fontFamily: FONT,
-                              fontSize: "12.5px",
-                              fontWeight: 500,
-                              cursor: "pointer",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {busy === `status-${u.id}` ? "…" : "Deactivate"}
-                          </button>
-                          <IconButton label="Cancel" onClick={() => setConfirm(null)}>
-                            {icon(<path d="M6.5 6.5l11 11M17.5 6.5l-11 11" />, 18)}
-                          </IconButton>
-                        </>
-                      ) : deactivated ? (
-                        <SecondaryButton onClick={() => setStatus(u, "ACTIVE")} disabled={busy !== ""}>
-                          <span>Reactivate</span>
-                        </SecondaryButton>
-                      ) : (
-                        <IconButton label={`Deactivate ${u.name}`} onClick={() => setConfirm(u.id)}>
-                          {icon(
-                            <>
-                              <circle cx="12" cy="12" r="8" />
-                              <path d="M6.5 17.5l11-11" />
-                            </>,
-                            18,
-                          )}
-                        </IconButton>
-                      )}
                     </span>
                   </div>
                 );
