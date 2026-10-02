@@ -1,3 +1,5 @@
+import type { PassSummary } from './report-math.js';
+
 export interface MyStatsResponse {
   exam: {
     id: string;
@@ -174,10 +176,14 @@ export interface ExamReportPaper {
   aiTotal: number | null;
   gap: number | null;
   mostlyCode: string | null;
+  // Total at or above the exam's pass mark. The TA's grade is the one the
+  // student gets; the AI's is the second opinion.
+  passedTa: boolean | null;
+  passedAi: boolean | null;
 }
 
 export interface ExamReportResponse {
-  exam: { id: string; name: string; maxTotal: number };
+  exam: { id: string; name: string; maxTotal: number; passMark: number };
   course: { id: string; code: string | null; name: string };
   totalPapers: number; // every paper, drafts included
   submittedPapers: number;
@@ -187,6 +193,8 @@ export interface ExamReportResponse {
   taAverage: number | null; // average paper total over AI-graded papers
   aiAverage: number | null;
   flaggedTaCount: number;
+  // Who passes, over the AI-graded papers.
+  passing: PassSummary;
   // The most serious flag: the flagged TA with the largest paper gap, on their
   // most off question. Null when no TA is flagged.
   headline: {

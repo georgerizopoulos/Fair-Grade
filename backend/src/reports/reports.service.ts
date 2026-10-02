@@ -13,6 +13,8 @@ import {
   median,
   MIN_SAMPLES,
   paperGap,
+  passes,
+  passSummary,
   round2,
   taSummary,
   threshold,
@@ -456,11 +458,16 @@ export class ReportsService {
     }));
 
     const papers: ExamReportPaper[] = graded
-      .map((p) => ({
-        ...paperGap(p, questions),
-        taId: p.ta.id,
-        taName: p.ta.name,
-      }))
+      .map((p) => {
+        const g = paperGap(p, questions);
+        return {
+          ...g,
+          taId: p.ta.id,
+          taName: p.ta.name,
+          passedTa: passes(g.taTotal, exam.passMark),
+          passedAi: passes(g.aiTotal, exam.passMark),
+        };
+      })
       .sort((a, b) => absOrInf(b.gap) - absOrInf(a.gap));
 
     const complete = papers.filter((p) => p.gap != null);
@@ -491,7 +498,12 @@ export class ReportsService {
     }
 
     return {
-      exam: { id: exam.id, name: exam.name, maxTotal },
+      exam: {
+        id: exam.id,
+        name: exam.name,
+        maxTotal,
+        passMark: exam.passMark,
+      },
       course: {
         id: exam.course.id,
         code: exam.course.code,
@@ -505,6 +517,7 @@ export class ReportsService {
       taAverage: taAverage == null ? null : round2(taAverage),
       aiAverage: aiAverage == null ? null : round2(aiAverage),
       flaggedTaCount: tas.filter((t) => t.flagged).length,
+      passing: passSummary(papers, exam.passMark),
       headline,
       questions: questionRows,
       tas,

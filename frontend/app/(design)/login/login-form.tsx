@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { type CSSProperties, type FormEvent, useEffect, useState } from "react";
 import { Avatar, Button, MONO, RoleChip } from "@/components/shell";
-import { getCurrentUser, homeFor, login } from "@/lib/auth";
+import { getCurrentUser, homeFor, login, registerInstructor } from "@/lib/auth";
 
 const DEMO_PASSWORD = "demo1234";
 const DEMO_ACCOUNTS = [
@@ -35,8 +35,11 @@ const INPUT: CSSProperties = {
 };
 
 // Sign-in form. Instructors land on their courses, TAs on the exam they grade.
+// Instructors can also create their own account; TAs can't (their instructor adds them).
 export function LoginForm() {
   const router = useRouter();
+  const [mode, setMode] = useState<"signin" | "register">("signin");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -63,9 +66,28 @@ export function LoginForm() {
     }
   }
 
+  async function signUp() {
+    setError(null);
+    setSubmitting(true);
+    try {
+      await registerInstructor(name.trim(), email, password);
+      const user = await login(email, password);
+      router.replace(await homeFor(user));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Sign-up failed");
+      setSubmitting(false);
+    }
+  }
+
+  function switchMode(next: "signin" | "register") {
+    setMode(next);
+    setError(null);
+  }
+
   function onSubmit(ev: FormEvent) {
     ev.preventDefault();
-    void signIn(email, password);
+    if (mode === "register") void signUp();
+    else void signIn(email, password);
   }
 
   return (
@@ -94,14 +116,33 @@ export function LoginForm() {
             color: "var(--ink)",
           }}
         >
-          Sign in
+          {mode === "register" ? "Create an account" : "Sign in"}
         </h1>
         <p
           style={{ margin: "10px 0 0", fontSize: "15px", lineHeight: 1.55, color: "var(--muted)" }}
         >
-          Use the account your instructor created for you.
+          {mode === "register"
+            ? "For instructors. TAs don't sign up: your instructor adds you to a course."
+            : "Use the account your instructor created for you."}
         </p>
       </div>
+
+      {mode === "register" && (
+        <div style={{ width: "100%" }}>
+          <label htmlFor="name" style={LABEL}>
+            Full name
+          </label>
+          <input
+            id="name"
+            type="text"
+            autoComplete="name"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            style={INPUT}
+          />
+        </div>
+      )}
 
       <div style={{ width: "100%" }}>
         <label htmlFor="email" style={LABEL}>
@@ -125,8 +166,9 @@ export function LoginForm() {
         <input
           id="password"
           type="password"
-          autoComplete="current-password"
+          autoComplete={mode === "register" ? "new-password" : "current-password"}
           required
+          minLength={mode === "register" ? 6 : undefined}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           style={INPUT}
@@ -161,9 +203,36 @@ export function LoginForm() {
           </svg>
         }
       >
-        {submitting ? "Signing in…" : "Sign in"}
+        {mode === "register"
+          ? submitting
+            ? "Creating account…"
+            : "Create account"
+          : submitting
+            ? "Signing in…"
+            : "Sign in"}
       </Button>
 
+      <p style={{ margin: 0, fontSize: "13.5px", color: "var(--muted)", textAlign: "center" }}>
+        {mode === "register" ? "Already have an account? " : "New instructor? "}
+        <button
+          type="button"
+          onClick={() => switchMode(mode === "register" ? "signin" : "register")}
+          style={{
+            border: 0,
+            padding: 0,
+            background: "transparent",
+            color: "var(--ink)",
+            font: "inherit",
+            fontWeight: 500,
+            textDecoration: "underline",
+            cursor: "pointer",
+          }}
+        >
+          {mode === "register" ? "Sign in" : "Create an account"}
+        </button>
+      </p>
+
+      {mode === "signin" && (
       <div
         style={{
           marginTop: "10px",
@@ -206,6 +275,7 @@ export function LoginForm() {
           </button>
         ))}
       </div>
+      )}
     </form>
   );
 }

@@ -2,6 +2,8 @@ import {
   largestAnswerGaps,
   median,
   paperGap,
+  passes,
+  passSummary,
   questionGap,
   taSummary,
   threshold,
@@ -27,6 +29,30 @@ function paper(id: string, p: [number, number, number, number]): MathPaper {
 }
 
 describe('report math', () => {
+  it('a paper passes at or above the pass mark, and has no verdict without a total', () => {
+    expect(passes(5, 5)).toBe(true);
+    expect(passes(4.5, 5)).toBe(false);
+    expect(passes(6.5, 5)).toBe(true);
+    expect(passes(null, 5)).toBeNull();
+  });
+
+  it('counts passes by TA and by AI, and where they disagree', () => {
+    const papers = [
+      { taTotal: 6, aiTotal: 7 }, // both pass
+      { taTotal: 4, aiTotal: 4.5 }, // both fail
+      { taTotal: 5, aiTotal: 4 }, // TA passes, AI fails
+      { taTotal: 4.5, aiTotal: 5.5 }, // TA fails, AI passes
+      { taTotal: 8, aiTotal: null }, // not compared yet
+    ];
+    expect(passSummary(papers, 5)).toEqual({
+      passMark: 5,
+      comparedPapers: 4,
+      passedTa: 2,
+      passedAi: 2,
+      differ: 2,
+    });
+  });
+
   it('threshold is 15% of the question points', () => {
     expect(threshold(3)).toBe(0.45);
     expect(threshold(4)).toBe(0.6);

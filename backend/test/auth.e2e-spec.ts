@@ -4,6 +4,7 @@ import request from 'supertest';
 import { App } from 'supertest/types.js';
 import { AppModule } from './../src/app.module.js';
 import { PrismaService } from './../src/prisma/prisma.service.js';
+import bcrypt from 'bcryptjs';
 import { wipeDb } from './helpers.js';
 
 describe('Auth and roles (e2e)', () => {
@@ -49,24 +50,30 @@ describe('Auth and roles (e2e)', () => {
     expect(res.body.id).toBeDefined();
     expect(res.body.createdAt).toBeDefined();
     expect(res.body.passwordHash).toBeUndefined();
-    await http.post('/auth/register').send(ta).expect(201);
+    // TAs can't sign up; their account comes from the instructor.
+    await app.get(PrismaService).user.create({
+      data: {
+        name: ta.name,
+        email: ta.email,
+        role: 'ta',
+        passwordHash: await bcrypt.hash(ta.password, 4),
+      },
+    });
   });
 
-  it('POST /auth/register → 403 unless ALLOW_REGISTER=on, and creates nothing', async () => {
-    vi.stubEnv('ALLOW_REGISTER', 'off');
-    try {
-      const res = await http
-        .post('/auth/register')
-        .send({ ...instructor, email: 'closed@test.com' })
-        .expect(403);
-      expect(res.body.error.code).toBe('FORBIDDEN');
-      expect(res.body.error.message).toContain('Self-registration is disabled');
-    } finally {
-      vi.unstubAllEnvs();
-    }
-    const prisma = app.get(PrismaService);
+  it('POST /auth/register → 403 for role ta, and creates nothing', async () => {
+    const res = await http
+      .post('/auth/register')
+      .send({ ...ta, email: 'new-ta@test.com' })
+      .expect(403);
+    expect(res.body.error.code).toBe('FORBIDDEN');
+    expect(res.body.error.message).toContain(
+      'created by the course instructor',
+    );
     expect(
-      await prisma.user.findUnique({ where: { email: 'closed@test.com' } }),
+      await app
+        .get(PrismaService)
+        .user.findUnique({ where: { email: 'new-ta@test.com' } }),
     ).toBeNull();
   });
 

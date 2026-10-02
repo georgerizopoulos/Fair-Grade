@@ -23,6 +23,7 @@ import {
   GapCell,
   Kpi,
   MONO_ID,
+  Segmented,
   TABLE_FRAME,
   TaAvatar,
   TableHead,
@@ -44,7 +45,7 @@ interface QuestionGap {
 }
 
 interface Report {
-  exam: { id: string; name: string; maxTotal: number };
+  exam: { id: string; name: string; maxTotal: number; passMark: number };
   course: { id: string; code: string | null; name: string };
   totalPapers: number;
   submittedPapers: number;
@@ -54,6 +55,7 @@ interface Report {
   taAverage: number | null;
   aiAverage: number | null;
   flaggedTaCount: number;
+  passing: { passMark: number; comparedPapers: number; passedTa: number; passedAi: number; differ: number };
   headline: {
     taId: string;
     taName: string;
@@ -94,11 +96,16 @@ interface Report {
     aiTotal: number | null;
     gap: number | null;
     mostlyCode: string | null;
+    passedTa: boolean | null;
+    passedAi: boolean | null;
   }[];
 }
 
+type PassFilter = "all" | "passed" | "failed" | "differ";
+
 const TA_COLUMNS = "minmax(0, 1.4fr) 80px 120px 120px minmax(0, 1.2fr) 110px 24px";
 const PAPER_COLUMNS = "130px minmax(0, 1fr) 100px 100px 100px 90px 24px";
+const PASS_COLUMNS = "130px minmax(0, 1fr) 100px 100px 110px 110px 24px";
 const firstName = (name: string) => name.split(" ")[0];
 
 export function ExamReportLivePage() {
@@ -106,6 +113,8 @@ export function ExamReportLivePage() {
   const [report, setReport] = useState<Report | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [showAll, setShowAll] = useState(false);
+  const [passFilter, setPassFilter] = useState<PassFilter>("all");
+  const [showAllResults, setShowAllResults] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -147,15 +156,46 @@ export function ExamReportLivePage() {
   const flaggedCodes = [...new Set(tas.flatMap((t) => t.flaggedQuestionCodes))];
   const shownPapers = showAll ? papers : papers.slice(0, 5);
 
+  const verdict = (passed: boolean | null) => (passed == null ? "" : passed ? "passed" : "failed");
+  const byStudent = papers.slice().sort((a, b) => a.studentId.localeCompare(b.studentId));
+  const passedPapers = byStudent.filter((p) => p.passedTa);
+  const fileName = (suffix: string) => `${course.code ?? "course"}-${exam.name}-${suffix}.csv`.replace(/\s+/g, "-");
+
   function exportGrades() {
-    downloadCsv(`${course.code ?? "course"}-${exam.name}-grades.csv`.replace(/\s+/g, "-"), [
-      ["student_id", "graded_by", "ta_total", "ai_total", "gap", "max_total"],
-      ...papers
-        .slice()
-        .sort((a, b) => a.studentId.localeCompare(b.studentId))
-        .map((p) => [p.studentId, p.taName, p.taTotal, p.aiTotal, p.gap, exam.maxTotal]),
+    downloadCsv(fileName("grades"), [
+      ["student_id", "graded_by", "ta_total", "ai_total", "gap", "max_total", "pass_mark", "ta_result", "ai_result"],
+      ...byStudent.map((p) => [
+        p.studentId,
+        p.taName,
+        p.taTotal,
+        p.aiTotal,
+        p.gap,
+        exam.maxTotal,
+        exam.passMark,
+        verdict(p.passedTa),
+        verdict(p.passedAi),
+      ]),
     ]);
   }
+
+  // Everyone whose TA grade reaches the pass mark, with the AI's verdict beside it.
+  function exportPassed() {
+    downloadCsv(fileName("passed"), [
+      ["student_id", "graded_by", "ta_total", "ai_total", "max_total", "pass_mark", "ai_result"],
+      ...passedPapers.map((p) => [p.studentId, p.taName, p.taTotal, p.aiTotal, exam.maxTotal, exam.passMark, verdict(p.passedAi)]),
+    ]);
+  }
+
+  const resultRows = byStudent.filter((p) =>
+    passFilter === "passed"
+      ? p.passedTa
+      : passFilter === "failed"
+        ? p.passedTa === false
+        : passFilter === "differ"
+          ? p.passedTa != null && p.passedAi != null && p.passedTa !== p.passedAi
+          : true,
+  );
+  const shownResults = showAllResults ? resultRows : resultRows.slice(0, 10);
 
   return (
     <AppShell course={shellCourse} exam={shellExam} active="report" access="instructor">
@@ -178,6 +218,17 @@ export function ExamReportLivePage() {
           }
         >
           <span>Export grades</span>
+        </SecondaryButton>
+        <SecondaryButton
+          onClick={exportPassed}
+          disabled={passedPapers.length === 0}
+          icon={
+            <svg {...svg(16)}>
+              <path d="M5 12.5l4.5 4.5L19 7.5" />
+            </svg>
+          }
+        >
+          <span>Export passed</span>
         </SecondaryButton>
       </PageHeader>
       <PageTitle
@@ -325,6 +376,123 @@ export function ExamReportLivePage() {
         <div className="fg-span" style={{ gridColumn: "span 12", minWidth: 0 }}>
           <Card className="fg-in fg-d5" padding="26px">
             <SectionHeader
+              title="Who passed"
+              description={`Pass mark ${pts(exam.passMark)} of ${pts(exam.maxTotal)}. The TA's grade decides; the AI's verdict is shown next to it.`}
+            >
+              <SecondaryButton
+                onClick={exportPassed}
+                disabled={passedPapers.length === 0}
+                icon={
+                  <svg {...svg(16)}>
+                    <path d="M12 15.5V4.5" />
+                    <path d="M7.5 9l4.5-4.5L16.5 9" />
+                    <path d="M4.5 15v3a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3" />
+                  </svg>
+                }
+              >
+                <span>Export passed ({passedPapers.length})</span>
+              </SecondaryButton>
+            </SectionHeader>
+            {papers.length === 0 ? (
+              <p style={{ margin: "18px 0 0", fontSize: "14px", color: "var(--muted)" }}>
+                Nobody to show yet. Papers appear here once the AI has graded them.
+              </p>
+            ) : (
+              <>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "16px", marginBottom: "20px" }}>
+                  <PassStat
+                    label="Passed, by the TA"
+                    value={report.passing.passedTa}
+                    of={report.passing.comparedPapers}
+                  />
+                  <PassStat
+                    label="Passed, by the AI"
+                    value={report.passing.passedAi}
+                    of={report.passing.comparedPapers}
+                    color="var(--blue-x)"
+                  />
+                  <PassStat
+                    label="TA and AI disagree"
+                    value={report.passing.differ}
+                    of={report.passing.comparedPapers}
+                    color={report.passing.differ > 0 ? "var(--red-x)" : undefined}
+                  />
+                </div>
+                <div style={{ marginBottom: "6px" }}>
+                  <Segmented<PassFilter>
+                    label="Filter papers by result"
+                    value={passFilter}
+                    onChange={(v) => {
+                      setPassFilter(v);
+                      setShowAllResults(false);
+                    }}
+                    options={[
+                      { value: "all", label: `All ${papers.length}` },
+                      { value: "passed", label: `Passed ${report.passing.passedTa}` },
+                      { value: "failed", label: `Not passed ${report.passing.comparedPapers - report.passing.passedTa}` },
+                      { value: "differ", label: `Disagree ${report.passing.differ}` },
+                    ]}
+                  />
+                </div>
+                {resultRows.length === 0 ? (
+                  <p style={{ margin: "18px 0 0", fontSize: "14px", color: "var(--muted)" }}>No papers match this filter.</p>
+                ) : (
+                  <>
+                    <TableHead
+                      columns={PASS_COLUMNS}
+                      labels={["Student ID", "Graded by", "TA", "AI", "TA result", "AI result", ""]}
+                    />
+                    <div style={TABLE_FRAME}>
+                      {shownResults.map((p, i) => (
+                        <Link
+                          key={p.paperId}
+                          href={`/papers/${p.paperId}`}
+                          className="fg-row"
+                          style={rowStyle(PASS_COLUMNS, i === 0, "13px 20px")}
+                        >
+                          <span style={{ ...MONO_ID, fontSize: "13.5px", color: "var(--ink)" }}>{p.studentId}</span>
+                          <span style={{ fontSize: "13.5px" }}>{p.taName}</span>
+                          <span style={{ fontSize: "14px", fontVariantNumeric: "tabular-nums" }}>{pts(p.taTotal)}</span>
+                          <span style={{ fontSize: "14px", fontVariantNumeric: "tabular-nums", color: "var(--blue-x)" }}>
+                            {pts(p.aiTotal)}
+                          </span>
+                          <span>
+                            {p.passedTa == null ? (
+                              <span style={{ color: "var(--faint)" }}>—</span>
+                            ) : (
+                              <Pill tone={p.passedTa ? "green" : "neutral"}>{p.passedTa ? "Passed" : "Not passed"}</Pill>
+                            )}
+                          </span>
+                          <span>
+                            {p.passedAi == null ? (
+                              <span style={{ color: "var(--faint)" }}>—</span>
+                            ) : (
+                              <Pill tone={p.passedAi === p.passedTa ? "blue" : "amber"}>
+                                {p.passedAi ? "Passed" : "Not passed"}
+                              </Pill>
+                            )}
+                          </span>
+                          <Chevron />
+                        </Link>
+                      ))}
+                    </div>
+                    {resultRows.length > 10 && (
+                      <div style={{ marginTop: "14px" }}>
+                        <SecondaryButton onClick={() => setShowAllResults((v) => !v)}>
+                          <span>{showAllResults ? "Show the first 10" : `Show all ${resultRows.length}`}</span>
+                        </SecondaryButton>
+                      </div>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+          </Card>
+        </div>
+
+        <div className="fg-span" style={{ gridColumn: "span 12", minWidth: 0 }}>
+          <Card className="fg-in fg-d5" padding="26px">
+            <SectionHeader
               title="Largest gaps on a single paper"
               description="Open a paper to see the scan, both grades and the AI's reasoning."
             >
@@ -382,6 +550,20 @@ export function ExamReportLivePage() {
         </div>
       </div>
     </AppShell>
+  );
+}
+
+function PassStat({ label, value, of, color }: { label: string; value: number; of: number; color?: string }) {
+  const share = of > 0 ? Math.round((value / of) * 100) : 0;
+  return (
+    <div style={{ padding: "16px 18px", borderRadius: "14px", background: "rgba(var(--ink-rgb), 0.04)" }}>
+      <div style={{ fontSize: "13px", color: "var(--muted)" }}>{label}</div>
+      <div style={{ marginTop: "8px" }}>
+        <span style={{ fontSize: "28px", fontWeight: 500, letterSpacing: "-0.03em", color: color ?? "var(--ink)" }}>{value}</span>
+        <span style={{ fontSize: "15px", color: "var(--muted)" }}> / {of}</span>
+        <span style={{ marginLeft: "10px", fontSize: "13px", color: "var(--muted)" }}>{share}%</span>
+      </div>
+    </div>
   );
 }
 

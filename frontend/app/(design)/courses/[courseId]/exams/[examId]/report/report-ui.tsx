@@ -205,6 +205,56 @@ export const ArrowUpRight = ({ stroke = "currentColor" }: { stroke?: string }) =
   </svg>
 );
 
+// Segmented filter (same look as the tabs on the Users page).
+export function Segmented<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: T;
+  options: { value: T; label: string }[];
+  onChange: (v: T) => void;
+}) {
+  return (
+    <div
+      role="radiogroup"
+      aria-label={label}
+      style={{ display: "inline-flex", flexWrap: "wrap", padding: "4px", borderRadius: "999px", background: "rgba(var(--ink-rgb), 0.05)", gap: "2px" }}
+    >
+      {options.map((o) => {
+        const on = o.value === value;
+        return (
+          <button
+            key={o.value}
+            type="button"
+            role="radio"
+            aria-checked={on}
+            className="fg-press"
+            onClick={() => onChange(o.value)}
+            style={{
+              height: "34px",
+              padding: "0 14px",
+              border: 0,
+              borderRadius: "999px",
+              fontFamily: "'Geist', 'Segoe UI', system-ui, sans-serif",
+              fontSize: "13.5px",
+              fontWeight: 500,
+              cursor: "pointer",
+              background: on ? "var(--raised)" : "transparent",
+              color: on ? "var(--ink)" : "var(--muted)",
+              boxShadow: on ? "0 1px 2px rgba(var(--shadow-rgb), 0.10), 0 0 0 1px rgba(var(--ink-rgb), 0.07)" : undefined,
+            }}
+          >
+            {o.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 // Saves rows as a CSV file in the browser.
 export function downloadCsv(filename: string, rows: (string | number | null)[][]) {
   const escape = (v: string | number | null) => {

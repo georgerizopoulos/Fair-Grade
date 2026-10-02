@@ -138,6 +138,7 @@ describe('ReportsService.examReport', () => {
       ownedExam: vi.fn().mockResolvedValue({
         id: 'exam-1',
         name: 'Midterm',
+        passMark: 4,
         courseId: 'course-1',
         course: {
           id: 'course-1',
@@ -207,6 +208,33 @@ describe('ReportsService.examReport', () => {
       taId: 'ta-1',
       taName: 'TA One',
       papersGraded: 2,
+    });
+  });
+
+  it('says who passes: TA total vs AI total against the exam pass mark', async () => {
+    const result = await service.examReport(instructor, 'exam-1');
+
+    expect(result.exam.passMark).toBe(4);
+    // paper-1: TA 3.5, AI 3 (both fail). paper-2: TA 4 (passes, at the mark), AI 3.5 (fails).
+    const byId = new Map(result.papers.map((p) => [p.paperId, p]));
+    expect(byId.get('paper-1')).toMatchObject({
+      taTotal: 3.5,
+      aiTotal: 3,
+      passedTa: false,
+      passedAi: false,
+    });
+    expect(byId.get('paper-2')).toMatchObject({
+      taTotal: 4,
+      aiTotal: 3.5,
+      passedTa: true,
+      passedAi: false,
+    });
+    expect(result.passing).toEqual({
+      passMark: 4,
+      comparedPapers: 2,
+      passedTa: 1,
+      passedAi: 0,
+      differ: 1,
     });
   });
 

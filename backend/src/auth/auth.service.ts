@@ -22,13 +22,13 @@ export class AuthService {
     private readonly jwt: JwtService,
   ) {}
 
-  // Public and lets the caller pick any role, so it is closed unless
-  // ALLOW_REGISTER=on (development and tests only). The app creates accounts
-  // through POST /users.
+  // Public sign-up is for instructors only: the department secretariat vouches
+  // for them outside the app. TAs never sign themselves up; the course
+  // instructor creates their account (POST /users, POST /courses/:id/members).
   async register(dto: RegisterDto) {
-    if (process.env.ALLOW_REGISTER !== 'on') {
+    if (dto.role !== 'instructor') {
       throw new ForbiddenException(
-        'Self-registration is disabled. Ask an instructor to create your account.',
+        'TA accounts are created by the course instructor. Ask your instructor to add you.',
       );
     }
     const email = dto.email.toLowerCase();

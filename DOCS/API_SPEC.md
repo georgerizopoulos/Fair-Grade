@@ -124,7 +124,7 @@ The same rule is used everywhere:
 | Method and path | Who | Status | Module |
 |---|---|---|---|
 | `GET /health` | anyone | ✅ | health |
-| `POST /auth/register` | anyone (dev only) | ✅ | auth |
+| `POST /auth/register` | anyone, role `instructor` only | ✅ | auth |
 | `POST /auth/login` | anyone | ✅ | auth |
 | `GET /auth/me` | signed in | ✅ | auth |
 | `GET /users` | instructor | ✅ tested | users |
@@ -199,11 +199,11 @@ Response (200):
 
 Response: `{ id, name, email, role }`. Returns 401 if the user was deleted (e.g. after re-seeding) or deactivated.
 
-### `POST /auth/register` ✅ (development only, off by default)
+### `POST /auth/register` ✅ (instructors only)
 
 Request: `{ name, email, password (min 6), role }` → 201 with the user. Returns 409 if the email exists.
 
-It is public and lets the caller pick any role, so it returns **403** unless `ALLOW_REGISTER=on` is set in `backend/.env`. The app creates accounts through `POST /users` instead.
+Public sign-up is for **instructors only** (`role: "instructor"`): the department secretariat vouches for them outside the app. Any other role gets **403**: a TA never signs themselves up, the course instructor creates the account (`POST /users` or `POST /courses/:id/members`). The login page has a "Create an account" form for instructors.
 
 ---
 
@@ -588,11 +588,12 @@ Type `ExamReportResponse`:
 
 ```json
 {
-  "exam": { "id": "…", "name": "Midterm", "maxTotal": 10 },
+  "exam": { "id": "…", "name": "Midterm", "maxTotal": 10, "passMark": 5 },
   "course": { "id": "…", "code": "HY335", "name": "Computer Networks" },
   "totalPapers": 59, "submittedPapers": 58, "aiGradedPapers": 57,
   "aiGradingPapers": 1, "aiFailedPapers": 0,
   "taAverage": 7.06, "aiAverage": 7.18, "flaggedTaCount": 1,
+  "passing": { "passMark": 5, "comparedPapers": 57, "passedTa": 54, "passedAi": 56, "differ": 2 },
   "headline": {
     "taId": "…", "taName": "Maria Papadaki", "paperGap": -1.4, "papersGraded": 12,
     "questionCode": "Q2", "questionTitle": "TCP and UDP", "maxPoints": 3,
@@ -612,14 +613,16 @@ Type `ExamReportResponse`:
   ],
   "papers": [
     { "paperId": "…", "studentId": "csd5108", "taId": "…", "taName": "Maria Papadaki",
-      "taTotal": 4.5, "aiTotal": 7, "gap": -2.5, "mostlyCode": "Q2" }
+      "taTotal": 4.5, "aiTotal": 7, "gap": -2.5, "mostlyCode": "Q2",
+      "passedTa": false, "passedAi": true }
   ]
 }
 ```
 
 - `headline`: the flagged TA with the largest paper gap, on their worst flagged question; `null` when nobody is flagged.
 - `tas`: flagged first, then by |paper gap|. `averageGap` is the mean |question gap| (kept for older clients).
-- `papers`: every AI-graded paper, largest |gap| first. The report's "Export grades" builds its CSV from it.
+- `papers`: every AI-graded paper, largest |gap| first. The report's "Export grades" and "Export passed" build their CSVs from it.
+- **Who passed:** a paper passes when its total is at or above the exam's `passMark` (same rule as the course stats). `passedTa` is the verdict that counts for the student; `passedAi` is the second opinion. `passing` counts both over the papers that have both totals, and `differ` is how many papers TA and AI disagree on. Both are `null` until the total exists.
 
 ### `GET /exams/:id/report/tas/:taId` ✅ (owner)
 

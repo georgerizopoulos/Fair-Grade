@@ -65,6 +65,36 @@ export interface TaSummary {
 
 export const round2 = (x: number) => Math.round(x * 100) / 100;
 
+// A paper passes when its total reaches the exam's pass mark. Null until the
+// total exists. Same rule as the course stats (distribution, "at stake").
+export function passes(total: number | null, passMark: number): boolean | null {
+  return total == null ? null : total >= passMark - 1e-9;
+}
+
+export interface PassSummary {
+  passMark: number;
+  comparedPapers: number; // papers with both a TA and an AI total
+  passedTa: number;
+  passedAi: number;
+  differ: number; // TA and AI disagree on pass or fail
+}
+
+export function passSummary(
+  papers: { taTotal: number | null; aiTotal: number | null }[],
+  passMark: number,
+): PassSummary {
+  const compared = papers.filter((p) => p.taTotal != null && p.aiTotal != null);
+  const taPass = (p: (typeof compared)[number]) => passes(p.taTotal, passMark);
+  const aiPass = (p: (typeof compared)[number]) => passes(p.aiTotal, passMark);
+  return {
+    passMark,
+    comparedPapers: compared.length,
+    passedTa: compared.filter(taPass).length,
+    passedAi: compared.filter(aiPass).length,
+    differ: compared.filter((p) => taPass(p) !== aiPass(p)).length,
+  };
+}
+
 export function mean(xs: number[]): number | null {
   return xs.length ? xs.reduce((s, x) => s + x, 0) / xs.length : null;
 }

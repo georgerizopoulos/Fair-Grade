@@ -33,8 +33,8 @@ Most education-AI projects target the student. Fair Grade targets the instructor
 
 | Role | Can |
 |---|---|
-| Instructor | create courses and exams, manage members and users, see reports and stats, reopen or publish |
-| TA | add and grade papers in the courses they are a member of, see their own papers and stats, ask to reopen a submitted paper |
+| Instructor | sign up themselves, create courses and exams, manage members and users, see reports and stats (including who passed, exportable as CSV), reopen or publish |
+| TA | add and grade papers in the courses they are a member of, see their own papers and stats, ask to reopen a submitted paper. A TA can't sign up: the instructor creates the account |
 
 Course membership is the only thing that gives a TA access to a course. Access is enforced in the backend.
 
@@ -42,13 +42,13 @@ Course membership is the only thing that gives a TA access to a course. Access i
 
 | Route | Who | What it shows |
 |---|---|---|
-| `/login` | everyone | sign in (demo accounts one click away) |
+| `/login` | everyone | sign in (demo accounts one click away); instructors can create an account |
 | `/courses` | everyone | your courses |
 | `/courses/[id]` | both | exams with progress, reopen requests (instructor), people |
 | `/courses/[id]/stats` | instructor | trend across exams, TA leaderboard, pass/fail at stake, grade distribution, rubrics to tighten, live activity |
 | `/courses/[id]/members` | instructor | add or remove TAs |
 | `/courses/[id]/exams/[examId]/setup` | instructor | questions, model answers, rubric; open for grading, publish |
-| `/courses/[id]/exams/[examId]/report` | instructor | the flag, gap per question per TA, TAs table, largest gaps, CSV export |
+| `/courses/[id]/exams/[examId]/report` | instructor | the flag, gap per question per TA, TAs table, who passed (TA vs AI), largest gaps, CSV exports (all grades, passed only) |
 | `/courses/[id]/exams/[examId]/report/[taId]` | instructor | one TA against the AI, the papers behind the flag |
 | `/courses/[id]/exams/[examId]/papers` (`/new`) | TA | my papers; add a paper |
 | `/courses/[id]/exams/[examId]/stats` | TA | my stats: TA vs AI, leaderboard, papers worth a second look |

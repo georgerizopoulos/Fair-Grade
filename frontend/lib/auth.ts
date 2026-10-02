@@ -49,6 +49,15 @@ export async function login(email: string, password: string): Promise<User> {
   return user;
 }
 
+// POST /auth/register. Sign-up is for instructors only; a TA gets their account
+// from the course instructor, and the backend answers 403 to role "ta".
+export async function registerInstructor(name: string, email: string, password: string): Promise<void> {
+  await apiFetch("/auth/register", {
+    method: "POST",
+    body: { name, email, password, role: "instructor" },
+  });
+}
+
 // No logout endpoint: dropping the token is enough.
 export function logout() {
   localStorage.removeItem(TOKEN_KEY);

@@ -4,6 +4,8 @@ import request from 'supertest';
 import { App } from 'supertest/types.js';
 import { AppModule } from './../src/app.module.js';
 import { PrismaService } from './../src/prisma/prisma.service.js';
+import bcrypt from 'bcryptjs';
+import type { Role } from './../src/generated/prisma/client.js';
 import { wipeDb } from './helpers.js';
 
 const TCP_RUBRIC = {
@@ -25,10 +27,15 @@ describe('Rubrics (e2e)', () => {
   let taToken: string;
 
   async function tokenFor(email: string, role: string) {
-    await http
-      .post('/auth/register')
-      .send({ name: email, email, password: 'demo1234', role })
-      .expect(201);
+    // Sign-up is instructor-only, so create the account directly.
+    await prisma.user.create({
+      data: {
+        name: email,
+        email,
+        role: role as Role,
+        passwordHash: await bcrypt.hash('demo1234', 4),
+      },
+    });
     const res = await http
       .post('/auth/login')
       .send({ email, password: 'demo1234' })
