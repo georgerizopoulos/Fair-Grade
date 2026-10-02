@@ -23,7 +23,7 @@ export default function GradePaperPage() {
   return <GradePaperLivePage />;
 }
 
-export function StaticGradePaperPage() {
+function StaticGradePaperPage() {
   return (
     <>
       <AppShell course={course} exam={exam} active="my-papers" access="ta">

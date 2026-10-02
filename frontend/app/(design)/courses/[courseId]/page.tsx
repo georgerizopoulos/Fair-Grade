@@ -22,7 +22,7 @@ export default function CoursePage() {
   return <CourseLivePage />;
 }
 
-export function StaticCoursePage() {
+function StaticCoursePage() {
   return (
     <>
       <AppShell course={course} active="exams">

@@ -23,7 +23,7 @@ export default function AddPaperPage() {
   return <AddPaperLivePage />;
 }
 
-export function StaticAddPaperPage() {
+function StaticAddPaperPage() {
   return (
     <>
       <AppShell course={course} exam={exam} active="add-paper" access="ta">

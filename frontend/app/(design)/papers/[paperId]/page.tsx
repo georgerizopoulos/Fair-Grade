@@ -23,7 +23,7 @@ export default function PaperResultPage() {
   return <PaperResultLivePage />;
 }
 
-export function StaticPaperResultPage() {
+function StaticPaperResultPage() {
   return (
     <>
       <AppShell course={course} exam={exam} active="my-papers">

@@ -15,7 +15,7 @@ export default function TaPapersPage() {
   return <TaPapersLivePage />;
 }
 
-export function StaticTaPapersPage() {
+function StaticTaPapersPage() {
   return (
     <>
       <AppShell course={course} exam={exam} active="my-papers" access="ta">
