@@ -90,8 +90,15 @@ export function AppShell({
           "radial-gradient(1200px 520px at 30% -8%, var(--surface) 0%, rgba(var(--surface-rgb), 0) 70%), var(--bg)",
       }}
     >
+      <a className="fg-skip-link" href="#main-content">
+        Skip to main content
+      </a>
       <Sidebar user={user ?? { name: "", role }} course={course} nav={nav} />
-      <main style={{ flexGrow: 1, minWidth: 0, padding: "26px 44px 96px" }}>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        style={{ flexGrow: 1, minWidth: 0, padding: "26px 44px 96px" }}
+      >
         <div
           style={{
             maxWidth: "1120px",
@@ -144,6 +151,7 @@ export function Sidebar({
             alignItems: "center",
             gap: "10px",
             padding: "2px 2px 16px 8px",
+            flexWrap: "wrap",
           }}
         >
           <Logo />
