@@ -10,7 +10,12 @@ export default defineConfig({
   test: {
     globals: true,
     root: './',
-    env: { DATABASE_URL: TEST_DATABASE_URL },
+    env: {
+      DATABASE_URL: TEST_DATABASE_URL,
+      // Defaults so the suite runs without a backend/.env (e.g. in CI).
+      JWT_SECRET: process.env.JWT_SECRET ?? 'e2e-test-secret',
+      ALLOW_REGISTER: 'on',
+    },
     globalSetup: ['./test/global-setup.ts'],
     setupFiles: ['dotenv/config'],
     include: ['**/*.e2e-spec.ts'],

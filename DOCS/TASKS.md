@@ -20,7 +20,7 @@ What is done, what is left, and who owns it. Keep this file short and **true**: 
 3. **The AI grades it** within seconds. The **paper result** shows TA vs AI per question, with the AI's reasoning.
 4. **Instructor:** **Midterm report** → **Maria flagged on Q2 (−1.05)** → her page → the papers behind the flag.
 
-Step 4 needs **the seeded papers** (not done yet).
+Step 4 works from the seeded papers (`npm run seed`, checked by `scripts/check-demo-numbers.ts`).
 
 ---
 
@@ -39,7 +39,7 @@ Step 4 needs **the seeded papers** (not done yet).
 | Paper upload (PDF, pages, demo transcription), page rescan | Σταύρος |
 | Reports: `my-stats`, exam report, per-TA report | Δημήτρης |
 | Pages wired to the API: courses list, course page, exam setup, add paper, grade, paper result | team |
-| `llm.client.ts`, prompt, response validation, `runGrading()` (old flow, to be reused) | Κώστας |
+| `llm.client.ts` (Bedrock), prompt and response validation. The old `runGrading()` and `POST /grade/run` were removed; the AI worker is the only grader | Κώστας |
 | Seeded HY335 papers for the demo story, `scripts/check-demo-numbers.ts` | Γιώργος |
 | Real numbers in `my-stats`, exam report and TA report (`reports/report-math.ts`, unit-tested) | Γιώργος |
 | Course stats and activity feed endpoints (`reports/course-stats.ts`), exam status flow (draft → ready → open → published), e2e tests | Γιώργος |

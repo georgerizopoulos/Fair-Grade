@@ -52,6 +52,24 @@ describe('Auth and roles (e2e)', () => {
     await http.post('/auth/register').send(ta).expect(201);
   });
 
+  it('POST /auth/register → 403 unless ALLOW_REGISTER=on, and creates nothing', async () => {
+    vi.stubEnv('ALLOW_REGISTER', 'off');
+    try {
+      const res = await http
+        .post('/auth/register')
+        .send({ ...instructor, email: 'closed@test.com' })
+        .expect(403);
+      expect(res.body.error.code).toBe('FORBIDDEN');
+      expect(res.body.error.message).toContain('Self-registration is disabled');
+    } finally {
+      vi.unstubAllEnvs();
+    }
+    const prisma = app.get(PrismaService);
+    expect(
+      await prisma.user.findUnique({ where: { email: 'closed@test.com' } }),
+    ).toBeNull();
+  });
+
   it('POST /auth/register → 409 on duplicate email (any case)', async () => {
     const res = await http
       .post('/auth/register')

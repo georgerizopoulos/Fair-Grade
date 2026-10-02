@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -21,7 +22,15 @@ export class AuthService {
     private readonly jwt: JwtService,
   ) {}
 
+  // Public and lets the caller pick any role, so it is closed unless
+  // ALLOW_REGISTER=on (development and tests only). The app creates accounts
+  // through POST /users.
   async register(dto: RegisterDto) {
+    if (process.env.ALLOW_REGISTER !== 'on') {
+      throw new ForbiddenException(
+        'Self-registration is disabled. Ask an instructor to create your account.',
+      );
+    }
     const email = dto.email.toLowerCase();
     const existing = await this.prisma.user.findUnique({ where: { email } });
     if (existing) {

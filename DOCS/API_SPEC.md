@@ -199,9 +199,11 @@ Response (200):
 
 Response: `{ id, name, email, role }`. Returns 401 if the user was deleted (e.g. after re-seeding) or deactivated.
 
-### `POST /auth/register` ✅ (development only)
+### `POST /auth/register` ✅ (development only, off by default)
 
-Request: `{ name, email, password (min 6), role }` → 201 with the user. Returns 409 if the email exists. The app creates accounts through `POST /users` instead.
+Request: `{ name, email, password (min 6), role }` → 201 with the user. Returns 409 if the email exists.
+
+It is public and lets the caller pick any role, so it returns **403** unless `ALLOW_REGISTER=on` is set in `backend/.env`. The app creates accounts through `POST /users` instead.
 
 ---
 
