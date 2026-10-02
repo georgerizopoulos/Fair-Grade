@@ -108,14 +108,14 @@ export function TaDetailLivePage() {
   if (error) {
     const denied = error instanceof ApiError && (error.status === 403 || error.status === 404);
     return (
-      <AppShell course={shellCourse} active="report" access="instructor">
+      <AppShell course={shellCourse} access="instructor">
         {denied ? <NoAccess message={error.message} /> : <Notice tone="error">{error.message}</Notice>}
       </AppShell>
     );
   }
   if (!data) {
     return (
-      <AppShell course={shellCourse} exam={shellExam} active="report" access="instructor">
+      <AppShell course={shellCourse} exam={shellExam} access="instructor">
         <p style={{ margin: 0, fontSize: "14px", color: "var(--muted)" }}>Loading…</p>
       </AppShell>
     );
@@ -132,7 +132,7 @@ export function TaDetailLivePage() {
   const PAPER_COLUMNS = `120px repeat(${Math.max(questions.length, 1)}, minmax(0, 1fr)) 120px 90px`;
 
   return (
-    <AppShell course={shellCourse} exam={shellExam} active="report" access="instructor">
+    <AppShell course={shellCourse} exam={shellExam} access="instructor">
       <PageHeader
         crumbs={[
           { label: [course.code, course.name].filter(Boolean).join(" "), href: `/courses/${courseId}` },
