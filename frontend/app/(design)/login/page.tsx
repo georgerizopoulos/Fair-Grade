@@ -74,7 +74,7 @@ export default function LoginPage() {
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            gap: "32px",
+            gap: "28px",
           }}
         >
           <div style={{ maxWidth: "520px" }}>
@@ -123,14 +123,13 @@ export default function LoginPage() {
               before final grades are released.
             </p>
           </div>
-          <div style={{ position: "relative", height: "480px" }}>
+          <div style={{ position: "relative", height: "460px" }}>
             <div
               style={{
                 position: "absolute",
                 left: "0",
                 top: "0",
-                width: "450px",
-                transform: "rotate(-1.5deg)",
+                right: "64px",
               }}
             >
               <div
@@ -608,10 +607,9 @@ export default function LoginPage() {
             <div
               style={{
                 position: "absolute",
-                right: "4px",
+                right: "0",
                 bottom: "0",
-                width: "290px",
-                transform: "rotate(2.5deg)",
+                width: "300px",
               }}
             >
               <div

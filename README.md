@@ -1,150 +1,121 @@
 # Fair Grade
 
-Consistent, transparent grading across every TA — powered by AI.
+Consistent, transparent grading across every TA, with an AI second opinion.
 
 Built for the [FuturEd AI Hackathon](https://hackathon.csd.uoc.gr) 2026 by Team Byte Me.
 
 ## The Problem
 
-In university courses with multiple teaching assistants grading the same exam, identical answers can receive different scores depending on who grades them — even when everyone follows the same rubric. Students notice. Students complain. Instructors have no systematic way to catch it before final grades go out.
+In university courses where several teaching assistants grade the same exam, identical answers can receive different scores depending on who grades them, even when everyone follows the same rubric. Students notice. Students complain. Instructors have no systematic way to catch it before final grades go out.
 
 ## The Solution
 
-Fair Grade gives instructors an independent, AI-powered second opinion on grading consistency.
+Fair Grade gives the instructor an independent AI grade for every paper and shows, per TA and per question, where the TAs and the AI disagree.
 
-1. The instructor uploads a rubric and the students' answers
-2. TA grades come in — imported by the instructor, or entered by each TA through their own login
-3. An LLM grades every answer independently, against the same rubric, without seeing any TA's scores
-4. The system compares the AI's scores with each TA's scores, criterion by criterion
-5. Systematic gaps are flagged — e.g. "Maria is on average 1.4 points stricter than the AI on *clearly organized*"
-6. The instructor fixes inconsistencies before grades are finalized
+1. The instructor creates a **course**, adds the **TAs as members**, and sets up each **exam**: the questions, a model answer for each, and rubric points that add up to the question's maximum.
+2. A TA adds a **paper**: one student, a scanned PDF. The answers are transcribed; the TA checks the text and grades each question.
+3. The TA **submits**. Their points are locked.
+4. The **AI grades the same transcribed answers** in the background, against the same model answers and rubric. It never sees the TA's points, the student ID or any name.
+5. The TA sees TA vs AI per question. The instructor sees the **report**: a TA is flagged when their average gap on a question is more than 15% of its points over at least 3 papers, e.g. *"Maria gives papers 1.4 points less than the AI on average, almost all of it on Q2."*
+6. The instructor opens the papers behind the flag, reads the AI's reasoning, and reopens the ones to regrade before grades are published.
 
-Fair Grade isn't meant to replace human judgment — it's a quality-control layer that turns a vague suspicion ("something feels off with the grading") into a measurable, actionable report.
+Fair Grade doesn't replace human judgement. It is a quality-control layer that turns a vague suspicion ("something feels off with the grading") into a measurable, actionable report.
 
 ## Why This Idea
 
-Most education-AI projects target the student — tutors, gamified learning, study tools, knowledge maps. Fair Grade takes the opposite angle: it targets the instructor and course staff, directly answering the hackathon brief's call for "smarter administrative tools."
+Most education-AI projects target the student. Fair Grade targets the instructor and course staff, answering the hackathon brief's call for "smarter administrative tools".
 
-- Real, recurring problem in every large course with multiple TAs
-- Measurable output (deviation per TA, per criterion) instead of vague "engagement" claims
-- Feasible to build end-to-end in a weekend
-- Matches the team's existing skill set
-
-## How It Works
-
-```
-Instructor uploads        TAs submit grades          AI grades every answer
-rubric + answers   --->   (or the instructor   --->  against the same rubric
-                           imports them)                      |
-                                                              v
-                        Dashboard  <---  Gap per TA, per criterion
-                   (flagged TAs + examples)
-```
-
-- **Independent grading:** the AI never sees a TA's score, so it can't be anchored by it
-- **Criterion-level analysis:** gaps are measured per rubric criterion, not just on the total
-- **Pattern, not noise:** a single disagreement is normal; a flag needs a consistent gap across at least 3 answers, larger than 15% of that criterion's points
-- **Explainable:** every AI score comes with a short reasoning, so the instructor sees *why*, not just a number
-- **Role-based access:** instructors and TAs log in separately, and a TA can only ever submit grades under their own name
+- A real, recurring problem in every large course with several TAs
+- Measurable output (gap per TA, per question) instead of vague "engagement" claims
+- The AI is a second opinion, not the grader: humans stay in charge
 
 ## Roles
 
 | Role | Can |
 |---|---|
-| Instructor | create rubrics, upload answers, import TA grades, run AI grading, see the dashboard |
-| TA | see rubrics and answers, enter and update their own grades |
+| Instructor | create courses and exams, manage members and users, see reports and stats, reopen or publish |
+| TA | add and grade papers in the courses they are a member of, see their own papers and stats, ask to reopen a submitted paper |
+
+Course membership is the only thing that gives a TA access to a course. Access is enforced in the backend.
 
 ## Pages
 
-| Route | Who | What it does |
+| Route | Who | What it shows |
 |---|---|---|
-| `/login` | everyone | email + password; instructors go to `/upload`, TAs go to `/ta` |
-| `/upload` | instructor | shows what's loaded; add a rubric, answers, and TA grades; **Run AI Grading** |
-| `/dashboard?rubricId=` | instructor | every TA for the rubric, with a Flagged / OK badge and their average gap |
-| `/dashboard/[taId]?rubricId=` | instructor | one TA: the gap on each criterion, the answers behind each flag with the AI's reasoning, and every answer they graded next to the AI's score |
-| `/ta` | TA | pick a rubric, read the answers, enter your own scores per criterion |
-
-Which endpoint each page calls is in the Endpoint Index of `API_SPEC.md`.
+| `/login` | everyone | sign in (demo accounts one click away) |
+| `/courses` | everyone | your courses |
+| `/courses/[id]` | both | exams with progress, reopen requests (instructor), people |
+| `/courses/[id]/stats` | instructor | trend across exams, TA leaderboard, pass/fail at stake, grade distribution, rubrics to tighten, live activity |
+| `/courses/[id]/members` | instructor | add or remove TAs |
+| `/courses/[id]/exams/[examId]/setup` | instructor | questions, model answers, rubric; open for grading, publish |
+| `/courses/[id]/exams/[examId]/report` | instructor | the flag, gap per question per TA, TAs table, largest gaps, CSV export |
+| `/courses/[id]/exams/[examId]/report/[taId]` | instructor | one TA against the AI, the papers behind the flag |
+| `/courses/[id]/exams/[examId]/papers` (`/new`) | TA | my papers; add a paper |
+| `/courses/[id]/exams/[examId]/stats` | TA | my stats: TA vs AI, leaderboard, papers worth a second look |
+| `/papers/[id]` (`/grade`) | both | grade a paper; TA vs AI per question with the AI's reasoning |
+| `/users` | instructor | everyone who can sign in |
 
 ## Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Backend | NestJS (TypeScript) |
-| Frontend | Next.js (TypeScript, App Router), Tailwind CSS, shadcn/ui |
-| Database | PostgreSQL via Prisma (SQLite as a fallback) |
-| Auth | Email + password, bcrypt, JWT |
-| AI | The LLM API provided at the event, called only from the backend |
-
-## Data Model
-
-```
-users            id, name, email, password_hash, role (instructor | ta)
-courses          id, name
-rubrics          id, course_id, question_text
-criteria         id, rubric_id, position, description, max_points
-student_answers  id, rubric_id, student_id_anon, answer_text
-ta_grades        id, answer_id, criterion_id, ta_id -> users, points_given
-ai_grades        id, answer_id, criterion_id, points, reasoning
-```
-
-The deviation report is not stored — it's computed from `ta_grades` and `ai_grades` each time the dashboard asks for it. The full schema, with every constraint, is in `API_SPEC.md`.
+| Backend | NestJS 12 (TypeScript, ESM), on port 3001 |
+| Frontend | Next.js 16 (App Router), Tailwind 4, light and dark mode, on port 3000 |
+| Database | SQLite through Prisma 7 |
+| Auth | Email + password, bcryptjs, JWT |
+| AI | Amazon Bedrock (Mistral Large), called only from the backend by a background worker |
 
 ## Getting Started
+
+You need Node.js 22+ and AWS credentials with access to Bedrock in `us-east-1` (for AI grading; everything else works without them).
 
 Backend (first terminal):
 
 ```bash
 cd backend
+cp .env.example .env     # fill in AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
 npm install
-cp .env.example .env     # fill in DATABASE_URL, JWT_SECRET, LLM_API_KEY, LLM_MODEL
-npm run migrate
-npm run seed             # wipes the database and loads the demo dataset
-npm run start:dev        # http://localhost:3001  (check http://localhost:3001/health)
+npm run migrate          # creates dev.db
+npm run seed             # wipes the database and loads the demo story
+npm run start:dev        # http://localhost:3001/health
 ```
 
 Frontend (second terminal):
 
 ```bash
 cd frontend
-npm install
 cp .env.example .env.local   # NEXT_PUBLIC_API_URL=http://localhost:3001
+npm install
 npm run dev                  # http://localhost:3000
 ```
 
-Demo logins are the ones in `dataset/users.json`. After re-running the seed, log in again.
+Demo logins (password `demo1234`): `instructor@demo.com`, and the TAs `maria@`, `nikos@`, `giannis@`, `eleni@`, `katerina@demo.com`. After `npm run seed`, sign in again.
 
-## MVP Scope
+Check that the demo data tells the story: `cd backend && npx tsx scripts/check-demo-numbers.ts` must end with **demo numbers hold**.
 
-In scope:
-
-- 1 course, 1 rubric, 15-20 typed answers, 2-3 synthetic TAs
-- Email + password login with two roles; demo accounts are seeded, there's no sign-up page
-- AI grading, deviation report, dashboard with drill-down, TA grading page
-- Typed math answers (limits, integrals, etc.) — see `DATASET.md`
-
-Out of scope for the weekend:
-
-- Answers that are diagrams or photos of handwriting (would need a vision model and file upload)
-- Managing many courses and rubrics at once
-- Editing or deleting data — reset with `npm run seed` instead
-- Export (PDF/CSV), semantic matching of answers, notifications
+Changing `.env` needs a backend restart.
 
 ## Demo Script
 
-1. State the problem in one sentence (grading inconsistency between TAs)
-2. Log in as the instructor
-3. Show `/upload` with the rubric, answers, and TA grades already loaded — don't type data live
-4. Click **Run AI Grading** and let it run
-5. Open the dashboard — one TA is flagged
-6. Drill down — show an answer, the TA's score, the AI's score, and the AI's reasoning
-7. (Optional, 20 seconds) Log in as a TA — show they can only grade under their own name
-8. Close with why it matters — fairness, transparency, fewer disputes after grades come out
+1. State the problem in one sentence: TAs grade the same answers differently.
+2. Sign in as the **instructor**. Open HY335 → **Midterm → Setup**: the questions, model answers and rubric everyone grades against.
+3. Sign in as **Nikos** (TA). Midterm → My papers → **csd5150** → grade the three questions → **Submit for AI grading**.
+4. A few seconds later the paper shows TA vs AI per question, with the AI's reasoning.
+5. Back as the instructor: **Midterm → Report**. Maria is flagged on **Q2** (−1.04 against a threshold of 0.45). Open her page and the papers behind the flag.
+6. (Optional) **Course stats**: the gap shrinks exam after exam; Katerina leads the leaderboard.
+7. Close with why it matters: fairness, transparency, fewer disputes after grades come out.
 
-If the network or the LLM fails on stage, show the dashboard from the grading run done before the pitch, or the screen recording (see `TASKS.md`, Final Pass).
+Before the pitch: `npm run seed` (csd5150 is a draft again), run the demo once, and keep a screen recording in case the network or Bedrock fails on stage.
+
+## Development
+
+```bash
+cd backend && npm test && npm run test:e2e && npx tsc --noEmit
+cd frontend && npx tsc --noEmit && npx eslint app components lib
+```
 
 ## Documents
 
-- `API_SPEC.md` — every endpoint: who can call it, what it takes, what it returns, and how deviation is calculated. The contract everyone builds against.
-- `TASKS.md` — what each person does, in order; who waits on whom; what to cut first if time runs short.
-- `DATASET.md` — how the demo logins, rubric, answers, and TA grades are written.
+- `CLAUDE.md`: how the code is organised and the rules for changing it.
+- `DOCS/API_SPEC.md`: every endpoint, who can call it, what it takes and returns.
+- `DOCS/TASKS.md`: what's done, what's left, who owns it.
