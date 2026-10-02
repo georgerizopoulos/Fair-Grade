@@ -155,7 +155,7 @@ Things to know before going live:
 - **Never seed a real database.** `npm run seed` wipes every user, course and paper; with `NODE_ENV=production` it refuses unless you pass `ALLOW_SEED=1`.
 - **Health check:** `GET /health` always answers 200 (so the frontend can tell "backend down" from "database down"); alert on `"database": "error"`.
 - **Sign-up is open to instructors.** Anyone who can reach the login page can create an instructor account (limited to 10 attempts an hour per address). Instructors can't see or edit each other, but the TA pool is shared. For a real deployment, keep the app on the university network or behind SSO.
-- **Not done:** a Content-Security-Policy on the frontend, real handwriting transcription (the scan step is a demo fake), and deleting the legacy API and pages (`DOCS/TASKS.md`, Final Pass).
+- **Not done:** a Content-Security-Policy on the frontend, real handwriting transcription (the scan step is a demo fake), importing questions from a solutions PDF (the button is hidden until an importer exists), and deleting the legacy API and pages (`DOCS/TASKS.md`, Final Pass).
 
 ## Documents
 

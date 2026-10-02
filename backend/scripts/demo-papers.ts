@@ -330,7 +330,7 @@ export const PAPER_PLANS: ExamPlan[] = [
           },
         ],
         extra: [
-          // Submitted, the AI is still on it (kept out of the worker's reach).
+          // Submitted; the AI worker grades it a few seconds after the seed.
           {
             studentId: 'csd5148',
             at: '12:38',

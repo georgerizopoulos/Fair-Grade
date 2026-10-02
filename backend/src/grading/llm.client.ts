@@ -6,7 +6,6 @@ import {
 // The ONLY file that knows Bedrock exists. Everything else calls complete().
 // Swap provider later => only this file changes.
 
-// TODO: read region + model from env (.env: LLM_MODEL, AWS_REGION), don't hardcode.
 const REGION = process.env.AWS_REGION ?? 'us-east-1';
 const MODEL_ID = process.env.LLM_MODEL ?? 'mistral.mistral-large-2402-v1:0';
 
@@ -39,9 +38,6 @@ export async function complete(
       },
     ],
 
-    // TODO: inferenceConfig — temperature, maxTokens.
-    // Low temp for consistent grading. Try temperature: 0; if the model
-    // rejects it, drop it and rely on the prompt wording.
     // Temperature 0: the same answer should get the same grade every time.
     inferenceConfig: {
       temperature: 0,

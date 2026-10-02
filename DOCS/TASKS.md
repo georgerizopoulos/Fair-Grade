@@ -39,24 +39,26 @@ Step 4 works from the seeded papers (`npm run seed`, checked by `scripts/check-d
 | Paper upload (PDF, pages, demo transcription), page rescan | Σταύρος |
 | Reports: `my-stats`, exam report, per-TA report | Δημήτρης |
 | Pages wired to the API: courses list, course page, exam setup, add paper, grade, paper result | team |
-| `llm.client.ts` (Bedrock), prompt and response validation. The old `runGrading()` and `POST /grade/run` were removed; the AI worker is the only grader | Κώστας |
+| `llm.client.ts` (Bedrock), prompt and response validation. Papers are graded only by the AI worker; the legacy `POST /grade/run` stays for the `(legacy)` pages until the Final Pass deletes them | Κώστας |
 | Seeded HY335 papers for the demo story, `scripts/check-demo-numbers.ts` | Γιώργος |
 | Real numbers in `my-stats`, exam report and TA report (`reports/report-math.ts`, unit-tested) | Γιώργος |
 | Course stats and activity feed endpoints (`reports/course-stats.ts`), exam status flow (draft → ready → open → published), e2e tests | Γιώργος |
 | Pages wired: TA My stats, Report, TA page, Course stats (with live activity and leaderboard visibility), Members, Users, New exam, open/publish an exam | Γιώργος |
 | Production pass: sign-in and sign-up rate limits, instructors can't see or edit each other, security headers (API and frontend), upload size caps, startup env checks, `migrate:deploy`, seed guard, committed lockfiles, CI (`.github/workflows/ci.yml`), README "Production" | Γιώργος |
 | e2e tests for papers (every lifecycle rule and permission), reports and the abuse limits | Γιώργος |
+| e2e tests for exams and questions (`test/exams.e2e-spec.ts`: create, list, status rules, questions PUT, import) | Γιώργος |
+| Deck (11 slides, shared as a claude.ai artifact) | Γιώργος |
+| Setup page hides "Import from PDF" until a PDF importer exists (`NEXT_PUBLIC_PDF_IMPORT=on`); login hides the demo accounts with `NEXT_PUBLIC_DEMO_LOGINS=off` | Γιώργος |
 
 ## Left, in priority order
 
 | # | What | Who | Notes |
 |---|---|---|---|
-| 3 | **e2e tests for exams and questions**: `backend/test/exams.e2e-spec.ts` (create, status flow, questions PUT, import) | Σταύρος | Pattern: `test/papers.e2e-spec.ts`. |
 | 7 | **⌘K search** (`GET /search`) | Δημήτρης | Lowest priority. |
 | 8 | **Real handwriting transcription** with a vision model | Κώστας | Only if a vision model is available on Bedrock. The demo fake works without it. |
-| 9 | **Deck** | Γιώργος | Problem → solution → live demo → how it works → why it matters → team. |
+| 9 | **Questions import from PDF** (`ai/questions-import.ts`) | Κώστας | The endpoint and the page are ready; only the importer is missing. |
 
-**If time runs short, cut from the bottom:** 8 → 7. Before the demo run `npm run seed` so test papers don't change the numbers.
+**If time runs short, cut from the bottom:** 9 → 8 → 7. Before the demo run `npm run seed` so test papers don't change the numbers.
 
 ---
 

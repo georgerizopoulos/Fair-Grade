@@ -60,6 +60,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .fg-login-visual > div:last-child{transform:scale(0.88);transform-origin:top left}
 }
 
+/* Pages with a fixed side column (exam setup): stack it before the form gets squeezed */
+@media (max-width: 1240px) and (min-width: 901px){.fg-side-cols{grid-template-columns:1fr !important}}
+
 @media (max-width: 900px){.fg-shell{flex-direction:column}
 .fg-side{width:auto !important;padding:12px 12px 0 !important}
 .fg-side > div{position:static !important;min-height:0 !important}

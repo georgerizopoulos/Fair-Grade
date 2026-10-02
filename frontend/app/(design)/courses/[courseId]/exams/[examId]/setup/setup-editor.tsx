@@ -23,6 +23,10 @@ import { ApiError, apiFetch } from "@/lib/api";
 //   PUT   /exams/:id/questions  the whole question list
 //   POST  /exams/:id/questions/import  PDF → draft questions (not saved yet)
 
+// The backend has no PDF importer yet (it answers 503), so the button stays
+// hidden until one exists. Build with NEXT_PUBLIC_PDF_IMPORT=on to show it.
+const PDF_IMPORT = process.env.NEXT_PUBLIC_PDF_IMPORT === "on";
+
 interface RubricPoint {
   text: string;
   points: number;
@@ -387,7 +391,7 @@ export function SetupEditor() {
         title={/\d/.test(exam.name) ? `Set up ${exam.name}` : `Set up the ${exam.name.toLowerCase()}`}
         description={
           <>
-            Upload the questions and model answers. That is the rubric every TA and the AI grade
+            Write the questions and model answers. That is the rubric every TA and the AI grade
             against.
           </>
         }
@@ -410,7 +414,7 @@ export function SetupEditor() {
       )}
 
       <div
-        className="fg-grid fg-in fg-d1"
+        className="fg-grid fg-side-cols fg-in fg-d1"
         style={{
           display: "grid",
           gridTemplateColumns: "minmax(0, 1fr) 360px",
@@ -490,7 +494,9 @@ export function SetupEditor() {
                 title="Questions and model answers"
                 description={
                   questions.length === 0
-                    ? "No questions yet. Import the solutions PDF or add them by hand."
+                    ? PDF_IMPORT
+                      ? "No questions yet. Import the solutions PDF or add them by hand."
+                      : "No questions yet. Add each question with its model answer and rubric."
                     : `${questions.length} question${questions.length === 1 ? "" : "s"}, ${fmt(total)} points.`
                 }
               />
@@ -542,23 +548,27 @@ export function SetupEditor() {
                     </div>
                   )}
                   <div style={{ display: "flex", gap: "8px" }}>
-                    <input
-                      ref={fileInput}
-                      type="file"
-                      accept="application/pdf,.pdf"
-                      hidden
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) void importPdf(file);
-                      }}
-                    />
-                    <SecondaryButton
-                      icon={<UploadIcon />}
-                      onClick={() => fileInput.current?.click()}
-                      disabled={busy !== ""}
-                    >
-                      <span>{busy === "import" ? "Reading the PDF…" : "Import from PDF"}</span>
-                    </SecondaryButton>
+                    {PDF_IMPORT && (
+                      <>
+                        <input
+                          ref={fileInput}
+                          type="file"
+                          accept="application/pdf,.pdf"
+                          hidden
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) void importPdf(file);
+                          }}
+                        />
+                        <SecondaryButton
+                          icon={<UploadIcon />}
+                          onClick={() => fileInput.current?.click()}
+                          disabled={busy !== ""}
+                        >
+                          <span>{busy === "import" ? "Reading the PDF…" : "Import from PDF"}</span>
+                        </SecondaryButton>
+                      </>
+                    )}
                     <SecondaryButton icon={<PlusIcon />} onClick={addQuestion}>
                       <span>Add question</span>
                     </SecondaryButton>

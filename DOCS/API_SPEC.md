@@ -423,6 +423,8 @@ Multipart with `file` = a solutions PDF.
 
 Response: `{ examId, questions: [ … draft questions in the PUT shape … ] }`. **Nothing is saved**: the instructor reviews the drafts and then calls `PUT`. Returns 400 if the file isn't a PDF, 413 if it is over 20 MiB.
 
+**No importer is wired yet**: the endpoint validates the file, then answers 503 until `ai/questions-import.ts` provides one. The setup page hides its "Import from PDF" button unless the frontend is built with `NEXT_PUBLIC_PDF_IMPORT=on`.
+
 ---
 
 ## Papers
@@ -669,7 +671,7 @@ The first version of the app (one rubric, a CSV of answers). It still runs for `
 - `POST/GET /rubrics`, `GET /rubrics/:id`;
 - `POST /answers/bulk`, `GET /answers`;
 - `POST /ta-grades/bulk`, `GET /ta-grades`;
-- `GET /grade/results/:rubricId` (`POST /grade/run` was never built);
+- `POST /grade/run` (instructor; grades a legacy rubric's answers in one request) and `GET /grade/results/:rubricId`;
 - `GET /deviation/:rubricId`.
 
 It also uses the tables `Rubric`, `Criterion`, `StudentAnswer`, `TaGrade`, `AiGrade`.

@@ -1,6 +1,9 @@
 // Checks that the seeded HY335 data tells the demo story (change request §7).
 //   npm run seed && npx tsx scripts/check-demo-numbers.ts
 // Prints the numbers and exits with an error if a check fails.
+// Only the seeded AI grades are checked. The worker also grades csd5148 (seeded
+// as "AI grading") a few seconds after the seed, and csd5150 after the demo;
+// those live grades depend on the model, so they are listed but not checked.
 
 import 'dotenv/config';
 import { PrismaLibSql } from '@prisma/adapter-libsql';
@@ -13,6 +16,8 @@ const prisma = new PrismaClient({
 const FLAG_RATIO = 0.15;
 const MIN_SAMPLES = 3;
 const r2 = (x: number) => Math.round(x * 100) / 100;
+// The seed stamps aiGradedAt 40 s after submittedAt; the worker stamps "now".
+const SEEDED_GRADE_MS = 40_000;
 const mean = (xs: number[]) =>
   xs.length ? xs.reduce((s, x) => s + x, 0) / xs.length : 0;
 
@@ -53,15 +58,24 @@ async function main() {
   let allGraded = 0;
 
   for (const exam of course.exams) {
-    const graded = exam.papers.filter((p) => p.status === 'AI_GRADED');
+    const seeded = (p: (typeof exam.papers)[number]) =>
+      p.aiGradedAt?.getTime() ===
+      (p.submittedAt?.getTime() ?? NaN) + SEEDED_GRADE_MS;
+    const aiGraded = exam.papers.filter((p) => p.status === 'AI_GRADED');
+    const graded = aiGraded.filter(seeded);
+    const live = aiGraded.filter((p) => !seeded(p));
     const submitted = exam.papers.filter((p) => p.submittedAt);
     if (!exam.papers.length) continue;
     allPapers += submitted.length;
     allGraded += graded.length;
 
     console.log(
-      `\n${exam.name}: ${submitted.length} submitted, ${graded.length} AI graded`,
+      `\n${exam.name}: ${submitted.length} submitted, ${graded.length} AI graded by the seed`,
     );
+    if (live.length)
+      console.log(
+        `  graded live since the seed (not checked): ${live.map((p) => p.studentId).join(', ')}`,
+      );
     const byTa = new Map<string, typeof graded>();
     for (const p of graded)
       byTa.set(p.ta.name, [...(byTa.get(p.ta.name) ?? []), p]);
