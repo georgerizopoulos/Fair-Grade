@@ -9,6 +9,16 @@ import { PrismaClient } from '../src/generated/prisma/client.js';
 import { COURSES, DEMO_PASSWORD, USERS } from './demo-data.js';
 import { seedActivity, seedPapers } from './demo-papers.js';
 
+// The seed deletes every user, course and paper first. Never by accident on a
+// real database: with NODE_ENV=production it needs ALLOW_SEED=1.
+if (process.env.NODE_ENV === 'production' && process.env.ALLOW_SEED !== '1') {
+  console.error(
+    'Refusing to seed: NODE_ENV=production and the seed wipes the whole database.\n' +
+      'If this really is a throwaway demo database, run it with ALLOW_SEED=1.',
+  );
+  process.exit(1);
+}
+
 const prisma = new PrismaClient({
   adapter: new PrismaLibSql({ url: process.env.DATABASE_URL! }),
 });
