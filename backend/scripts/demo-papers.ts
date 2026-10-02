@@ -601,9 +601,8 @@ export async function seedPapers(
               graded && submittedAt
                 ? new Date(submittedAt.getTime() + 40_000)
                 : null,
-            // csd5148 stays "AI grading" for the demo instead of being picked up.
-            aiNextAttemptAt:
-              p.status === 'AI_GRADING' ? new Date('2099-01-01') : null,
+            // Submitted demo papers must be eligible for the grading worker.
+            aiNextAttemptAt: null,
             pages: {
               create: [0, 1, 2].map((index) => ({
                 index,
