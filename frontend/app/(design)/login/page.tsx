@@ -367,7 +367,7 @@ export default function LoginPage() {
                         }}
                       ></span>
                       <span
-                        title="Maria Papadaki \u22121.05"
+                        title="Maria Papadaki \u22121.04"
                         style={{
                           position: "absolute",
                           left: "23.75%",
@@ -412,7 +412,7 @@ export default function LoginPage() {
                           fontVariantNumeric: "tabular-nums",
                         }}
                       >
-                        −1.05
+                        −1.04
                       </span>
                       <span
                         title="Nikos Georgiou \u22120.10"
