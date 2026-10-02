@@ -1,15 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Collapsible } from "radix-ui";
-import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-<<<<<<< HEAD
 import { Fragment, type ReactNode, useEffect, useRef, useState } from "react";
-=======
-import { Fragment, type ReactNode, useEffect, useState } from "react";
-import { apiFetch } from "@/lib/api";
->>>>>>> 78df1ef (Fixed courses menu slider)
 import { HOME_BY_ROLE, logout, useSession } from "@/lib/auth";
 import { Icon, Logo } from "./icons";
 import {
@@ -273,7 +266,6 @@ const STATUS_DOT: Record<ExamStatus, { color: string; label: string }> = {
   PUBLISHED: { color: "var(--green)", label: "Grades published" },
 };
 
-<<<<<<< HEAD
 function NavLink({ item, small = false }: { item: NavItem; small?: boolean }) {
   const highlighted = item.active || (item.current && !item.children?.some((c) => c.active));
   return (
@@ -388,7 +380,7 @@ function CourseSwitcher({ course }: { course: ShellCourse }) {
   );
 
   return (
-    <div ref={box} style={{ position: "relative", marginBottom: "18px" }}>
+    <div ref={box} style={{ marginBottom: "18px" }}>
       <button
         type="button"
         className="fg-press"
@@ -434,11 +426,9 @@ function CourseSwitcher({ course }: { course: ShellCourse }) {
           role="listbox"
           aria-label="Switch course"
           style={{
-            position: "absolute",
-            top: "calc(100% + 6px)",
-            left: 0,
-            right: 0,
-            zIndex: 50,
+            marginTop: "8px",
+            maxHeight: "320px",
+            overflowY: "auto",
             padding: "6px",
             borderRadius: "16px",
             background: "var(--raised)",
@@ -520,84 +510,6 @@ function CourseSwitcher({ course }: { course: ShellCourse }) {
         </div>
       )}
     </div>
-=======
-function CourseSwitcher({ course }: { course: ShellCourse }) {
-  const router = useRouter();
-  const [open, setOpen] = useState(false);
-  const user = useSession();
-  const [courses, setCourses] = useState<ShellCourse[]>([]);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (!user) return;
-    let cancelled = false;
-    apiFetch<{ courses: { id: string; code: string | null; name: string }[] }>("/courses")
-      .then(({ courses }) => {
-        if (cancelled) return;
-        setCourses(courses.map((item) => ({ ...item, code: item.code ?? item.name })));
-        setError("");
-      })
-      .catch((cause) => {
-        if (!cancelled) setError(cause instanceof Error ? cause.message : "Could not load courses");
-      });
-    return () => { cancelled = true; };
-  }, [user]);
-
-  const options = courses.some((item) => item.id === course.id) ? courses : [course, ...courses];
-
-  return (
-    <div style={{ marginBottom: "20px" }}>
-      <Collapsible.Root open={open} onOpenChange={setOpen}>
-        <Collapsible.Trigger asChild>
-          <button type="button" aria-label={`Switch course, current course ${course.code}`} className="fg-course-surface fg-course-trigger fg-press"
-            style={{ display: "flex", alignItems: "center", gap: "10px", width: "100%", padding: "10px 12px", cursor: "pointer", textAlign: "left", fontFamily: FONT }}>
-            <CourseSwitcherLabel course={course} />
-            <span style={{ color: "var(--faint)", flexShrink: 0 }}><Icon name="chevrons" size={16} /></span>
-          </button>
-        </Collapsible.Trigger>
-        <Collapsible.Content className="fg-course-surface fg-course-menu"
-          style={{ marginTop: "8px", maxHeight: "320px", overflowY: "auto", padding: "6px", fontFamily: FONT }}>
-          <div style={{ padding: "8px 6px", fontSize: "11px", fontWeight: 600, color: "var(--muted)", letterSpacing: "0.04em" }}>SWITCH COURSE</div>
-          <nav aria-label="Courses">
-            {options.map((item) => (
-              <Link key={item.id} href={`/courses/${item.id}`} className="fg-course-option"
-                aria-current={item.id === course.id ? "page" : undefined}
-                data-state={item.id === course.id ? "checked" : "unchecked"}
-                style={{ textDecoration: "none" }}
-                onClick={(event) => {
-                  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-                  event.preventDefault();
-                  setOpen(false);
-                  if (item.id !== course.id) router.push(`/courses/${item.id}`);
-                }}>
-                <CourseSwitcherLabel course={item} />
-                {item.id === course.id && <span style={{ color: "var(--blue-x)", display: "flex", flexShrink: 0 }}><Check size={16} strokeWidth={2.5} /></span>}
-              </Link>
-            ))}
-          </nav>
-        </Collapsible.Content>
-      </Collapsible.Root>
-      {error && (
-        <p role="alert" style={{ color: "var(--red-x)", fontSize: "12px", margin: "10px 0 0" }}>
-          {error}. <Link href="/courses">View all courses</Link>
-        </p>
-      )}
-    </div>
-  );
-}
-
-function CourseSwitcherLabel({ course }: { course: ShellCourse }) {
-  return (
-    <>
-      <span style={{ width: "30px", height: "30px", flexShrink: 0, borderRadius: "9px", background: "var(--blue-t)", color: "var(--blue-x)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: 600 }}>
-        {course.code.replace(/^\D+/, "") || course.code.slice(0, 2)}
-      </span>
-      <span style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: 0, flexGrow: 1 }}>
-        <span style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--ink)" }}>{course.code}</span>
-        <span style={{ fontSize: "12px", color: "var(--muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{course.name}</span>
-      </span>
-    </>
->>>>>>> 78df1ef (Fixed courses menu slider)
   );
 }
 
