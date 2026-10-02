@@ -145,7 +145,7 @@ The same rule is used everywhere:
 | `PATCH /exams/:id` | owner | ✅ | exams |
 | `GET /exams/:id/questions` | owner | ✅ | exams |
 | `PUT /exams/:id/questions` | owner | ✅ | exams |
-| `POST /exams/:id/questions/import` | owner | ✅ | exams |
+| `POST /exams/:id/questions/import` | owner | ⚠️ answers 503 until an importer is wired | exams |
 | `POST /exams/:id/papers` | TA member, or owner for a TA | ✅ | papers |
 | `GET /exams/:id/my-papers` | TA member | ✅ | papers |
 | `GET /papers/:id` | owner, or the paper's TA | ✅ | papers |
@@ -417,9 +417,11 @@ Errors:
 - 400 if a question code appears twice;
 - 409 if you delete a question that papers already use.
 
-### `POST /exams/:id/questions/import` ✅
+### `POST /exams/:id/questions/import` ⚠️ not available yet
 
-Multipart with `file` = a solutions PDF.
+The route and its validation exist, but no importer is wired in (`UnavailableQuestionsImporter`), so a valid PDF gets **503** `Importing questions from a PDF is not available yet. Add the questions by hand.` Enter questions with `PUT` instead.
+
+What it will do once an importer is wired: multipart with `file` = a solutions PDF.
 
 Response: `{ examId, questions: [ … draft questions in the PUT shape … ] }`. **Nothing is saved**: the instructor reviews the drafts and then calls `PUT`. Returns 400 if the file isn't a PDF, 413 if it is over 20 MiB.
 
@@ -669,7 +671,7 @@ The first version of the app (one rubric, a CSV of answers). It still runs for `
 - `POST/GET /rubrics`, `GET /rubrics/:id`;
 - `POST /answers/bulk`, `GET /answers`;
 - `POST /ta-grades/bulk`, `GET /ta-grades`;
-- `GET /grade/results/:rubricId` (`POST /grade/run` was never built);
+- `POST /grade/run` (instructor; grades every answer of a rubric with the AI) and `GET /grade/results/:rubricId`;
 - `GET /deviation/:rubricId`.
 
 It also uses the tables `Rubric`, `Criterion`, `StudentAnswer`, `TaGrade`, `AiGrade`.

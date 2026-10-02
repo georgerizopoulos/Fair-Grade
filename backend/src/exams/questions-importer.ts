@@ -25,7 +25,7 @@ export const QUESTIONS_IMPORTER = Symbol('QUESTIONS_IMPORTER');
 export class UnavailableQuestionsImporter implements QuestionsImporter {
   async importSolutionsPdf(_pdf: Buffer): Promise<DraftQuestion[]> {
     throw new ServiceUnavailableException(
-      'Question import is unavailable until ai/questions-import.ts is provided',
+      'Importing questions from a PDF is not available yet. Add the questions by hand.',
     );
   }
 }

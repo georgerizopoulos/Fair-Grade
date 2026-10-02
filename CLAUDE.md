@@ -21,7 +21,6 @@ TAs grade handwritten exam papers. The AI grades **the same transcribed answers*
 - the Midterm report shows Maria flagged on Q2 (−1.04).
 
 **Docs:**
-- `DOCS/TASKS.md`: what's done, what's left, who owns it, and the cut list.
 - `DOCS/API_SPEC.md`: the API contract. Every endpoint is marked built or planned; update it when you change an endpoint.
 
 ## Roles and access (non-negotiable)
@@ -42,10 +41,10 @@ TAs grade handwritten exam papers. The AI grades **the same transcribed answers*
 backend/    NestJS 12 (ESM) on :3001, Prisma 7 + SQLite, JWT + bcryptjs, vitest
 frontend/   Next.js 16 App Router on :3000, Tailwind 4, shadcn/ui, the Fair Grade design
 dataset/    old single-rubric demo data (legacy)
-DOCS/       TASKS.md, API_SPEC.md, DATASET.md
+DOCS/       API_SPEC.md
 ```
 
-**Who owns what** (see `DOCS/TASKS.md`). Stay in your folders; ask before editing someone else's.
+**Who owns what.** Stay in your folders; ask before editing someone else's.
 
 | Owner | Files |
 |---|---|
@@ -55,7 +54,7 @@ DOCS/       TASKS.md, API_SPEC.md, DATASET.md
 | Δημήτρης | `reports/`, `activity/` read side, `search/`, the instructor pages |
 
 **Legacy, frozen** (the first version of the app). Don't extend it; it gets deleted at the end:
-- backend `rubrics/ answers/ ta-grades/ grading/ results/ deviation/`
+- backend `rubrics/ answers/ ta-grades/ grading/ results/ deviation/`. **Exception:** the live AI worker imports `grading/llm.client.ts` (the Bedrock client) and `deviation/` imports `grading/deviation.ts`. Move `llm.client.ts` to `ai/` before deleting `grading/`, or production AI grading breaks.
 - the old tables (`Rubric`, `Criterion`, `StudentAnswer`, `TaGrade`, `AiGrade`)
 - frontend `app/(legacy)/`
 
