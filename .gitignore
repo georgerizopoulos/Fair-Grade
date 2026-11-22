@@ -1,10 +1,11 @@
-.env
-node_modules
-frontend/package-lock.json
-backend/package-lock.json
-.env.local
-dev.db
-.claude
-.idea
+target/
+*.class
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
 .DS_Store
-*.log
+# Task A writes its JSON output here
+task-a-jaxp/european_countries.json

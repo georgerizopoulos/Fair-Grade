@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DBpedia Text Annotator</title>
+  <style>
+    :root { --bg: #f7f7f5; --fg: #1d1d1f; --muted: #5f6368; --card: #fff; --line: #d9d9d6; --accent: #1a56b0; --err: #b3261e; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #161617; --fg: #ececec; --muted: #a0a0a5; --card: #222224; --line: #3a3a3d; --accent: #8ab4f8; --err: #f2b8b5; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, sans-serif; }
+    main { max-width: 760px; margin: 0 auto; padding: 32px 16px; }
+    h1 { font-size: 1.6rem; margin: 0 0 4px; }
+    p.lead { color: var(--muted); margin: 0 0 24px; }
+    label { display: block; font-weight: 600; margin-bottom: 6px; }
+    textarea { width: 100%; min-height: 140px; padding: 12px; font: inherit; color: inherit; background: var(--card); border: 1px solid var(--line); border-radius: 8px; resize: vertical; }
+    .row { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin: 12px 0 24px; }
+    input[type=range] { width: 160px; }
+    button { padding: 10px 20px; font: inherit; font-weight: 600; color: #fff; background: var(--accent); border: 0; border-radius: 8px; cursor: pointer; }
+    @media (prefers-color-scheme: dark) { button { color: #111; } }
+    button:disabled { opacity: .6; cursor: progress; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+    #result { font-size: 1.1rem; font-weight: 600; font-style: italic; white-space: pre-wrap; }
+    #result a { color: var(--accent); }
+    #error { color: var(--err); }
+    ul { padding-left: 20px; }
+    .muted { color: var(--muted); font-size: .9rem; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>DBpedia Text Annotator</h1>
+  <p class="lead">Type some text. Terms that DBpedia Spotlight recognises become links to their DBpedia pages.</p>
+
+  <form id="form">
+    <label for="text">Text</label>
+    <textarea id="text" required>Leonardo da Vinci created the 'Mona Lisa'</textarea>
+    <div class="row">
+      <label for="confidence" style="margin:0">Confidence <output id="confidenceValue">0.5</output></label>
+      <input id="confidence" type="range" min="0" max="1" step="0.05" value="0.5">
+      <button id="submit" type="submit">Annotate</button>
+    </div>
+  </form>
+
+  <p id="error" role="alert" hidden></p>
+  <section id="output" hidden>
+    <h2>Annotated text</h2>
+    <div class="card"><div id="result"></div></div>
+    <h2>Terms found</h2>
+    <ul id="terms"></ul>
+  </section>
+  <p class="muted">Calls the <a href="https://www.dbpedia-spotlight.org/api">DBpedia Spotlight REST API</a> through this app's /api/annotate endpoint.</p>
+</main>
+
+<script>
+  const form = document.getElementById('form');
+  const text = document.getElementById('text');
+  const confidence = document.getElementById('confidence');
+  const confidenceValue = document.getElementById('confidenceValue');
+  const submit = document.getElementById('submit');
+  const error = document.getElementById('error');
+  const output = document.getElementById('output');
+  const result = document.getElementById('result');
+  const terms = document.getElementById('terms');
+
+  confidence.addEventListener('input', () => { confidenceValue.textContent = confidence.value; });
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    error.hidden = true;
+    submit.disabled = true;
+    submit.textContent = 'Annotating…';
+    try {
+      const response = await fetch('api/annotate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text.value, confidence: Number(confidence.value) })
+      });
+      const body = await response.json();
+      if (!response.ok) throw new Error(body.message || ('Request failed with status ' + response.status));
+      // The server escapes the text and builds the links, so this HTML is safe to insert.
+      result.innerHTML = body.html;
+      terms.replaceChildren(...body.resources.map((r) => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = r.uri; a.target = '_blank'; a.rel = 'noopener'; a.textContent = r.uri;
+        li.append(r.surfaceForm + ' → ', a);
+        return li;
+      }));
+      if (body.resources.length === 0) {
+        const li = document.createElement('li');
+        li.textContent = 'No terms found. Try a lower confidence.';
+        terms.append(li);
+      }
+      output.hidden = false;
+    } catch (e) {
+      error.textContent = e.message;
+      error.hidden = false;
+    } finally {
+      submit.disabled = false;
+      submit.textContent = 'Annotate';
+    }
+  });
+</script>
+</body>
+</html>

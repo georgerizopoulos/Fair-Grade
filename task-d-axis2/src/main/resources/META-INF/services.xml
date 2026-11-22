@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Both services ship in one archive (hy452ws.aar), so they deploy on the same server. -->
+<serviceGroup>
+  <service name="ConverterService" targetNamespace="http://intro.ws.hy452">
+    <description>ws1: converts centimetres to inches and inches to centimetres.</description>
+    <parameter name="ServiceClass">hy452.ws.intro.ConverterService</parameter>
+    <operation name="inch_to_cm"/>
+    <operation name="cm_to_inch"/>
+    <messageReceivers>
+      <messageReceiver mep="http://www.w3.org/ns/wsdl/in-only"
+                       class="org.apache.axis2.rpc.receivers.RPCInOnlyMessageReceiver"/>
+      <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out"
+                       class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+    </messageReceivers>
+  </service>
+
+  <service name="IdealWeightService" targetNamespace="http://intro.ws.hy452">
+    <description>ws2: ideal body weight for men and women from height in cm (Miller formula).</description>
+    <parameter name="ServiceClass">hy452.ws.intro.IdealWeightService</parameter>
+    <operation name="idealWeightFormula"/>
+    <operation name="millerFormula"/>
+    <messageReceivers>
+      <messageReceiver mep="http://www.w3.org/ns/wsdl/in-only"
+                       class="org.apache.axis2.rpc.receivers.RPCInOnlyMessageReceiver"/>
+      <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out"
+                       class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+    </messageReceivers>
+  </service>
+</serviceGroup>

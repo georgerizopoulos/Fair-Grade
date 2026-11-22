@@ -1,164 +1,168 @@
-# Fair Grade
+# CS452 Assignment 2: XML, REST and SOAP web services
 
-Consistent, transparent grading across every TA, with an AI second opinion.
-
-Built for the [FuturEd AI Hackathon](https://hackathon.csd.uoc.gr) 2026 by Team Byte Me.
-
-## The Problem
-
-In university courses where several teaching assistants grade the same exam, identical answers can receive different scores depending on who grades them, even when everyone follows the same rubric. Students notice. Students complain. Instructors have no systematic way to catch it before final grades go out.
-
-## The Solution
-
-Fair Grade gives the instructor an independent AI grade for every paper and shows, per TA and per question, where the TAs and the AI disagree.
-
-1. The instructor creates a **course**, adds the **TAs as members**, and sets up each **exam**: the questions, a model answer for each, and rubric points that add up to the question's maximum.
-2. A TA adds a **paper**: one student, a scanned PDF. The answers are transcribed; the TA checks the text and grades each question.
-3. The TA **submits**. Their points are locked.
-4. The **AI grades the same transcribed answers** in the background, against the same model answers and rubric. It never sees the TA's points, the student ID or any name.
-5. The TA sees TA vs AI per question. The instructor sees the **report**: a TA is flagged when their average gap on a question is more than 15% of its points over at least 3 papers, e.g. *"Maria gives papers 1.4 points less than the AI on average, almost all of it on Q2."*
-6. The instructor opens the papers behind the flag, reads the AI's reasoning, and reopens the ones to regrade before grades are published.
-
-Fair Grade doesn't replace human judgement. It is a quality-control layer that turns a vague suspicion ("something feels off with the grading") into a measurable, actionable report.
-
-## Why This Idea
-
-Most education-AI projects target the student. Fair Grade targets the instructor and course staff, answering the hackathon brief's call for "smarter administrative tools".
-
-- A real, recurring problem in every large course with several TAs
-- Measurable output (gap per TA, per question) instead of vague "engagement" claims
-- The AI is a second opinion, not the grader: humans stay in charge
-
-## Roles
-
-| Role | Can |
-|---|---|
-| Instructor | sign up themselves, create courses and exams, manage members and users, see reports and stats (including who passed, exportable as CSV), reopen or publish |
-| TA | add and grade papers in the courses they are a member of, see their own papers and stats, ask to reopen a submitted paper. A TA can't sign up: the instructor creates the account |
-
-Course membership is the only thing that gives a TA access to a course. Access is enforced in the backend.
-
-## Pages
-
-| Route | Who | What it shows |
-|---|---|---|
-| `/login` | everyone | sign in (demo accounts one click away); instructors can create an account |
-| `/courses` | everyone | your courses |
-| `/courses/[id]` | both | exams with progress, reopen requests (instructor), people |
-| `/courses/[id]/stats` | instructor | trend across exams, TA leaderboard, pass/fail at stake, grade distribution, rubrics to tighten, live activity |
-| `/courses/[id]/members` | instructor | add or remove TAs |
-| `/courses/[id]/exams/[examId]/setup` | instructor | questions, model answers, rubric; open for grading, publish |
-| `/courses/[id]/exams/[examId]/report` | instructor | the flag, gap per question per TA, TAs table, who passed (TA vs AI), largest gaps, CSV exports (all grades, passed only) |
-| `/courses/[id]/exams/[examId]/report/[taId]` | instructor | one TA against the AI, the papers behind the flag |
-| `/courses/[id]/exams/[examId]/papers` (`/new`) | TA | my papers; add a paper |
-| `/courses/[id]/exams/[examId]/stats` | TA | my stats: TA vs AI, leaderboard, papers worth a second look |
-| `/papers/[id]` (`/grade`) | both | grade a paper; TA vs AI per question with the AI's reasoning |
-| `/users` | instructor | everyone who can sign in |
-
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Backend | NestJS 12 (TypeScript, ESM), on port 3001 |
-| Frontend | Next.js 16 (App Router), Tailwind 4, light and dark mode, on port 3000 |
-| Database | SQLite through Prisma 7 |
-| Auth | Email + password, bcryptjs, JWT |
-| AI | Amazon Bedrock (Mistral Large), called only from the backend by a background worker |
-
-## Getting Started
-
-You need Node.js 22+ and AWS credentials with access to Bedrock in `us-east-1` (for AI grading; everything else works without them).
-
-Backend (first terminal):
+Code for all four tasks of CS452 (University of Crete, winter 2026-27), Assignment 2. Each task is
+its own Maven project, and the root `pom.xml` builds them all:
 
 ```bash
-cd backend
-cp .env.example .env     # fill in AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
-npm install
-npm run migrate          # creates dev.db
-npm run seed             # wipes the database and loads the demo story
-npm run start:dev        # http://localhost:3001/health
+mvn verify          # build every module and run its tests (24 tests)
 ```
 
-Frontend (second terminal):
+Needs Java 17 or newer and Maven 3.9. The dataset is `data/xmldata_mondial-3.0.xml`.
+
+| Folder | Task | Framework |
+| --- | --- | --- |
+| `task-a-jaxp` | A: parse Mondial with JAXP, XPath queries, JSON with Gson | JAXP, Gson |
+| `task-b1-country-service` | B.i: country and river REST service with Swagger | Spring Boot, springdoc (OpenAPI 3) |
+| `task-b2-spotlight-client` | B.ii: web page that links text to DBpedia | Spring Boot, DBpedia Spotlight |
+| `task-c1-jersey-converter` | C.i: cm/inch REST service | Jersey on Grizzly |
+| `task-c2-weather-client` | C.ii: OpenWeatherMap client, XML output | Jersey client |
+| `task-d-axis2` | D (bonus): two SOAP services and two clients | Apache Axis2 1.8 |
+
+---
+
+## A. JAXP, XPath and Gson
 
 ```bash
-cd frontend
-cp .env.example .env.local   # NEXT_PUBLIC_API_URL=http://localhost:3001
-npm install
-npm run dev                  # http://localhost:3000
+cd task-a-jaxp && mvn -q compile exec:java
 ```
 
-Demo logins (password `demo1234`): `instructor@demo.com`, and the TAs `maria@`, `nikos@`, `giannis@`, `eleni@`, `katerina@demo.com`. After `npm run seed`, sign in again.
+`MondialXml` prints:
 
-Check that the demo data tells the story: `cd backend && npx tsx scripts/check-demo-numbers.ts` must end with **demo numbers hold**.
+1. **A.i** The root node (`mondial`) and the first-level node names below it, with a count of each:
+   `continent (5), country (231), organization (168), mountain (88), desert (30), island (184),
+   river (135), sea (22), lake (92)`.
+2. **A.ii** The 51 European countries. The XPath query is
+   `/mondial/country[encompassed/@continent = /mondial/continent[@name='Europe']/@id]/@name`.
+3. **A.iii** The countries in both Europe and Asia (Russia and Turkey), with every attribute,
+   read with `getAttributes()`.
+4. **A.iv** `european_countries.json`, which lists all 51 European countries with every attribute.
+   It is written with Gson from a list of `LinkedHashMap`s.
 
-Changing `.env` needs a backend restart.
-
-## Demo Script
-
-1. State the problem in one sentence: TAs grade the same answers differently.
-2. Sign in as the **instructor**. Open HY335 → **Midterm → Setup**: the questions, model answers and rubric everyone grades against.
-3. Sign in as **Nikos** (TA). Midterm → My papers → **csd5150** → grade the three questions → **Submit for AI grading**.
-4. A few seconds later the paper shows TA vs AI per question, with the AI's reasoning.
-5. Back as the instructor: **Midterm → Report**. Maria is flagged on **Q2** (−1.04 against a threshold of 0.45). Open her page and the papers behind the flag.
-6. (Optional) **Course stats**: the gap shrinks exam after exam; Katerina leads the leaderboard.
-7. Close with why it matters: fairness, transparency, fewer disputes after grades come out.
-
-Before the pitch: `npm run seed` (csd5150 is a draft again), run the demo once, and keep a screen recording in case the network or Bedrock fails on stage.
-
-## Development
+## B.i Country and river service (Spring Boot)
 
 ```bash
-cd backend && npm test && npm run test:e2e && npx tsc --noEmit
-cd frontend && npx tsc --noEmit && npx eslint app components lib
+cd task-b1-country-service && mvn -q package && java -jar target/country-service.jar
 ```
 
-The same checks run in CI on every push and pull request (`.github/workflows/ci.yml`). Both apps commit a `package-lock.json`; install with `npm ci` for a reproducible tree.
+The service runs on port 5000, the port Elastic Beanstalk forwards to. Swagger UI is at
+<http://localhost:5000/swagger-ui.html>, and the OpenAPI 3 document is at `/v3/api-docs`.
 
-## Production
+| Operation | Request | Example answer |
+| --- | --- | --- |
+| country_name | `GET /countries/GR/country_name` | `{"code":"GR","country_name":"Greece"}` |
+| country_population | `GET /countries/GR/country_population` | `{"code":"GR","country_population":10538594}` |
+| country_total_area | `GET /countries/GR/country_total_area` | `{"code":"GR","country_total_area":131940}` |
+| country_capital_name | `GET /countries/GR/country_capital_name` | `{"code":"GR","country_capital_name":"Athens"}` |
+| country_political_system | `GET /countries/GR/country_political_system` | `{"code":"GR","country_political_system":"parliamentary republic"}` |
+| river_passes_through_countries | `GET /rivers/Nile/river_passes_through_countries` | `{"river":"Nile","river_passes_through_countries":["Egypt","Sudan"]}` |
+| river_outfall | `GET /rivers/Nile/river_outfall` | `{"river":"Nile","river_outfall":[{"type":"sea","name":"Mediterranean Sea"}]}` |
 
-The demo runs from `npm run start:dev` and `npm run dev`. To run it for real, build both apps and run them as one backend process plus one frontend process.
+Notes on the dataset:
 
-**Backend** (from `backend/`):
+- The two-letter code is the country's `datacode` attribute. Most codes match the usual ones, but
+  not all: Russia is `RS`, Turkey `TU`, Austria `AU`. Serbia and Montenegro has no code.
+- Codes and river names are case-insensitive. An unknown code or river returns 404 with a message.
+- 59 of the 135 rivers list no countries (the Thames, for example), so their country list is empty.
+- `river_outfall` returns a list, because the Rhein has two outfalls (North Sea and Bodensee).
+- River names are as written in the dataset, often in German: `Donau`, `Rhein`, `Weichsel`.
+
+## B.ii DBpedia Spotlight annotator (Spring Boot)
 
 ```bash
-npm ci
-npm run build
-npm run migrate:deploy     # applies the committed migrations; never `npm run migrate` here
-npm run start:prod         # node dist/main
+cd task-b2-spotlight-client && mvn -q package && java -jar target/spotlight-client.jar
 ```
 
-Set these in `backend/.env` (or the process environment). `backend/.env.example` lists them all.
+Open <http://localhost:5000/>, type some text and press **Annotate**. The page posts the text to
+`POST /api/annotate`. The server then calls `https://api.dbpedia-spotlight.org/en/annotate` with
+`Accept: application/json` and builds the HTML. Every term Spotlight finds becomes a link to its
+DBpedia resource. For example, *Leonardo da Vinci created the 'Mona Lisa'* becomes
+[Leonardo da Vinci](http://dbpedia.org/resource/Leonardo_da_Vinci) created the
+'[Mona Lisa](http://dbpedia.org/resource/Mona_Lisa)'.
 
-| Variable | Production value |
-|---|---|
-| `NODE_ENV` | `production`. The backend then refuses to start with the example `JWT_SECRET`. |
-| `JWT_SECRET` | 16+ random characters: `node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"` |
-| `DATABASE_URL` | an absolute SQLite path on a persistent disk, e.g. `file:/var/lib/fairgrade/prod.db` |
-| `CORS_ORIGIN` | the frontend's URL, e.g. `https://fairgrade.example.edu` |
-| `TRUST_PROXY` | `1` behind one reverse proxy (so the sign-in limits and HSTS see the real client); leave unset without one |
-| `AWS_*`, `LLM_MODEL` | Bedrock credentials for AI grading (or an instance role) |
+The server HTML-escapes all text and only links `http(s)` URIs. If Spotlight is unreachable, the
+page shows a 502 error. To use another Spotlight server, set `SPOTLIGHT_URL`.
 
-**Frontend** (from `frontend/`): `NEXT_PUBLIC_*` variables are baked in at build time, so set them first. `NEXT_PUBLIC_DEMO_LOGINS=off` hides the one-click demo accounts on the login page.
+## Deploying B.i and B.ii to AWS Elastic Beanstalk
+
+Each Spring Boot app builds into one self-contained jar (`target/country-service.jar`,
+`target/spotlight-client.jar`). The Mondial XML is packed inside the country-service jar. For each
+app:
+
+1. In the Elastic Beanstalk console, choose **Create application**. For the platform, pick
+   **Java**, branch **Corretto 17** (or 21) on Amazon Linux 2023.
+2. Under **Application code**, choose **Upload your code** and upload the jar.
+3. Create the environment. The platform's nginx forwards port 80 to 5000, which is the port the
+   apps listen on (`server.port=${PORT:5000}`).
+4. Open the environment URL. For B.i, add `/swagger-ui.html`. For B.ii, the page is at `/`.
+
+With the EB CLI, the equivalent is to run `eb init` (choose the Java / Corretto platform when
+asked), add `deploy: artifact: target/<name>.jar` to `.elasticbeanstalk/config.yml`, then run
+`eb create`.
+
+## C.i Jersey converter
 
 ```bash
-NEXT_PUBLIC_API_URL=https://api.fairgrade.example.edu NEXT_PUBLIC_DEMO_LOGINS=off npm run build
-npm run start
+cd task-c1-jersey-converter && mvn -q compile exec:java
 ```
 
-Things to know before going live:
+```
+GET http://localhost:8080/api/converter/inch_to_cm?value=1      -> 2.54
+GET http://localhost:8080/api/converter/cm_to_inch?value=2.54   -> 1.0
+```
 
-- **Run it from `backend/`, with a persistent disk.** Uploaded PDFs go to `uploads/` relative to the working directory. Back up the SQLite file and `uploads/` together.
-- **One backend process.** SQLite, the AI worker's polling and the sign-in limits all live in that one process; don't scale it out.
-- **Put it behind HTTPS.** Tokens travel in the `Authorization` header and live in the browser's `localStorage`.
-- **Never seed a real database.** `npm run seed` wipes every user, course and paper; with `NODE_ENV=production` it refuses unless you pass `ALLOW_SEED=1`.
-- **Health check:** `GET /health` always answers 200 (so the frontend can tell "backend down" from "database down"); alert on `"database": "error"`.
-- **Sign-up is open to instructors.** Anyone who can reach the login page can create an instructor account (limited to 10 attempts an hour per address). Instructors can't see or edit each other, but the TA pool is shared. For a real deployment, keep the app on the university network or behind SSO.
-- **Not done:** a Content-Security-Policy on the frontend, real handwriting transcription (the scan step is a demo fake), importing questions from a solutions PDF (the button is hidden until an importer exists), and deleting the legacy API and pages (`DOCS/TASKS.md`, Final Pass).
+Answers are plain text by default. Send `Accept: application/json` or `Accept: application/xml`
+for `{"inch":1.0,"cm":2.54}` or `<inch_to_cm><inch>1.0</inch><cm>2.54</cm></inch_to_cm>`. A
+missing, non-numeric or infinite value returns 400.
 
-## Documents
+## C.ii OpenWeatherMap client (Jersey)
 
-- `CLAUDE.md`: how the code is organised and the rules for changing it.
-- `DOCS/API_SPEC.md`: every endpoint, who can call it, what it takes and returns.
-- `DOCS/TASKS.md`: what's done, what's left, who owns it.
+You need a free key from <https://home.openweathermap.org/api_keys>. A new key can take a few hours
+to start working.
+
+```bash
+cd task-c2-weather-client
+OPENWEATHER_API_KEY=your-key mvn -q compile exec:java                      # Heraklion,GR
+OPENWEATHER_API_KEY=your-key mvn -q compile exec:java -Dexec.args="Athens,GR"
+```
+
+The client calls `GET https://api.openweathermap.org/data/2.5/weather?q=<city>&mode=xml&units=metric&appid=<key>`.
+It prints the XML answer, indented, followed by a short summary. The key is read only from the
+environment, so it stays out of the code and the report.
+
+## D. (bonus) Axis2 SOAP services
+
+`mvn package` builds `target/hy452ws.aar`. That one archive holds both services
+(`META-INF/services.xml` is a service group), so they deploy on the same server.
+
+- **ws1 `ConverterService`**: operations `inch_to_cm` and `cm_to_inch`.
+- **ws2 `IdealWeightService`**: operation `idealWeightFormula(heightCm)` returns an `IdealWeight`
+  with `menWeight` and `womenWeight`, from the Miller formula. The same calculation is also
+  available as `millerFormula`, because the assignment's example response is
+  `millerFormulaResponse`.
+
+The package `hy452.ws.intro` gives the namespaces `http://intro.ws.hy452` and
+`http://intro.ws.hy452/xsd`, as in the example. With 175 cm, the response is:
+
+```xml
+<ns:millerFormulaResponse xmlns:ns="http://intro.ws.hy452"><ns:return xmlns:ax21="http://intro.ws.hy452/xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ax21:IdealWeight"><ax21:menWeight>68.745475</ax21:menWeight><ax21:womenWeight>65.2006</ax21:womenWeight></ns:return></ns:millerFormulaResponse>
+```
+
+The example's numbers come from converting with 0.3937 inch/cm, so ws2 uses that factor. The exact
+factor (1/2.54) would give 68.745669 and 65.200787 kg. ws1 uses the exact 2.54 cm/inch.
+
+**On Tomcat (as in the lab):** deploy `axis2.war` (Axis2 1.8.2) on Tomcat 9, for example from
+Eclipse with the Axis2 facet. Then copy `target/hy452ws.aar` into
+`webapps/axis2/WEB-INF/services/` and check <http://localhost:8080/axis2/services/listServices>.
+
+**Without Tomcat:** `mvn -q compile exec:java` serves both services on Axis2's built-in HTTP server,
+at the same `http://localhost:8080/axis2/services/...` URLs.
+
+**Clients** (the endpoint defaults to Tomcat's `localhost:8080`):
+
+```bash
+CP=$(mvn -q dependency:build-classpath -Dmdep.outputFile=/dev/stdout):target/classes
+java -cp "$CP" hy452.ws.intro.ConverterClient
+java -cp "$CP" hy452.ws.intro.IdealWeightClient http://localhost:8080/axis2/services/IdealWeightService 175
+```
+
+Each client prints the values it got back and the SOAP response body.
