@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Builds every task with one command: mvn verify.
+     Each module is a standalone Maven project, so you can also build one alone:
+     mvn -f task-b1-country-service/pom.xml package -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>hy452</groupId>
+  <artifactId>cs452-assignment2</artifactId>
+  <version>1.0</version>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>task-a-jaxp</module>
+    <module>task-b1-country-service</module>
+    <module>task-b2-spotlight-client</module>
+    <module>task-c1-jersey-converter</module>
+    <module>task-c2-weather-client</module>
+    <module>task-d-axis2</module>
+  </modules>
+</project>

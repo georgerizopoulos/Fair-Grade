@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>hy452</groupId>
+  <artifactId>task-d-axis2</artifactId>
+  <version>1.0</version>
+  <name>Task D (bonus) - Axis2 SOAP services and clients</name>
+
+  <properties>
+    <maven.compiler.release>17</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- Axis2 1.8 uses javax.servlet, so it runs on Tomcat 9 (the usual Eclipse lab setup) -->
+    <axis2.version>1.8.2</axis2.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.axis2</groupId>
+      <artifactId>axis2-kernel</artifactId>
+      <version>${axis2.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.axis2</groupId>
+      <artifactId>axis2-adb</artifactId>
+      <version>${axis2.version}</version>
+    </dependency>
+    <!-- HTTP transport: the clients use it, and so does LocalAxis2Server -->
+    <dependency>
+      <groupId>org.apache.axis2</groupId>
+      <artifactId>axis2-transport-http</artifactId>
+      <version>${axis2.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.axis2</groupId>
+      <artifactId>axis2-transport-local</artifactId>
+      <version>${axis2.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.13.4</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.5.4</version>
+      </plugin>
+      <!-- target/hy452ws.aar: copy it to Tomcat's webapps/axis2/WEB-INF/services/ -->
+      <plugin>
+        <groupId>org.apache.axis2</groupId>
+        <artifactId>axis2-aar-maven-plugin</artifactId>
+        <version>${axis2.version}</version>
+        <extensions>true</extensions>
+        <configuration>
+          <aarName>hy452ws</aarName>
+          <servicesXmlFile>${project.basedir}/src/main/resources/META-INF/services.xml</servicesXmlFile>
+          <includeDependencies>false</includeDependencies>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals><goal>aar</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.5.0</version>
+        <configuration>
+          <mainClass>hy452.ws.intro.LocalAxis2Server</mainClass>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

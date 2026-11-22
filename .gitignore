@@ -1,0 +1,11 @@
+target/
+*.class
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+.DS_Store
+# Task A writes its JSON output here
+task-a-jaxp/european_countries.json
